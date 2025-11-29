@@ -135,3 +135,16 @@ export async function deleteJob(jobId: string) {
   revalidatePath("/employer/dashboard");
   revalidatePath("/jobs");
 }
+
+export async function deleteUser(userId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.user.delete({
+    where: { id: userId },
+  });
+
+  revalidatePath("/admin/dashboard");
+}

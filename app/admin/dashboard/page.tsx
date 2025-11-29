@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import DeleteUserButton from "@/components/DeleteUserButton";
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
@@ -66,6 +67,7 @@ export default async function AdminDashboard() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(user.createdAt).toLocaleDateString()}
+                  {user.role !== "ADMIN" && <DeleteUserButton userId={user.id} />}
                 </td>
               </tr>
             ))}

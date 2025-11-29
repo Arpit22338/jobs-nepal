@@ -64,7 +64,16 @@ export default function ProfilePage() {
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">My Profile</h1>
+        <div className="flex items-center gap-4">
+          {session?.user?.image && (
+            <img 
+              src={session.user.image} 
+              alt="Profile" 
+              className="w-16 h-16 rounded-full object-cover border"
+            />
+          )}
+          <h1 className="text-2xl font-bold">My Profile</h1>
+        </div>
         <Link
           href="/profile/edit"
           className="text-blue-600 hover:underline"
