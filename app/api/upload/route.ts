@@ -12,6 +12,21 @@ export async function POST(req: Request) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    
+    // Check file size (limit to 1MB for Base64 storage in DB)
+    if (buffer.length > 1024 * 1024) {
+      return NextResponse.json({ error: "File size too large. Max 1MB allowed." }, { status: 400 });
+    }
+
+    // Convert to Base64 Data URI
+    const mimeType = file.type;
+    const base64Data = buffer.toString("base64");
+    const dataUri = `data:${mimeType};base64,${base64Data}`;
+
+    return NextResponse.json({ url: dataUri });
+
+    /* 
+    // Previous local file storage logic (disabled for Vercel compatibility)
     const filename = Date.now() + "_" + file.name.replaceAll(" ", "_");
     const uploadDir = path.join(process.cwd(), "public/uploads");
     const filePath = path.join(uploadDir, filename);
@@ -27,6 +42,7 @@ export async function POST(req: Request) {
         warning: "File upload failed due to server restrictions. Using placeholder."
       });
     }
+    */
   } catch (error) {
     console.error("Error uploading file:", error);
     return NextResponse.json({ error: "Error uploading file." }, { status: 500 });
