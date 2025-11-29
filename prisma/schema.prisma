@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  role          String    @default("JOBSEEKER")
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  jobSeekerProfile JobSeekerProfile?
+  employerProfile  EmployerProfile?
+  jobs             Job[]             @relation("EmployerJobs")
+  applications     Application[]
+  enrollments      Enrollment[]
+  
+  // New Features
+  isVerified       Boolean   @default(false)
+  verificationDoc  String?
+  
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  talentPost       TalentPost?
+  
+  questions        Question[]
+  givenTrusts      Trust[]   @relation("GivenTrusts")
+  receivedTrusts   Trust[]   @relation("ReceivedTrusts")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  senderId  String
+  sender    User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId String
+  receiver  User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model TalentPost {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  bio         String
+  skills      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobSeekerProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio         String?
+  skills      String?  // Comma separated or JSON
+  resumeUrl   String?
+  location    String?
+  experience  String?
+  education   String?
+}
+
+model EmployerProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName String
+  description String?
+  website     String?
+  location    String?
+  logoUrl     String?
+}
+
+model Job {
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  location    String
+  salary      String?
+  type        String        // Full-time, Part-time, etc.
+  employerId  String
+  employer    User          @relation("EmployerJobs", fields: [employerId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  applications Application[]
+  
+  // For recommendations
+  requiredSkills String?
+  
+  questions    Question[]
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  content   String
+  answer    String?
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Trust {
+  id        String   @id @default(cuid())
+  trusterId String
+  truster   User     @relation("GivenTrusts", fields: [trusterId], references: [id])
+  trustedId String
+  trusted   User     @relation("ReceivedTrusts", fields: [trustedId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([trusterId, trustedId])
+}
+
+model Application {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    String   @default("PENDING") // PENDING, REVIEWING, ACCEPTED, REJECTED
+  coverLetter String?
+  createdAt DateTime @default(now())
+}
+
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  description String
+  price       Float
+  instructor  String?
+  duration    String?
+  createdAt   DateTime     @default(now())
+  enrollments Enrollment[]
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  progress  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([courseId, userId])
+}
