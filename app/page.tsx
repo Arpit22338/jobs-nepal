@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Search, Briefcase, GraduationCap, Users } from "lucide-react";
 import { prisma } from "../lib/prisma";
 
@@ -80,8 +81,13 @@ export default async function Home() {
             </li>
           </ul>
         </div>
-        <div className="bg-gray-200 rounded-lg h-64 md:h-96 flex items-center justify-center">
-          <span className="text-gray-500">Image Placeholder</span>
+        <div className="relative h-64 md:h-96 w-full rounded-lg overflow-hidden shadow-lg">
+          <Image 
+            src="/remotejob.jpeg" 
+            alt="Remote Work in Nepal" 
+            fill
+            className="object-cover"
+          />
         </div>
       </section>
     </div>
