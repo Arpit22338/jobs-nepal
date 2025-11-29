@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import DeleteJobButton from "@/components/DeleteJobButton";
 
 export default async function EmployerDashboard() {
   const session = await getServerSession(authOptions);
@@ -72,7 +73,7 @@ export default async function EmployerDashboard() {
                     <Link href={`/jobs/${job.id}`} className="text-blue-600 hover:text-blue-900 mr-4">
                       View
                     </Link>
-                    <button className="text-red-600 hover:text-red-900">Delete</button>
+                    <DeleteJobButton jobId={job.id} />
                   </td>
                 </tr>
               ))

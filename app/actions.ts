@@ -109,3 +109,29 @@ export async function applyForJob(jobId: string, employerId: string) {
   revalidatePath("/my-applications");
   return { success: true, message: "Application submitted successfully!" };
 }
+
+export async function deleteJob(jobId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const job = await prisma.job.findUnique({
+    where: { id: jobId },
+  });
+
+  if (!job) {
+    throw new Error("Job not found");
+  }
+
+  if (job.employerId !== session.user.id && session.user.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.job.delete({
+    where: { id: jobId },
+  });
+
+  revalidatePath("/employer/dashboard");
+  revalidatePath("/jobs");
+}
