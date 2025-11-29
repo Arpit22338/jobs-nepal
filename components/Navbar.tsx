@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 export default function Navbar() {
   const { data: session } = useSession();
   // Cast user to include role to satisfy editor type checking
-  const user = session?.user as { name?: string | null; email?: string | null; image?: string | null; role?: string } | undefined;
+  const user = session?.user as { name?: string | null; email?: string | null; role?: string } | undefined;
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 

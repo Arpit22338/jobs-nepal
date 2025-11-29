@@ -43,8 +43,6 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           role: user.role,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          image: (user as any).image,
         };
       },
     }),
@@ -57,7 +55,6 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.id as string,
           role: token.role as string,
-          image: token.picture as string | null | undefined,
         },
       };
     },
@@ -65,7 +62,6 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
-        token.picture = user.image;
       }
       return token;
     },

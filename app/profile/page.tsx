@@ -17,6 +17,7 @@ interface Profile {
   experience?: string;
   education?: string;
   resumeUrl?: string;
+  image?: string;
 }
 
 export default function ProfilePage() {
@@ -66,9 +67,9 @@ export default function ProfilePage() {
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
-          {session?.user?.image && (
+          {profile.image && (
             <Image 
-              src={session.user.image} 
+              src={profile.image} 
               alt="Profile" 
               width={64}
               height={64}
