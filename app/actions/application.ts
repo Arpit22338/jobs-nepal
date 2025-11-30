@@ -40,16 +40,3 @@ export async function updateApplicationStatus(applicationId: string, status: "AC
     return { error: "Failed to update status" };
   }
 }
-
-    await prisma.application.update({
-      where: { id: applicationId },
-      data: { status },
-    });
-
-    revalidatePath(`/employer/jobs/${application.job.id}/applications`);
-    return { success: true };
-  } catch (error) {
-    console.error("Error updating application status:", error);
-    return { error: "Failed to update status" };
-  }
-}
