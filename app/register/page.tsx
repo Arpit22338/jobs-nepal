@@ -50,7 +50,7 @@ export default function RegisterPage() {
         throw new Error(errorData.message || "Registration failed");
       }
 
-      router.push("/login?registered=true");
+      router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

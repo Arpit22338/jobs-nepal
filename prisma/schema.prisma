@@ -27,6 +27,8 @@ model User {
   // New Features
   isVerified       Boolean   @default(false)
   verificationDoc  String?
+  otp              String?
+  otpExpires       DateTime?
   
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")

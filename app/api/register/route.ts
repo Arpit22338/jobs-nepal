@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import * as z from "zod";
+import { sendVerificationEmail } from "@/lib/mail";
 
 const registerSchema = z.object({
   name: z.string().min(2),
@@ -28,6 +29,10 @@ export async function POST(req: Request) {
     }
 
     const hashedPassword = await hash(password, 10);
+    
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpires = new Date(Date.now() + 3600000); // 1 hour from now
 
     const user = await prisma.user.create({
       data: {
@@ -38,8 +43,23 @@ export async function POST(req: Request) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         image: image || null,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        otp,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        otpExpires,
+        isVerified: false,
       },
     });
+
+    // Send verification email
+    try {
+      await sendVerificationEmail(email, otp);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+      // We don't fail the registration, but the user will need to resend OTP
+    }
 
     // Create profile based on role
     if (role === "JOBSEEKER") {
