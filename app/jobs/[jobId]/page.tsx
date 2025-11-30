@@ -4,7 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { applyForJob } from "@/app/actions";
+import { applyForJob, deleteQuestion } from "@/app/actions";
+import { Trash2 } from "lucide-react";
 
 interface Props {
   params: Promise<{
@@ -203,7 +204,19 @@ export default async function JobDetailsPage({ params }: Props) {
                         <Link href={`/profile/${q.userId}`} className="font-semibold text-gray-900 hover:underline">
                           {q.user.name}
                         </Link>
-                        <span className="text-xs text-gray-500">{q.createdAt.toLocaleDateString()}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-500">{q.createdAt.toLocaleDateString()}</span>
+                          {(session?.user.id === q.userId || session?.user.id === job.employerId || session?.user.role === "ADMIN") && (
+                            <form action={async () => {
+                              "use server";
+                              await deleteQuestion(q.id);
+                            }}>
+                              <button type="submit" className="text-red-500 hover:text-red-700 p-1">
+                                <Trash2 size={14} />
+                              </button>
+                            </form>
+                          )}
+                        </div>
                       </div>
                       <p className="text-gray-800 mt-1">{q.content}</p>
                     </div>

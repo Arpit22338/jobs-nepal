@@ -162,3 +162,66 @@ export async function deleteUser(userId: string) {
     throw new Error("Failed to delete user");
   }
 }
+
+export async function deleteQuestion(questionId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const question = await prisma.question.findUnique({
+    where: { id: questionId },
+    include: { job: true },
+  });
+
+  if (!question) {
+    throw new Error("Question not found");
+  }
+
+  // Allow deletion if:
+  // 1. User is the author of the question
+  // 2. User is the employer (job owner)
+  // 3. User is ADMIN
+  const isAuthor = question.userId === session.user.id;
+  const isEmployer = question.job.employerId === session.user.id;
+  const isAdmin = session.user.role === "ADMIN";
+
+  if (!isAuthor && !isEmployer && !isAdmin) {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.question.delete({
+    where: { id: questionId },
+  });
+
+  revalidatePath(`/jobs/${question.jobId}`);
+}
+
+export async function deleteMessage(messageId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const message = await prisma.message.findUnique({
+    where: { id: messageId },
+  });
+
+  if (!message) {
+    throw new Error("Message not found");
+  }
+
+  // Allow deletion if user is the sender
+  // (Optional: Allow receiver to delete? Usually only sender can "unsend" or delete for themselves)
+  // For now, let's allow sender to delete.
+  if (message.senderId !== session.user.id && session.user.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.message.delete({
+    where: { id: messageId },
+  });
+  
+  // We can't easily revalidate the specific chat page from here since we don't know the other user's ID easily without fetching more data,
+  // but the client-side polling in ChatPage will pick up the change.
+}

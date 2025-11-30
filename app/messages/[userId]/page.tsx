@@ -4,8 +4,9 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { User } from "lucide-react";
+import { User, Trash2 } from "lucide-react";
 import Image from "next/image";
+import { deleteMessage } from "@/app/actions";
 
 interface Message {
   id: string;
@@ -185,15 +186,32 @@ export default function ChatPage() {
                 </div>
               )}
 
-              <div
-                className={`max-w-xs px-4 py-2 rounded-lg ${
-                  isMe
-                    ? "bg-blue-600 text-white rounded-br-none"
-                    : "bg-gray-200 text-gray-900 rounded-bl-none"
-                }`}
-              >
-                <p>{formatMessageContent(msg.content, isMe)}</p>
-                <p className={`text-xs mt-1 ${isMe ? "text-blue-100" : "text-gray-500"} flex items-center justify-end gap-1`}>
+              <div className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
+                <div
+                  className={`max-w-xs px-4 py-2 rounded-lg relative group ${
+                    isMe
+                      ? "bg-blue-600 text-white rounded-br-none"
+                      : "bg-gray-200 text-gray-900 rounded-bl-none"
+                  }`}
+                >
+                  <p>{formatMessageContent(msg.content, isMe)}</p>
+                  {isMe && (
+                    <button
+                      onClick={async () => {
+                        if (confirm("Delete this message?")) {
+                          await deleteMessage(msg.id);
+                          // Optimistic update or refetch
+                          setMessages(prev => prev.filter(m => m.id !== msg.id));
+                        }
+                      }}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                      title="Delete message"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  )}
+                </div>
+                <p className={`text-xs mt-1 ${isMe ? "text-gray-500" : "text-gray-500"} flex items-center gap-1`}>
                   {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   {isMe && (
                     <span>
