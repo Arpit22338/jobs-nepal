@@ -6,6 +6,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+interface Skill {
+  name: string;
+  level: number;
+}
+
 interface Profile {
   id: string;
   bio?: string;
@@ -133,7 +138,33 @@ export default function ProfilePage() {
             )}
             <div className="border-b pb-4">
               <p className="text-sm text-gray-500">Skills</p>
-              <p className="font-medium">{profile.skills}</p>
+              {(() => {
+                if (!profile.skills) return <p className="font-medium">None</p>;
+                try {
+                  const skills = JSON.parse(profile.skills);
+                  if (Array.isArray(skills)) {
+                    return (
+                      <div className="space-y-2 mt-2">
+                        {skills.map((skill: Skill, idx: number) => (
+                          <div key={idx} className="flex items-center gap-4">
+                            <span className="w-32 font-medium truncate">{skill.name}</span>
+                            <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-blue-600 rounded-full" 
+                                style={{ width: `${skill.level}%` }}
+                              />
+                            </div>
+                            <span className="text-xs text-gray-500 w-8">{skill.level}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
+                  return <p className="font-medium">{profile.skills}</p>;
+                } catch {
+                  return <p className="font-medium">{profile.skills}</p>;
+                }
+              })()}
             </div>
             <div className="border-b pb-4">
               <p className="text-sm text-gray-500">Location</p>

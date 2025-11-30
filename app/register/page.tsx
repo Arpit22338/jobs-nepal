@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import AvatarUpload from "@/components/AvatarUpload";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -20,12 +21,11 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -34,42 +34,15 @@ export default function RegisterPage() {
     },
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
-  };
-
   const onSubmit = async (data: RegisterFormValues) => {
     setError(null);
     try {
-      let imageUrl = "";
-
-      if (selectedFile) {
-        setUploading(true);
-        const formData = new FormData();
-        formData.append("file", selectedFile);
-
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!uploadRes.ok) {
-          throw new Error("File upload failed");
-        }
-
-        const uploadData = await uploadRes.json();
-        imageUrl = uploadData.url;
-        setUploading(false);
-      }
-
       const response = await fetch("/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...data, image: imageUrl }),
+        body: JSON.stringify(data),
       });
 
       if (!response.ok) {
@@ -96,13 +69,9 @@ export default function RegisterPage() {
         </div>
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Profile Picture</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2"
+        <div className="flex justify-center">
+          <AvatarUpload 
+            onImageChange={(base64) => setValue("image", base64)} 
           />
         </div>
         <div>
@@ -153,10 +122,10 @@ export default function RegisterPage() {
         </div>
         <button
           type="submit"
-          disabled={isSubmitting || uploading}
+          disabled={isSubmitting}
           className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
         >
-          {uploading ? "Uploading..." : isSubmitting ? "Registering..." : "Register"}
+          {isSubmitting ? "Registering..." : "Register"}
         </button>
       </form>
       <p className="mt-4 text-center text-sm text-gray-600">
