@@ -61,21 +61,25 @@ export default function PeoplePage() {
       </div>
 
       {/* Search & Filters */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border space-y-4">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 rounded-xl shadow-lg">
+        <h2 className="text-white text-xl font-semibold mb-4">Find People & Companies</h2>
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+          <div className="flex-1 relative group">
+            <Search className="absolute left-4 top-3.5 text-gray-400 group-focus-within:text-blue-600 transition-colors" size={20} />
             <input
               type="text"
               placeholder="Search by name or email..."
-              className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm text-gray-900 placeholder-gray-500"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
-          <div className="w-full md:w-48">
+          <div className="w-full md:w-56 relative">
+            <div className="absolute right-4 top-3.5 pointer-events-none text-gray-500">
+              <Briefcase size={20} />
+            </div>
             <select
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              className="w-full pl-4 pr-10 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm text-gray-900 appearance-none bg-white cursor-pointer"
               value={role}
               onChange={(e) => setRole(e.target.value)}
             >
