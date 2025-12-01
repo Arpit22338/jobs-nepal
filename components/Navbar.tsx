@@ -62,6 +62,9 @@ export default function Navbar() {
             <Link href="/jobs" className={getLinkClass("/jobs")}>
               Find Jobs
             </Link>
+            <Link href="/people" className={getLinkClass("/people")}>
+              Community
+            </Link>
             <Link href="/talent" className={getLinkClass("/talent")}>
               Find Talent
             </Link>
@@ -173,6 +176,13 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
             >
               Find Jobs
+            </Link>
+            <Link
+              href="/people"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+              onClick={() => setIsOpen(false)}
+            >
+              Community
             </Link>
             <Link
               href="/talent"

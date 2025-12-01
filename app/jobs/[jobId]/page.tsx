@@ -6,6 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { applyForJob, deleteQuestion, createAnswer, deleteAnswer } from "@/app/actions";
 import { Trash2, MessageCircle } from "lucide-react";
+import ReportButton from "@/components/ReportButton";
+import SaveJobButton from "@/components/SaveJobButton";
 
 interface Props {
   params: Promise<{
@@ -49,6 +51,12 @@ export default async function JobDetailsPage({ params }: Props) {
     notFound();
   }
 
+  // Increment views
+  await prisma.job.update({
+    where: { id: jobId },
+    data: { views: { increment: 1 } },
+  });
+
   // Check if user has completed profile
   let hasCompletedProfile = false;
   if (session?.user) {
@@ -67,6 +75,7 @@ export default async function JobDetailsPage({ params }: Props) {
 
   // Check if already applied
   let hasApplied = false;
+  let isSaved = false;
   if (session?.user) {
     const application = await prisma.application.findFirst({
       where: {
@@ -75,6 +84,16 @@ export default async function JobDetailsPage({ params }: Props) {
       },
     });
     if (application) hasApplied = true;
+
+    const saved = await prisma.savedJob.findUnique({
+      where: {
+        userId_jobId: {
+          userId: session.user.id,
+          jobId: jobId,
+        },
+      },
+    });
+    if (saved) isSaved = true;
   }
 
   return (
@@ -93,38 +112,47 @@ export default async function JobDetailsPage({ params }: Props) {
               <span>{job.type}</span>
             </div>
           </div>
-          {session?.user.id === job.employerId ? (
-             <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-               Your Job Post
-             </span>
-          ) : (
-            <div className="flex flex-col gap-2">
-               {hasApplied ? (
-                 <button disabled className="bg-green-600 text-white px-6 py-2 rounded-md cursor-not-allowed opacity-80">
-                   Applied
-                 </button>
-               ) : hasCompletedProfile ? (
-                 <form action={async () => {
-                   "use server";
-                   await applyForJob(job.id, job.employerId);
-                 }}>
-                   <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 w-full">
-                     Apply Now
-                   </button>
-                 </form>
-               ) : (
-                 <div className="text-right">
-                   <Link href="/profile/edit" className="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600 inline-block mb-1">
-                     Complete Profile to Apply
-                   </Link>
-                   <p className="text-xs text-red-500">Skills & Experience required</p>
-                 </div>
-               )}
-               <Link href={`/messages/${job.employerId}`} className="text-blue-600 text-sm hover:underline text-center border border-blue-600 rounded px-4 py-1">
-                 Message Employer
-               </Link>
-            </div>
-          )}
+          <div className="flex flex-col items-end gap-4">
+            {session?.user.id === job.employerId ? (
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                Your Job Post
+                </span>
+            ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                      <SaveJobButton jobId={job.id} initialSaved={isSaved} />
+                      <ReportButton targetJobId={job.id} />
+                  </div>
+                  
+                  <div className="flex flex-col gap-2 items-end">
+                    {hasApplied ? (
+                      <button disabled className="bg-green-600 text-white px-6 py-2 rounded-md cursor-not-allowed opacity-80">
+                        Applied
+                      </button>
+                    ) : hasCompletedProfile ? (
+                      <form action={async () => {
+                        "use server";
+                        await applyForJob(job.id, job.employerId);
+                      }}>
+                        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 w-full">
+                          Apply Now
+                        </button>
+                      </form>
+                    ) : (
+                      <div className="text-right">
+                        <Link href="/profile/edit" className="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600 inline-block mb-1">
+                          Complete Profile to Apply
+                        </Link>
+                        <p className="text-xs text-red-500">Skills & Experience required</p>
+                      </div>
+                    )}
+                    <Link href={`/messages/${job.employerId}`} className="text-blue-600 text-sm hover:underline text-center border border-blue-600 rounded px-4 py-1">
+                      Message Employer
+                    </Link>
+                  </div>
+                </>
+            )}
+          </div>
         </div>
 
         <div className="mt-8">

@@ -2,7 +2,6 @@
 
 import { updateApplicationStatus } from "@/app/actions/application";
 import { useState } from "react";
-import { Check, X } from "lucide-react";
 
 interface Props {
   applicationId: string;
@@ -13,8 +12,9 @@ export default function ApplicationStatusControls({ applicationId, currentStatus
   const [status, setStatus] = useState(currentStatus);
   const [loading, setLoading] = useState(false);
 
-  const handleUpdate = async (newStatus: "ACCEPTED" | "REJECTED") => {
+  const handleUpdate = async (newStatus: string) => {
     setLoading(true);
+    // @ts-expect-error: status type mismatch
     const result = await updateApplicationStatus(applicationId, newStatus);
     if (result.success) {
       setStatus(newStatus);
@@ -24,38 +24,32 @@ export default function ApplicationStatusControls({ applicationId, currentStatus
     setLoading(false);
   };
 
-  if (status === "ACCEPTED") {
-    return (
-      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-        <Check size={14} className="mr-1" /> Accepted
-      </span>
-    );
-  }
-
-  if (status === "REJECTED") {
-    return (
-      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-        <X size={14} className="mr-1" /> Rejected
-      </span>
-    );
-  }
+  const getStatusColor = (s: string) => {
+    switch (s) {
+      case "ACCEPTED": return "bg-green-100 text-green-800 border-green-200";
+      case "REJECTED": return "bg-red-100 text-red-800 border-red-200";
+      case "SHORTLISTED": return "bg-purple-100 text-purple-800 border-purple-200";
+      case "REVIEWING": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      default: return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
 
   return (
-    <div className="flex space-x-2">
-      <button
-        onClick={() => handleUpdate("ACCEPTED")}
+    <div className="flex items-center space-x-2">
+      <select
+        value={status}
+        onChange={(e) => handleUpdate(e.target.value)}
         disabled={loading}
-        className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 disabled:opacity-50"
+        className={`text-sm font-medium rounded-md border shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 py-1 pl-2 pr-8 cursor-pointer ${getStatusColor(status)}`}
       >
-        Accept
-      </button>
-      <button
-        onClick={() => handleUpdate("REJECTED")}
-        disabled={loading}
-        className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
-      >
-        Reject
-      </button>
+        <option value="PENDING">Pending</option>
+        <option value="REVIEWING">Reviewing</option>
+        <option value="SHORTLISTED">Shortlisted</option>
+        <option value="ACCEPTED">Accepted</option>
+        <option value="REJECTED">Rejected</option>
+      </select>
+      {loading && <span className="text-xs text-gray-500 animate-pulse">Updating...</span>}
     </div>
   );
 }
+

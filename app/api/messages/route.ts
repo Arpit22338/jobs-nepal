@@ -47,7 +47,7 @@ export async function GET(req: Request) {
 
     const conversationMap = new Map();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    /// eslint-disable-next-line @typescript-eslint/no-explicit-any
     for (const msg of allMessages) {
       const otherUser = msg.senderId === session.user.id ? msg.receiver : msg.sender;
       const otherUserId = otherUser.id;
@@ -90,6 +90,16 @@ export async function POST(req: Request) {
       senderId: session.user.id,
       receiverId,
       content,
+    },
+  });
+
+  // Create notification
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (prisma as any).notification.create({
+    data: {
+      userId: receiverId,
+      content: `New message from ${session.user.name}`,
+      link: `/messages/${session.user.id}`,
     },
   });
 

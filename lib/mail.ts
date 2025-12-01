@@ -37,3 +37,61 @@ export async function sendVerificationEmail(email: string, otp: string) {
     `,
   });
 }
+
+export async function sendApplicationEmail(employerEmail: string, jobTitle: string, applicantName: string) {
+  if (!process.env.EMAIL_SERVER_USER || !process.env.EMAIL_SERVER_PASSWORD) {
+    console.log(`[DEV MODE] Application Email to ${employerEmail} for ${jobTitle} from ${applicantName}`);
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_SERVER_HOST || "smtp.gmail.com",
+    port: Number(process.env.EMAIL_SERVER_PORT) || 587,
+    auth: {
+      user: process.env.EMAIL_SERVER_USER,
+      pass: process.env.EMAIL_SERVER_PASSWORD,
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM || '"Jobs Nepal" <noreply@jobsnepal.com>',
+    to: employerEmail,
+    subject: `New Application for ${jobTitle}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2>New Job Application</h2>
+        <p><strong>${applicantName}</strong> has applied for <strong>${jobTitle}</strong>.</p>
+        <p>Log in to your dashboard to review the application.</p>
+      </div>
+    `,
+  });
+}
+
+export async function sendApplicationStatusEmail(applicantEmail: string, jobTitle: string, status: string) {
+  if (!process.env.EMAIL_SERVER_USER || !process.env.EMAIL_SERVER_PASSWORD) {
+    console.log(`[DEV MODE] Status Email to ${applicantEmail} for ${jobTitle}: ${status}`);
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_SERVER_HOST || "smtp.gmail.com",
+    port: Number(process.env.EMAIL_SERVER_PORT) || 587,
+    auth: {
+      user: process.env.EMAIL_SERVER_USER,
+      pass: process.env.EMAIL_SERVER_PASSWORD,
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM || '"Jobs Nepal" <noreply@jobsnepal.com>',
+    to: applicantEmail,
+    subject: `Application Status Update: ${jobTitle}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2>Application Update</h2>
+        <p>Your application for <strong>${jobTitle}</strong> has been marked as <strong>${status}</strong>.</p>
+        <p>Log in to check details.</p>
+      </div>
+    `,
+  });
+}

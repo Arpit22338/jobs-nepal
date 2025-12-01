@@ -26,6 +26,7 @@ model User {
   
   // New Features
   isVerified       Boolean   @default(false)
+  isPremium        Boolean   @default(false)
   verificationDoc  String?
   otp              String?
   otpExpires       DateTime?
@@ -39,6 +40,36 @@ model User {
   notifications    Notification[]
   givenTrusts      Trust[]   @relation("GivenTrusts")
   receivedTrusts   Trust[]   @relation("ReceivedTrusts")
+  savedJobs        SavedJob[]
+  reportsMade      Report[]  @relation("Reporter")
+  reportsReceived  Report[]  @relation("ReportedUser")
+}
+
+model Report {
+  id        String   @id @default(cuid())
+  reporterId String
+  reporter  User     @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  
+  targetJobId String?
+  targetJob   Job?     @relation(fields: [targetJobId], references: [id], onDelete: Cascade)
+  
+  targetUserId String?
+  targetUser   User?   @relation("ReportedUser", fields: [targetUserId], references: [id], onDelete: Cascade)
+  
+  reason    String
+  status    String   @default("PENDING") // PENDING, RESOLVED, DISMISSED
+  createdAt DateTime @default(now())
+}
+
+model SavedJob {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, jobId])
 }
 
 model Message {
@@ -97,7 +128,10 @@ model Job {
   employer    User          @relation("EmployerJobs", fields: [employerId], references: [id], onDelete: Cascade)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  views       Int           @default(0)
   applications Application[]
+  savedByUsers SavedJob[]
+  reports      Report[]
   
   // For recommendations
   requiredSkills String?

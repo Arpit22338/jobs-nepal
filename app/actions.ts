@@ -59,6 +59,10 @@ export async function toggleTrust(trustedId: string) {
   }
 }
 
+import { sendApplicationEmail } from "@/lib/mail";
+
+// ...
+
 export async function applyForJob(jobId: string, employerId: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -91,7 +95,7 @@ export async function applyForJob(jobId: string, employerId: string) {
   // Fetch job details for the message
   const job = await prisma.job.findUnique({
     where: { id: jobId },
-    select: { title: true }
+    select: { title: true, employer: { select: { email: true } } }
   });
 
   const jobTitle = job?.title || "this job";
@@ -101,23 +105,17 @@ export async function applyForJob(jobId: string, employerId: string) {
     data: {
       senderId: userId,
       receiverId: employerId,
-      content: `I applied for your job: ${jobTitle}`,
+      content: `I have applied for ${jobTitle}. Please check my application.`,
     },
   });
 
-  // Create Notification for Employer
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (prisma as any).notification.create({
-    data: {
-      userId: employerId,
-      content: `New application for ${jobTitle}`,
-      link: `/employer/jobs/${jobId}/applications`,
-    },
-  });
+  // Send email
+  if (job?.employer?.email && session.user.name) {
+    await sendApplicationEmail(job.employer.email, jobTitle, session.user.name);
+  }
 
   revalidatePath(`/jobs/${jobId}`);
-  revalidatePath("/my-applications");
-  return { success: true, message: "Application submitted successfully!" };
+  return { success: true };
 }
 
 export async function deleteJob(jobId: string) {

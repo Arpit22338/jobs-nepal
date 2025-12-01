@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
-export async function updateApplicationStatus(applicationId: string, status: "ACCEPTED" | "REJECTED") {
+export async function updateApplicationStatus(applicationId: string, status: "PENDING" | "REVIEWING" | "SHORTLISTED" | "ACCEPTED" | "REJECTED") {
   const session = await getServerSession(authOptions);
 
   if (!session || (session.user.role !== "EMPLOYER" && session.user.role !== "ADMIN")) {
@@ -13,10 +13,14 @@ export async function updateApplicationStatus(applicationId: string, status: "AC
   }
 
   try {
+import { sendApplicationStatusEmail } from "@/lib/mail";
+
+// ...
+
     // Verify ownership
     const application = await prisma.application.findUnique({
       where: { id: applicationId },
-      include: { job: true },
+      include: { job: true, user: true },
     });
 
     if (!application) {
@@ -42,6 +46,11 @@ export async function updateApplicationStatus(applicationId: string, status: "AC
         link: `/my-applications`,
       },
     });
+
+    // Send Email
+    if (application.user.email) {
+        await sendApplicationStatusEmail(application.user.email, application.job.title, status);
+    }
 
     revalidatePath(`/employer/jobs/${application.job.id}/applications`);
     return { success: true };
