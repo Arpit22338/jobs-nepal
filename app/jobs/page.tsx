@@ -88,34 +88,34 @@ function JobsContent() {
       <RecommendedJobs />
 
       {/* Search & Filters */}
-      <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-        <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-3">
+      <div className="bg-white p-4 md:p-5 rounded-xl shadow-md border border-gray-200">
+        <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-2 md:gap-3">
           <div className="flex-1 relative group">
-            <Search className="absolute left-3 top-3 text-gray-400 group-focus-within:text-blue-600 transition-colors" size={18} />
+            <Search className="absolute left-3 top-2.5 md:top-3 text-gray-400 group-focus-within:text-blue-600 transition-colors" size={18} />
             <input
               type="text"
               placeholder="Job title, keywords, or company"
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 text-sm"
+              className="w-full pl-10 pr-4 py-2 md:py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all text-gray-900 placeholder-gray-500 text-sm"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
           <div className="flex-1 relative group">
-            <MapPin className="absolute left-3 top-3 text-gray-400 group-focus-within:text-blue-600 transition-colors" size={18} />
+            <MapPin className="absolute left-3 top-2.5 md:top-3 text-gray-400 group-focus-within:text-blue-600 transition-colors" size={18} />
             <input
               type="text"
               placeholder="Location"
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 placeholder-gray-500 text-sm"
+              className="w-full pl-10 pr-4 py-2 md:py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all text-gray-900 placeholder-gray-500 text-sm"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
           </div>
           <div className="w-full lg:w-48 relative">
-             <div className="absolute right-3 top-3 pointer-events-none text-gray-500">
+             <div className="absolute right-3 top-2.5 md:top-3 pointer-events-none text-gray-500">
               <Briefcase size={18} />
             </div>
             <select
-              className="w-full pl-3 pr-10 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900 appearance-none bg-white cursor-pointer text-sm"
+              className="w-full pl-3 pr-10 py-2 md:py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all text-gray-900 appearance-none cursor-pointer text-sm"
               value={type}
               onChange={(e) => setType(e.target.value)}
             >
@@ -129,7 +129,7 @@ function JobsContent() {
           </div>
           <button 
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-sm transition-colors duration-200 text-sm whitespace-nowrap"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 md:py-2.5 px-6 rounded-lg shadow-sm transition-colors duration-200 text-sm whitespace-nowrap"
           >
             Search
           </button>
