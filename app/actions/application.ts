@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { sendApplicationStatusEmail } from "@/lib/mail";
 
 export async function updateApplicationStatus(applicationId: string, status: "PENDING" | "REVIEWING" | "SHORTLISTED" | "ACCEPTED" | "REJECTED") {
   const session = await getServerSession(authOptions);
@@ -13,10 +14,6 @@ export async function updateApplicationStatus(applicationId: string, status: "PE
   }
 
   try {
-import { sendApplicationStatusEmail } from "@/lib/mail";
-
-// ...
-
     // Verify ownership
     const application = await prisma.application.findUnique({
       where: { id: applicationId },
