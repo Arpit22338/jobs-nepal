@@ -27,7 +27,9 @@ export default function CVCoursePage() {
       const canvas = await html2canvas(certificateRef.current, {
         scale: 2, // Higher quality
         logging: false,
-        useCORS: true
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
       });
       
       const imgData = canvas.toDataURL('image/png');
@@ -76,10 +78,17 @@ export default function CVCoursePage() {
             >
               {/* Watermark/Background */}
               <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-                <Award size={400} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.png" alt="Watermark" className="w-[500px] h-[500px] object-contain" />
               </div>
 
-              <div className="relative z-10 w-full">
+              <div className="relative z-10 w-full flex flex-col items-center">
+                {/* Logo at top */}
+                <div className="mb-4">
+                   {/* eslint-disable-next-line @next/next/no-img-element */}
+                   <img src="/logo.png" alt="Rojgaar Logo" className="h-24 object-contain" />
+                </div>
+                
                 <div className="mb-2 text-blue-900 font-bold tracking-widest uppercase text-sm">Rojgaar Skills Academy</div>
                 <h1 className="text-5xl font-bold text-blue-900 mb-8 font-serif">Certificate of Completion</h1>
                 
