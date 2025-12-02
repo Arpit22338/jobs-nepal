@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   const jobCount = await prisma.job.count();
   const jobSeekerCount = await prisma.user.count({ where: { role: "JOBSEEKER" } });
-  const courseCount = await prisma.course.count();
+  const courseCount = (await prisma.course.count()) + 1;
 
   // Fetch Premium Jobs
   const premiumJobs = await prisma.job.findMany({

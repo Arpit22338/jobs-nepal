@@ -1,145 +1,194 @@
 import Link from "next/link";
-import { ArrowLeft, CheckCircle, FileText, PenTool, Layout } from "lucide-react";
+import { ArrowLeft, BookOpen, PenTool, CheckCircle, Star, AlertCircle, GraduationCap } from "lucide-react";
 
 export default function CVCoursePage() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <Link href="/courses" className="inline-flex items-center text-gray-600 hover:text-blue-600 mb-6">
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <Link href="/courses" className="inline-flex items-center text-gray-600 hover:text-blue-600 mb-8 transition-colors">
         <ArrowLeft size={20} className="mr-2" />
-        Back to Courses
+        Back to Classroom
       </Link>
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-        <div className="p-8">
-          <div className="border-b pb-6 mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">CV Building Masterclass</h1>
-            <p className="text-gray-600 text-lg">
-              A comprehensive written guide to crafting a professional CV that gets you hired. 
-              Follow this step-by-step manual to build a resume that stands out.
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+        {/* Header / Blackboard */}
+        <div className="bg-slate-900 text-white p-10 text-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/chalkboard.png')]"></div>
+          <div className="relative z-10">
+            <div className="inline-flex items-center justify-center p-3 bg-blue-600 rounded-full mb-4">
+              <GraduationCap size={32} />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 font-serif">CV Writing Masterclass</h1>
+            <p className="text-xl text-blue-200 max-w-2xl mx-auto font-light">
+              &quot;The Art of Professional Storytelling&quot;
+            </p>
+            <div className="mt-6 inline-block bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 text-sm">
+              <span className="text-gray-400">Instructor:</span> <span className="text-white font-semibold">Prof. Rojgaar AI</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-8 md:p-12 space-y-12">
+          
+          {/* Introduction */}
+          <div className="prose max-w-none">
+            <h2 className="text-2xl font-bold text-gray-800 border-b pb-2 mb-4">Introduction: Your CV is Your Story</h2>
+            <p className="text-gray-600 text-lg leading-relaxed">
+              Welcome, class! Today, we are not just listing jobs on a piece of paper. We are learning to write a <strong>persuasive narrative</strong>. 
+              Think of your CV (Curriculum Vitae) as a marketing brochure where <em>you</em> are the product. 
+              Just like in an English essay, clarity, structure, and vocabulary matter immensely. 
+              Let&apos;s break down the grammar of a perfect CV.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-10">
-            <div className="md:col-span-2">
-              <h2 className="text-2xl font-bold mb-6 text-gray-800">Course Content</h2>
-              
-              {/* Module 1 */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-blue-700 mb-3 flex items-center">
-                  <Layout className="mr-2" size={20} />
-                  1. Structure & Formatting
-                </h3>
-                <div className="bg-gray-50 p-5 rounded-lg border text-gray-700 space-y-3">
-                  <p>
-                    <strong>Keep it concise:</strong> Your CV should ideally be 1-2 pages long. Recruiters spend an average of 7 seconds scanning a resume.
-                  </p>
-                  <p>
-                    <strong>Use a clean layout:</strong> Stick to standard fonts like Arial, Calibri, or Helvetica (size 10-12). Use bold headings to separate sections clearly.
-                  </p>
-                  <p>
-                    <strong>Reverse Chronological Order:</strong> Always list your most recent experience first. This is what employers care about most.
-                  </p>
-                  <p>
-                    <strong>File Format:</strong> Always save and send your CV as a PDF unless specifically asked for a Word document. This ensures formatting stays consistent across devices.
-                  </p>
-                </div>
+          {/* Lesson 1: Structure */}
+          <div className="bg-blue-50 rounded-xl p-8 border border-blue-100">
+            <div className="flex items-center mb-6">
+              <div className="bg-blue-600 text-white p-2 rounded-lg mr-4">
+                <BookOpen size={24} />
               </div>
-
-              {/* Module 2 */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-blue-700 mb-3 flex items-center">
-                  <PenTool className="mr-2" size={20} />
-                  2. Essential Sections
-                </h3>
-                <div className="space-y-4">
-                  <div className="border-l-4 border-blue-500 pl-4 py-1">
-                    <h4 className="font-bold text-gray-900">Header (Contact Info)</h4>
-                    <p className="text-gray-600 text-sm">Full Name, Phone Number, Professional Email (firstname.lastname@email.com), LinkedIn URL, and Location (City, Country).</p>
-                  </div>
-                  
-                  <div className="border-l-4 border-blue-500 pl-4 py-1">
-                    <h4 className="font-bold text-gray-900">Professional Summary</h4>
-                    <p className="text-gray-600 text-sm">A 2-3 sentence elevator pitch. Example: &quot;Motivated Sales Associate with 3+ years of experience in retail management, proven track record of exceeding sales targets by 20%.&quot;</p>
-                  </div>
-
-                  <div className="border-l-4 border-blue-500 pl-4 py-1">
-                    <h4 className="font-bold text-gray-900">Work Experience</h4>
-                    <p className="text-gray-600 text-sm">List roles with: Job Title, Company Name, Dates. Use bullet points starting with action verbs (e.g., &quot;Managed&quot;, &quot;Developed&quot;, &quot;Increased&quot;) to describe achievements, not just duties.</p>
-                  </div>
-
-                  <div className="border-l-4 border-blue-500 pl-4 py-1">
-                    <h4 className="font-bold text-gray-900">Education</h4>
-                    <p className="text-gray-600 text-sm">Degree Name, University/College, Graduation Year. You can include GPA if it is exceptionally high or if you are a fresh graduate.</p>
-                  </div>
-
-                  <div className="border-l-4 border-blue-500 pl-4 py-1">
-                    <h4 className="font-bold text-gray-900">Skills</h4>
-                    <p className="text-gray-600 text-sm">Hard Skills (e.g., Python, SEO, Accounting) and Soft Skills (e.g., Leadership, Communication). Tailor these to the job description.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Module 3 */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-blue-700 mb-3 flex items-center">
-                  <FileText className="mr-2" size={20} />
-                  3. Pro Tips for Success
-                </h3>
-                <ul className="space-y-3 text-gray-700">
-                  <li className="flex items-start">
-                    <CheckCircle size={18} className="text-green-500 mr-2 mt-1 flex-shrink-0" />
-                    <span><strong>Tailor your CV:</strong> Don&apos;t send the same generic CV to every job. Adjust your summary and skills to match keywords in the job description.</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle size={18} className="text-green-500 mr-2 mt-1 flex-shrink-0" />
-                    <span><strong>Quantify achievements:</strong> Use numbers. Instead of &quot;Improved sales&quot;, say &quot;Increased sales by 15% in Q3&quot;.</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle size={18} className="text-green-500 mr-2 mt-1 flex-shrink-0" />
-                    <span><strong>Proofread:</strong> Spelling errors are a major red flag. Use tools like Grammarly or ask a friend to review it.</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle size={18} className="text-green-500 mr-2 mt-1 flex-shrink-0" />
-                    <span><strong>Avoid clutter:</strong> Do not include personal details like marital status, religion, or full home address unless specifically required by local laws.</span>
-                  </li>
+              <h3 className="text-2xl font-bold text-gray-900">Lesson 1: The Syntax of Structure</h3>
+            </div>
+            <p className="text-gray-700 mb-6">
+              In English, syntax is the arrangement of words to create well-formed sentences. In a CV, structure is the arrangement of sections to create a readable document.
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <h4 className="font-bold text-blue-800 mb-3">The Golden Rules</h4>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start"><CheckCircle size={18} className="text-green-500 mr-2 mt-1" /> <strong>Reverse Chronological Order:</strong> Start with the present, move to the past.</li>
+                  <li className="flex items-start"><CheckCircle size={18} className="text-green-500 mr-2 mt-1" /> <strong>One Page Rule:</strong> Unless you have 10+ years of experience, keep it to one page. Be concise.</li>
+                  <li className="flex items-start"><CheckCircle size={18} className="text-green-500 mr-2 mt-1" /> <strong>White Space:</strong> Don&apos;t cram text. Margins should be 0.5&quot; to 1&quot;.</li>
                 </ul>
               </div>
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <h4 className="font-bold text-red-800 mb-3">Common Syntax Errors</h4>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start"><AlertCircle size={18} className="text-red-500 mr-2 mt-1" /> <strong>Photos:</strong> Do not include a photo unless applying for modeling or acting jobs (or if standard in your specific country).</li>
+                  <li className="flex items-start"><AlertCircle size={18} className="text-red-500 mr-2 mt-1" /> <strong>Fancy Fonts:</strong> Avoid Comic Sans or cursive. Stick to Arial, Calibri, or Roboto.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
+          {/* Lesson 2: Verbs */}
+          <div className="bg-green-50 rounded-xl p-8 border border-green-100">
+            <div className="flex items-center mb-6">
+              <div className="bg-green-600 text-white p-2 rounded-lg mr-4">
+                <PenTool size={24} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900">Lesson 2: The Power of Verbs</h3>
+            </div>
+            <p className="text-gray-700 mb-6">
+              Weak verbs make weak sentences. Strong verbs show impact. We never use the phrase &quot;Responsible for&quot;. Instead, we use <strong>Action Verbs</strong>.
+            </p>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
+                <thead>
+                  <tr className="bg-green-100 text-green-800">
+                    <th className="p-4 border-b border-green-200">Weak Phrasing (Passive)</th>
+                    <th className="p-4 border-b border-green-200">Strong Phrasing (Active)</th>
+                    <th className="p-4 border-b border-green-200">Why it works</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-700">
+                  <tr className="border-b border-gray-100">
+                    <td className="p-4">&quot;I was responsible for sales.&quot;</td>
+                    <td className="p-4 font-medium text-green-700">&quot;Generated $50,000 in revenue by targeting new clients.&quot;</td>
+                    <td className="p-4 text-sm">Uses numbers and specific outcome.</td>
+                  </tr>
+                  <tr className="border-b border-gray-100">
+                    <td className="p-4">&quot;Helped with the project.&quot;</td>
+                    <td className="p-4 font-medium text-green-700">&quot;Spearheaded the Q3 marketing project, leading a team of 5.&quot;</td>
+                    <td className="p-4 text-sm">&quot;Spearheaded&quot; implies leadership.</td>
+                  </tr>
+                  <tr>
+                    <td className="p-4">&quot;Talked to customers.&quot;</td>
+                    <td className="p-4 font-medium text-green-700">&quot;Resolved 50+ customer inquiries daily with a 98% satisfaction rate.&quot;</td>
+                    <td className="p-4 text-sm">Quantifies the workload and quality.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="mt-6 bg-white p-4 rounded-lg border border-green-200">
+              <h4 className="font-bold text-green-800 mb-2">Vocabulary List: Action Verbs</h4>
+              <p className="text-sm text-gray-600">
+                Achieved, Analyzed, Built, Created, Delivered, Enhanced, Facilitated, Generated, Improved, Launched, Managed, Negotiated, Organized, Pioneered, Reduced, Streamlined, Trained, Upgraded.
+              </p>
+            </div>
+          </div>
+
+          {/* Lesson 3: The STAR Method */}
+          <div className="bg-purple-50 rounded-xl p-8 border border-purple-100">
+            <div className="flex items-center mb-6">
+              <div className="bg-purple-600 text-white p-2 rounded-lg mr-4">
+                <Star size={24} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900">Lesson 3: The STAR Method</h3>
+            </div>
+            <p className="text-gray-700 mb-6">
+              When writing your bullet points, use the <strong>STAR</strong> formula to tell a complete story in one sentence.
+            </p>
+            
+            <div className="grid md:grid-cols-4 gap-4 text-center">
+              <div className="bg-white p-4 rounded-lg shadow-sm border-t-4 border-purple-400">
+                <div className="font-bold text-purple-800 text-xl mb-1">S</div>
+                <div className="font-semibold text-gray-800">Situation</div>
+                <div className="text-xs text-gray-500 mt-2">What was the problem?</div>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border-t-4 border-purple-500">
+                <div className="font-bold text-purple-800 text-xl mb-1">T</div>
+                <div className="font-semibold text-gray-800">Task</div>
+                <div className="text-xs text-gray-500 mt-2">What was your goal?</div>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border-t-4 border-purple-600">
+                <div className="font-bold text-purple-800 text-xl mb-1">A</div>
+                <div className="font-semibold text-gray-800">Action</div>
+                <div className="text-xs text-gray-500 mt-2">What did YOU do?</div>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border-t-4 border-purple-700">
+                <div className="font-bold text-purple-800 text-xl mb-1">R</div>
+                <div className="font-semibold text-gray-800">Result</div>
+                <div className="text-xs text-gray-500 mt-2">What was the outcome?</div>
+              </div>
             </div>
 
-            {/* Sidebar */}
-            <div>
-              <div className="bg-blue-50 p-6 rounded-lg sticky top-24">
-                <h3 className="font-semibold text-lg mb-4 text-blue-800">Course Overview</h3>
-                <div className="space-y-4 text-sm text-blue-900">
-                  <div className="flex justify-between border-b border-blue-200 pb-2">
-                    <span>Format:</span>
-                    <span className="font-medium">Written Guide</span>
-                  </div>
-                  <div className="flex justify-between border-b border-blue-200 pb-2">
-                    <span>Level:</span>
-                    <span className="font-medium">Beginner</span>
-                  </div>
-                  <div className="flex justify-between border-b border-blue-200 pb-2">
-                    <span>Read Time:</span>
-                    <span className="font-medium">15 Mins</span>
-                  </div>
-                  <div className="flex justify-between border-b border-blue-200 pb-2">
-                    <span>Price:</span>
-                    <span className="font-medium">Free</span>
-                  </div>
-                </div>
-                
-                <div className="mt-6">
-                  <h4 className="font-bold mb-2 text-blue-800">Action Items:</h4>
-                  <ul className="list-disc list-inside text-sm text-blue-700 space-y-1">
-                    <li>Draft your professional summary</li>
-                    <li>List top 5 achievements</li>
-                    <li>Select a clean font</li>
-                    <li>Export as PDF</li>
-                  </ul>
-                </div>
-              </div>
+            <div className="mt-6 bg-white p-6 rounded-lg border border-purple-200">
+              <h4 className="font-bold text-gray-900 mb-2">Example:</h4>
+              <p className="text-gray-600 italic">
+                &quot;Identified a bottleneck in supply chain (Situation), aimed to reduce delivery times (Task), implemented a new tracking software (Action), resulting in a 20% faster turnaround (Result).&quot;
+              </p>
+            </div>
+          </div>
+
+          {/* Homework */}
+          <div className="border-t-2 border-dashed border-gray-200 pt-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">📝 Class Assignment</h3>
+            <div className="bg-gray-50 p-6 rounded-xl">
+              <p className="mb-4 text-gray-700">Before you apply for your next job, complete this checklist:</p>
+              <ul className="space-y-3">
+                <li className="flex items-center">
+                  <input type="checkbox" className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 mr-3" />
+                  <span className="text-gray-700">I have removed all personal pronouns (I, me, my) from my bullet points.</span>
+                </li>
+                <li className="flex items-center">
+                  <input type="checkbox" className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 mr-3" />
+                  <span className="text-gray-700">I have checked for spelling errors (their vs. there, manager vs. manger).</span>
+                </li>
+                <li className="flex items-center">
+                  <input type="checkbox" className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 mr-3" />
+                  <span className="text-gray-700">Every bullet point starts with a strong Action Verb.</span>
+                </li>
+                <li className="flex items-center">
+                  <input type="checkbox" className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 mr-3" />
+                  <span className="text-gray-700">My contact email is professional (no nicknames).</span>
+                </li>
+                <li className="flex items-center">
+                  <input type="checkbox" className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300 mr-3" />
+                  <span className="text-gray-700">I have saved the file as <code>FirstName_LastName_CV.pdf</code>.</span>
+                </li>
+              </ul>
             </div>
           </div>
 
