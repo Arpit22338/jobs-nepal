@@ -11,6 +11,18 @@ export default async function CoursesPage() {
     },
   });
 
+  // Hardcoded CV Course
+  const cvCourse = {
+    id: "cv-building",
+    title: "CV Building Masterclass",
+    description: "Learn how to craft a professional CV that stands out. Includes video tutorials and templates.",
+    price: 0,
+    instructor: "Rojgaar Team",
+    duration: "1 Hour",
+  };
+
+  const allCourses = [cvCourse, ...courses];
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -18,12 +30,12 @@ export default async function CoursesPage() {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.length === 0 ? (
+        {allCourses.length === 0 ? (
           <div className="col-span-full text-center py-10 text-gray-500">
             No courses available at the moment.
           </div>
         ) : (
-          courses.map((course) => (
+          allCourses.map((course) => (
             <div key={course.id} className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition flex flex-col">
               <div className="h-48 bg-gray-200 flex items-center justify-center">
                 <BookOpen size={48} className="text-gray-400" />
@@ -53,7 +65,7 @@ export default async function CoursesPage() {
                       {course.price === 0 ? "Free" : `Rs. ${course.price}`}
                     </span>
                     <Link
-                      href={`/courses/${course.id}`}
+                      href={course.id === "cv-building" ? "/courses/cv-building" : `/courses/${course.id}`}
                       className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700"
                     >
                       Enroll Now

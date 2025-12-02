@@ -180,7 +180,7 @@ export default async function Home() {
       {/* Features Section */}
       <section className="grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-gray-900">Why Choose JobNepal?</h2>
+          <h2 className="text-3xl font-bold text-gray-900">Why Choose Rojgaar?</h2>
           <ul className="space-y-4">
             <li className="flex items-start">
               <div className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center mt-1">
