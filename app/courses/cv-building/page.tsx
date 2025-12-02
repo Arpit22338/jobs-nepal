@@ -44,11 +44,14 @@ export default function CVCoursePage() {
     
     setIsGenerating(true);
     try {
+      // Small delay to ensure rendering
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       const canvas = await html2canvas(certificateRef.current, {
         scale: 2, // Higher quality
         logging: false,
-        useCORS: true,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        // Removed useCORS as we are using Base64 images
       });
       
       const imgData = canvas.toDataURL('image/png');
@@ -58,7 +61,7 @@ export default function CVCoursePage() {
       link.click();
     } catch (error) {
       console.error("Error generating certificate:", error);
-      alert("Failed to generate certificate. Please try again.");
+      alert(`Failed to generate certificate: ${error instanceof Error ? error.message : "Unknown error"}`);
     } finally {
       setIsGenerating(false);
     }
@@ -133,10 +136,10 @@ export default function CVCoursePage() {
                   
                   <div className="text-center">
                     <div className="text-xl font-script text-blue-900 mb-1 font-cursive" style={{ fontFamily: 'cursive' }}>
-                      Arpit Kafle
+                      Arpit
                     </div>
                     <div className="text-base font-bold text-gray-800 border-t border-gray-400 pt-2 px-4">
-                      Arpit Kafle
+                      Arpit
                     </div>
                     <div className="text-xs text-gray-500 mt-1">CEO, Rojgaar</div>
                   </div>
