@@ -48,6 +48,7 @@ model User {
   reportsMade      Report[]  @relation("Reporter")
   reportsReceived  Report[]  @relation("ReportedUser")
   premiumRequests  PremiumRequest[]
+  supportTickets   SupportTicket[]
 }
 
 model TempRegistration {
@@ -244,4 +245,16 @@ model Enrollment {
   createdAt DateTime @default(now())
 
   @@unique([courseId, userId])
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  message   String
+  reply     String?
+  status    String   @default("OPEN") // OPEN, CLOSED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

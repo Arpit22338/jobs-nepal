@@ -94,7 +94,7 @@ export default async function Home() {
             {premiumTalent.map((user) => (
               <Link key={user.id} href={`/profile/${user.id}`} className="block group">
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-yellow-200 hover:shadow-md transition-all h-full flex flex-col items-center text-center">
-                  <div className="w-20 h-20 rounded-full bg-gray-200 mb-4 overflow-hidden relative border-2 border-yellow-400">
+                  <div className="w-14 h-14 rounded-full bg-gray-200 mb-4 overflow-hidden relative border-2 border-yellow-400">
                     {user.image ? (
                       <Image src={user.image} alt={user.name || "User"} fill className="object-cover" />
                     ) : (

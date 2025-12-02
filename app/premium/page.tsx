@@ -7,23 +7,84 @@ import { Upload, CheckCircle } from "lucide-react";
 
 export default function PremiumPage() {
   const router = useRouter();
-  const [selectedPlan, setSelectedPlan] = useState<"20_UPLOADS" | "30_DAYS" | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
   const plans = [
     {
-      id: "20_UPLOADS",
-      title: "20 Uploads Pack",
-      price: 500,
-      description: "Post up to 20 jobs or talents. Valid until used.",
+      id: "15_UPLOADS",
+      title: "15 Uploads Pack",
+      price: 200,
+      duration: "30 Days",
+      description: "Increase your posting limit by 15. Valid for 30 days.",
+      benefits: [
+        "Post 15 additional jobs/talents",
+        "Valid for 30 days",
+        "Standard visibility",
+        "No Verified Badge"
+      ]
+    },
+    {
+      id: "7_DAYS",
+      title: "7 Days Premium",
+      price: 299,
+      duration: "7 Days",
+      description: "Short-term boost for urgent hiring or job seeking.",
+      benefits: [
+        "Verified Badge",
+        "Unlimited Job/Talent Posts",
+        "Top Search Results",
+        "Premium Customer Support",
+        "Access to Premium Filters"
+      ]
     },
     {
       id: "30_DAYS",
       title: "30 Days Premium",
-      price: 1000,
-      description: "Unlimited visibility, verified badge, and priority support for 30 days.",
+      price: 499,
+      duration: "30 Days",
+      description: "Standard monthly premium plan for consistent growth.",
+      benefits: [
+        "Verified Badge",
+        "Unlimited Job/Talent Posts",
+        "Top Search Results",
+        "Premium Customer Support",
+        "Access to Premium Filters"
+      ]
+    },
+    {
+      id: "75_DAYS",
+      title: "75 Days Premium",
+      price: 999,
+      duration: "75 Days",
+      description: "Best value for quarterly planning.",
+      benefits: [
+        "Verified Badge",
+        "Unlimited Job/Talent Posts",
+        "Top Search Results",
+        "Premium Customer Support",
+        "Access to Premium Filters",
+        "Featured Profile"
+      ]
+    },
+    {
+      id: "6_MONTHS",
+      title: "6 Months Premium",
+      price: 1999,
+      duration: "6 Months",
+      description: "Long-term commitment for serious businesses.",
+      benefits: [
+        "Verified Badge",
+        "Unlimited Job/Talent Posts",
+        "Top Search Results",
+        "Premium Customer Support",
+        "Access to Premium Filters",
+        "Featured Profile",
+        "Priority Email Support"
+      ]
     },
   ];
 
@@ -104,7 +165,25 @@ export default function PremiumPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-8">
+    <div className="max-w-4xl mx-auto py-8 relative">
+      {zoomedImage && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4"
+          onClick={() => setZoomedImage(null)}
+        >
+          <div className="relative max-w-full max-h-full">
+            <Image 
+              src={zoomedImage} 
+              alt="Zoomed QR" 
+              width={500} 
+              height={500} 
+              className="object-contain max-h-[90vh]"
+            />
+            <p className="text-white text-center mt-4">Click anywhere to close</p>
+          </div>
+        </div>
+      )}
+
       <h1 className="text-3xl font-bold text-center mb-8">Upgrade to Premium</h1>
 
       <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -114,7 +193,7 @@ export default function PremiumPage() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              onClick={() => setSelectedPlan(plan.id as "20_UPLOADS" | "30_DAYS")}
+              onClick={() => setSelectedPlan(plan.id)}
               className={`p-6 rounded-xl border-2 cursor-pointer transition-all ${
                 selectedPlan === plan.id
                   ? "border-blue-600 bg-blue-50"
@@ -125,7 +204,15 @@ export default function PremiumPage() {
                 <h3 className="font-bold text-lg">{plan.title}</h3>
                 <span className="text-blue-600 font-bold">Rs. {plan.price}</span>
               </div>
-              <p className="text-gray-600 text-sm">{plan.description}</p>
+              <p className="text-gray-600 text-sm mb-3">{plan.description}</p>
+              
+              {selectedPlan === plan.id && (
+                <ul className="text-sm text-gray-700 space-y-1 list-disc list-inside bg-white p-3 rounded-lg border border-blue-100">
+                  {plan.benefits.map((benefit, idx) => (
+                    <li key={idx}>{benefit}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
         </div>
@@ -135,10 +222,10 @@ export default function PremiumPage() {
           <h2 className="text-xl font-semibold">2. Pay & Upload Screenshot</h2>
           
           <div className="bg-white p-6 rounded-xl shadow-sm border">
-            <p className="mb-4 text-sm text-gray-600">Scan QR to pay via eSewa or Khalti</p>
+            <p className="mb-4 text-sm text-gray-600">Click QR to Zoom & Scan via eSewa or Khalti</p>
             <div className="flex gap-4 justify-center mb-6">
-              <div className="text-center">
-                <div className="w-32 h-32 relative rounded-lg overflow-hidden mb-2 border">
+              <div className="text-center cursor-pointer" onClick={() => setZoomedImage("/esewa-qr.jpg")}>
+                <div className="w-32 h-32 relative rounded-lg overflow-hidden mb-2 border hover:opacity-80 transition-opacity">
                   <Image 
                     src="/esewa-qr.jpg" 
                     alt="eSewa QR" 
@@ -146,10 +233,10 @@ export default function PremiumPage() {
                     className="object-cover"
                   />
                 </div>
-                <span className="text-sm font-medium">eSewa</span>
+                <span className="text-sm font-medium">eSewa (Click to Zoom)</span>
               </div>
-              <div className="text-center">
-                <div className="w-32 h-32 relative rounded-lg overflow-hidden mb-2 border">
+              <div className="text-center cursor-pointer" onClick={() => setZoomedImage("/khalti-qr.jpg")}>
+                <div className="w-32 h-32 relative rounded-lg overflow-hidden mb-2 border hover:opacity-80 transition-opacity">
                   <Image 
                     src="/khalti-qr.jpg" 
                     alt="Khalti QR" 
@@ -157,7 +244,7 @@ export default function PremiumPage() {
                     className="object-cover"
                   />
                 </div>
-                <span className="text-sm font-medium">Khalti</span>
+                <span className="text-sm font-medium">Khalti (Click to Zoom)</span>
               </div>
             </div>
 

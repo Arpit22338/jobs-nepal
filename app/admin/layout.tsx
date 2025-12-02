@@ -19,6 +19,9 @@ export default function AdminLayout({
             <Link href="/admin/users" className="py-4 text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap">
               Users & Bans
             </Link>
+            <Link href="/admin/support" className="py-4 text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap">
+              Support Tickets
+            </Link>
             <Link href="/admin/reports" className="py-4 text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap">
               Reports
             </Link>

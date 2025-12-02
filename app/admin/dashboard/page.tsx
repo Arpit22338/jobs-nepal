@@ -70,7 +70,11 @@ export default async function AdminDashboard() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <TogglePremiumButton userId={user.id} isPremium={user.isPremium} />
+                    <TogglePremiumButton 
+                      userId={user.id} 
+                      isPremium={user.isPremium} 
+                      premiumExpiresAt={(user as any).premiumExpiresAt}
+                    />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(user.createdAt).toLocaleDateString()}

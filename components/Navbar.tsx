@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Crown, Settings, HelpCircle, AlertTriangle } from "lucide-react";
+import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Crown, Settings, HelpCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
 
@@ -12,7 +12,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   // Cast user to include role to satisfy editor type checking
-  const user = session?.user as { name?: string | null; email?: string | null; role?: string } | undefined;
+  const user = session?.user as { name?: string | null; email?: string | null; role?: string; isPremium?: boolean } | undefined;
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -47,10 +47,10 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Rogjaar Logo" width={40} height={40} className="object-contain" />
+            <Image src="/logo.png" alt="Roojgaar Logo" width={40} height={40} className="object-contain" />
             <div className="text-2xl font-bold flex items-center">
-              <span className="text-blue-600">Rog</span>
-              <span className="text-black">jaar</span>
+              <span className="text-blue-600">Rooj</span>
+              <span className="text-black">gaar</span>
             </div>
           </Link>
 
@@ -114,8 +114,8 @@ export default function Navbar() {
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center gap-2 focus:outline-none hover:bg-gray-50 p-1 rounded-full transition-colors"
                   >
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden border border-blue-200">
-                       <span className="text-blue-600 font-bold text-sm">{(user?.name || "U").charAt(0).toUpperCase()}</span>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center overflow-hidden ${user?.isPremium ? 'border-2 border-yellow-500 bg-yellow-50' : 'border border-blue-200 bg-blue-100'}`}>
+                       <span className={`${user?.isPremium ? 'text-yellow-700' : 'text-blue-600'} font-bold text-sm`}>{(user?.name || "U").charAt(0).toUpperCase()}</span>
                     </div>
                     <ChevronDown size={16} className="text-gray-500" />
                   </button>
@@ -135,12 +135,9 @@ export default function Navbar() {
                       <Link href="/premium" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setIsProfileOpen(false)}>
                         <Crown size={16} className="text-yellow-500"/> Buy Premium
                       </Link>
-                      <a href="mailto:support@rogjaar.com" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                        <HelpCircle size={16} className="text-gray-400"/> Contact Support
-                      </a>
-                      <a href="mailto:bugs@rogjaar.com" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                        <AlertTriangle size={16} className="text-gray-400"/> Report Bug
-                      </a>
+                      <Link href="/support" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setIsProfileOpen(false)}>
+                        <HelpCircle size={16} className="text-gray-400"/> Premium Support
+                      </Link>
                       <div className="border-t my-1"></div>
                       <button onClick={() => signOut()} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left">
                         <LogOut size={16}/> Sign Out

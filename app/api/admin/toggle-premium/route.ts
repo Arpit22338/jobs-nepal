@@ -10,14 +10,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { userId, isPremium } = await req.json();
+    const { userId, isPremium, durationDays } = await req.json();
     if (!userId) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
 
+    const updateData: any = { isPremium };
+
+    if (isPremium && durationDays) {
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + parseInt(durationDays));
+      updateData.premiumExpiresAt = expiresAt;
+      updateData.isVerified = true; // Auto-verify premium users
+    } else if (!isPremium) {
+      updateData.premiumExpiresAt = null;
+    }
+
     await prisma.user.update({
       where: { id: userId },
-      data: { isPremium },
+      data: updateData,
     });
 
     return NextResponse.json({ success: true });

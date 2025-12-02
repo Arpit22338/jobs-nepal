@@ -202,17 +202,52 @@ export default function PublicProfilePage() {
                     </div>
                   );
                 }
-                // Fallback for non-array JSON (unlikely but safe)
                 return <p>{profile.skills}</p>;
               } catch {
-                // Fallback for old comma-separated format
+                // Try to regex extract if it looks like JSON but is broken
+                if (profile.skills.includes('"name":')) {
+                   const extractedSkills = [];
+                   const parts = profile.skills.split('}');
+                   for (const part of parts) {
+                      const n = /"name":"([^"]+)"/.exec(part);
+                      const l = /"level":(\d+)/.exec(part);
+                      if (n) {
+                        extractedSkills.push({ name: n[1], level: l ? parseInt(l[1]) : 50 });
+                      }
+                   }
+                   
+                   if (extractedSkills.length > 0) {
+                      return (
+                        <div className="space-y-2 mt-2">
+                          {extractedSkills.map((skill, idx) => (
+                            <div key={idx} className="flex items-center gap-4">
+                              <span className="w-32 font-medium truncate">{skill.name}</span>
+                              <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-blue-600 rounded-full" 
+                                  style={{ width: `${skill.level}%` }}
+                                />
+                              </div>
+                              <span className="text-xs text-gray-500 w-8">{skill.level}%</span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                   }
+                }
+
+                // Fallback for comma-separated or cleanup
                 return (
                   <div className="flex flex-wrap gap-2">
-                    {profile.skills.split(',').map((skill, index) => (
-                      <span key={index} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
-                        {skill.trim()}
-                      </span>
-                    ))}
+                    {profile.skills.split(',').map((skill, index) => {
+                      const cleanSkill = skill.trim().replace(/[\[\]"{}]/g, '').replace(/name:/g, '').replace(/level:\d+/g, '');
+                      if (!cleanSkill) return null;
+                      return (
+                        <span key={index} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
+                          {cleanSkill}
+                        </span>
+                      );
+                    })}
                   </div>
                 );
               }
