@@ -125,11 +125,11 @@ export default function CVCoursePage() {
                 <h2 className="text-2xl font-bold mb-8" style={{ color: '#1e40af' }}>CV Writing Masterclass</h2>
                 
                 <div className="flex justify-between items-end w-full px-8 mt-8">
-                  <div className="text-center">
-                    <div className="text-base font-bold border-t pt-2 px-4" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
+                  <div className="text-center flex flex-col items-center">
+                    <div className="text-base font-bold border-b px-4 pb-1 mb-1 min-w-[120px]" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
                       {new Date().toLocaleDateString()}
                     </div>
-                    <div className="text-xs mt-1" style={{ color: '#6b7280' }}>Date</div>
+                    <div className="text-xs" style={{ color: '#6b7280' }}>Date</div>
                   </div>
 
                   <div className="flex flex-col items-center">
@@ -139,12 +139,12 @@ export default function CVCoursePage() {
                      </div>
                   </div>
                   
-                  <div className="text-center">
-                    <div className="text-xl font-script mb-1 font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>
+                  <div className="text-center flex flex-col items-center">
+                    <div className="text-xl font-script mb-0 font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>
                       Arpit
                     </div>
-                    <div className="text-base font-bold border-t pt-2 px-4" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
-                      Arpit
+                    <div className="text-base font-bold border-t pt-2 px-4 min-w-[150px]" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
+                      Arpit Kafle
                     </div>
                     <div className="text-xs mt-1" style={{ color: '#6b7280' }}>CEO, Rojgaar</div>
                   </div>
