@@ -88,7 +88,7 @@ export default function CVCoursePage() {
           <div className="flex justify-center mb-8 overflow-auto">
             <div 
               ref={certificateRef}
-              className="w-[800px] h-[600px] p-10 relative text-center flex flex-col items-center justify-center shadow-2xl"
+              className="min-w-[800px] w-[800px] min-h-[600px] h-[600px] p-8 relative text-center flex flex-col items-center justify-center shadow-2xl"
               style={{ 
                 fontFamily: 'serif',
                 backgroundColor: '#ffffff',
@@ -104,9 +104,9 @@ export default function CVCoursePage() {
 
               <div className="relative z-10 w-full flex flex-col items-center">
                 {/* Logo at top */}
-                <div className="mb-4">
+                <div className="mb-2">
                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                   {logoBase64 && <img src={logoBase64} alt="Rojgaar Logo" className="h-20 object-contain" />}
+                   {logoBase64 && <img src={logoBase64} alt="Rojgaar Logo" className="h-16 object-contain" />}
                 </div>
                 
                 <div className="mb-2 font-bold tracking-widest uppercase text-sm" style={{ color: '#1e3a8a' }}>Rojgaar Skills Academy</div>
@@ -124,7 +124,7 @@ export default function CVCoursePage() {
                 
                 <h2 className="text-2xl font-bold mb-8" style={{ color: '#1e40af' }}>CV Writing Masterclass</h2>
                 
-                <div className="flex justify-between items-end w-full px-12 mt-8">
+                <div className="flex justify-between items-end w-full px-8 mt-8">
                   <div className="text-center">
                     <div className="text-base font-bold border-t pt-2 px-4" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
                       {new Date().toLocaleDateString()}
