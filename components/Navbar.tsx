@@ -183,7 +183,20 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-4">
+          <div className="md:hidden flex items-center gap-2">
+            {!session && (
+              <div className="flex items-center gap-2 mr-1">
+                <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-blue-600 px-2 py-1">
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="text-sm bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
             {session && (
               <>
                 <NotificationBell />
@@ -310,25 +323,6 @@ export default function Navbar() {
               >
                 Admin
               </Link>
-            )}
-
-            {!session && (
-              <div className="border-t border-gray-100 pt-4 mt-2">
-                <Link
-                  href="/login"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/register"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:bg-blue-50"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Register
-                </Link>
-              </div>
             )}
           </div>
         </div>
