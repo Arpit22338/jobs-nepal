@@ -399,3 +399,15 @@ export async function deleteTalentPost(postId: string) {
 
   revalidatePath("/talent");
 }
+
+export async function getCurrentUserImage() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) return null;
+  
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { image: true }
+  });
+  
+  return user?.image;
+}

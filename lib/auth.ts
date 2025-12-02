@@ -48,7 +48,6 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           role: user.role,
-          image: user.image,
           isPremium: user.isPremium,
         };
       },
@@ -62,7 +61,6 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.id as string,
           role: token.role as string,
-          image: token.picture as string | null,
           isPremium: token.isPremium as boolean,
         },
       };
@@ -72,7 +70,6 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.role = user.role;
         token.isPremium = user.isPremium;
-        token.picture = user.image;
       }
       return token;
     },

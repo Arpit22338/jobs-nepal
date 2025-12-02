@@ -7,16 +7,18 @@ import { useSession, signOut } from "next-auth/react";
 import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Crown, Settings, HelpCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
+import { getCurrentUserImage } from "@/app/actions";
 
 export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   // Cast user to include role to satisfy editor type checking
-  const user = session?.user as { name?: string | null; email?: string | null; image?: string | null; role?: string; isPremium?: boolean } | undefined;
+  const user = session?.user as { name?: string | null; email?: string | null; role?: string; isPremium?: boolean } | undefined;
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileProfileOpen, setIsMobileProfileOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [userImage, setUserImage] = useState<string | null>(null);
 
   const getInitials = (name: string) => {
     return name
@@ -34,20 +36,25 @@ export default function Navbar() {
 
   useEffect(() => {
     if (session) {
-      const fetchUnreadCount = async () => {
+      const fetchUserData = async () => {
         try {
+          // Fetch unread messages
           const res = await fetch("/api/messages");
           if (res.ok) {
             const data = await res.json();
             const totalUnread = data.conversations.reduce((acc: number, conv: any) => acc + conv.unreadCount, 0);
             setUnreadCount(totalUnread);
           }
+          
+          // Fetch user image
+          const image = await getCurrentUserImage();
+          setUserImage(image || null);
         } catch (error) {
-          console.error("Failed to fetch unread count", error);
+          console.error("Failed to fetch user data", error);
         }
       };
-      fetchUnreadCount();
-      const interval = setInterval(fetchUnreadCount, 10000);
+      fetchUserData();
+      const interval = setInterval(fetchUserData, 10000);
       return () => clearInterval(interval);
     }
   }, [session]);
@@ -125,8 +132,8 @@ export default function Navbar() {
                     className="flex items-center gap-2 focus:outline-none hover:bg-gray-50 p-1 rounded-full transition-colors"
                   >
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center overflow-hidden ${user?.isPremium ? 'border-2 border-yellow-500 bg-yellow-50' : 'border border-blue-200 bg-blue-100'}`}>
-                       {user?.image ? (
-                          <Image src={user.image} alt={user.name || "User"} width={32} height={32} className="object-cover w-full h-full" />
+                       {userImage ? (
+                          <Image src={userImage} alt={user?.name || "User"} width={32} height={32} className="object-cover w-full h-full" />
                        ) : (
                           <span className={`${user?.isPremium ? 'text-yellow-700' : 'text-blue-600'} font-bold text-xs`}>{getInitials(user?.name || "U")}</span>
                        )}
@@ -196,8 +203,8 @@ export default function Navbar() {
                   className="flex items-center gap-1 focus:outline-none"
                 >
                     <div className={`relative w-8 h-8 rounded-full flex items-center justify-center overflow-hidden ${user?.isPremium ? 'border-2 border-yellow-500 bg-yellow-50' : 'border border-blue-200 bg-blue-100'}`}>
-                       {user?.image ? (
-                          <Image src={user.image} alt={user.name || "User"} fill className="object-cover" />
+                       {userImage ? (
+                          <Image src={userImage} alt={user?.name || "User"} fill className="object-cover" />
                        ) : (
                           <span className={`${user?.isPremium ? 'text-yellow-700' : 'text-blue-600'} font-bold text-xs`}>{getInitials(user?.name || "U")}</span>
                        )}
@@ -332,8 +339,8 @@ export default function Navbar() {
           <div className="px-4 py-4 space-y-1">
              <div className="px-3 mb-4 flex items-center gap-3">
                   <div className={`relative w-12 h-12 rounded-full flex items-center justify-center overflow-hidden ${user?.isPremium ? 'border-2 border-yellow-500 bg-yellow-50' : 'border border-blue-200 bg-blue-100'}`}>
-                      {user?.image ? (
-                          <Image src={user.image} alt={user.name || "User"} fill className="object-cover" />
+                      {userImage ? (
+                          <Image src={userImage} alt={user?.name || "User"} fill className="object-cover" />
                        ) : (
                           <span className={`${user?.isPremium ? 'text-yellow-700' : 'text-blue-600'} font-bold text-lg`}>{getInitials(user?.name || "U")}</span>
                        )}
