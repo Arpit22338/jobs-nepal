@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Crown, Settings, HelpCircle, Lock } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -33,6 +33,16 @@ export default function Navbar() {
     const isActive = path === "/" ? pathname === "/" : pathname.startsWith(path);
     return `${isActive ? "text-blue-600 font-semibold" : "text-gray-600 hover:text-blue-600"} text-base transition-colors`;
   };
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session && user?.role === "TEACHER" && !user.isPremium) {
+      if (pathname !== "/teacher/verification" && pathname !== "/login") {
+        router.push("/teacher/verification");
+      }
+    }
+  }, [session, user, pathname, router]);
 
   useEffect(() => {
     if (session) {

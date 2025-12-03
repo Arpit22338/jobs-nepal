@@ -12,7 +12,7 @@ const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.enum(["JOBSEEKER", "EMPLOYER"]),
+  role: z.enum(["JOBSEEKER", "EMPLOYER", "TEACHER"]),
   image: z.string().optional(),
 });
 
@@ -115,6 +115,7 @@ export default function RegisterPage() {
           >
             <option value="JOBSEEKER">Job Seeker</option>
             <option value="EMPLOYER">Employer</option>
+            <option value="TEACHER">Skill Teacher</option>
           </select>
           {errors.role && (
             <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
