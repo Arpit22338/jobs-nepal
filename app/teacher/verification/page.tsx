@@ -13,6 +13,7 @@ export default function TeacherVerificationPage() {
   const [loading, setLoading] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState<string | null>(null); // PENDING, APPROVED, REJECTED, NONE
   const [error, setError] = useState<string | null>(null);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -134,17 +135,17 @@ export default function TeacherVerificationPage() {
           
           <div className="flex flex-col md:flex-row gap-8 items-center justify-center bg-white p-6 rounded-lg border border-gray-200">
             <div className="flex gap-4">
-                <div className="flex flex-col items-center">
-                    <div className="relative w-32 h-32 mb-2">
+                <div className="flex flex-col items-center cursor-pointer group" onClick={() => setZoomedImage("/esewa-qr.jpg")}>
+                    <div className="relative w-32 h-32 mb-2 transition-transform group-hover:scale-105">
                         <Image src="/esewa-qr.jpg" alt="eSewa QR" fill className="object-contain" />
                     </div>
-                    <span className="text-xs font-medium text-gray-500">eSewa</span>
+                    <span className="text-xs font-medium text-gray-500">eSewa (Tap to zoom)</span>
                 </div>
-                <div className="flex flex-col items-center">
-                    <div className="relative w-32 h-32 mb-2">
+                <div className="flex flex-col items-center cursor-pointer group" onClick={() => setZoomedImage("/khalti-qr.jpg")}>
+                    <div className="relative w-32 h-32 mb-2 transition-transform group-hover:scale-105">
                         <Image src="/khalti-qr.jpg" alt="Khalti QR" fill className="object-contain" />
                     </div>
-                    <span className="text-xs font-medium text-gray-500">Khalti</span>
+                    <span className="text-xs font-medium text-gray-500">Khalti (Tap to zoom)</span>
                 </div>
             </div>
             
@@ -208,6 +209,26 @@ export default function TeacherVerificationPage() {
           </button>
         </div>
       </div>
+
+      {/* Zoom Modal */}
+      {zoomedImage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90 p-4 cursor-pointer"
+          onClick={() => setZoomedImage(null)}
+        >
+          <div className="relative w-full max-w-md aspect-square">
+            <Image 
+              src={zoomedImage} 
+              alt="Zoomed QR Code" 
+              fill 
+              className="object-contain bg-white rounded-lg"
+            />
+            <div className="absolute -bottom-12 left-0 right-0 text-center text-white">
+              <p className="text-lg font-medium">Tap anywhere to close</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
