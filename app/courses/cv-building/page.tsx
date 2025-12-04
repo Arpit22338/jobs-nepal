@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, BookOpen, PenTool, CheckCircle, Star, AlertCircle, GraduationCap, Download, Award } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -12,24 +13,34 @@ export default function CVCoursePage() {
   const certificateRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [logoBase64, setLogoBase64] = useState<string>("");
+  const [signBase64, setSignBase64] = useState<string>("");
 
   useEffect(() => {
     // Convert logo to base64 to avoid CORS issues in html2canvas
     const getBase64FromUrl = async (url: string) => {
-      const data = await fetch(url);
-      const blob = await data.blob();
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => {
-          const base64data = reader.result;
-          resolve(base64data);
-        };
-      });
+      try {
+        const data = await fetch(url);
+        const blob = await data.blob();
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = () => {
+            const base64data = reader.result;
+            resolve(base64data);
+          };
+        });
+      } catch (e) {
+        console.error("Error loading image:", url, e);
+        return "";
+      }
     };
 
     getBase64FromUrl('/logo.png').then((base64) => {
       setLogoBase64(base64 as string);
+    });
+
+    getBase64FromUrl('/uploads/ceo-sign.png').then((base64) => {
+      setSignBase64(base64 as string);
     });
   }, []);
 
@@ -98,15 +109,13 @@ export default function CVCoursePage() {
             >
               {/* Watermark/Background */}
               <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                {logoBase64 && <img src={logoBase64} alt="Watermark" className="w-[500px] h-[500px] object-contain" />}
+                {logoBase64 && <Image src={logoBase64} alt="Watermark" width={500} height={500} className="w-[500px] h-[500px] object-contain" unoptimized />}
               </div>
 
               <div className="relative z-10 w-full flex flex-col items-center">
                 {/* Logo at top */}
                 <div className="mb-2">
-                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                   {logoBase64 && <img src={logoBase64} alt="Rojgaar Logo" className="h-16 object-contain" />}
+                   {logoBase64 && <Image src={logoBase64} alt="Rojgaar Logo" width={200} height={64} className="h-16 w-auto object-contain" unoptimized />}
                 </div>
                 
                 <div className="mb-2 font-bold tracking-widest uppercase text-sm" style={{ color: '#1e3a8a' }}>RojgaarNepal Skills Academy</div>
@@ -140,8 +149,12 @@ export default function CVCoursePage() {
                   </div>
                   
                   <div className="text-center flex flex-col items-center">
-                    <div className="text-xl font-script mb-0 font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>
-                      Arpit
+                    <div className="mb-1 h-16 flex items-end justify-center">
+                       {signBase64 ? (
+                         <Image src={signBase64} alt="Signature" width={200} height={64} className="h-16 w-auto object-contain" unoptimized />
+                       ) : (
+                         <div className="text-xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
+                       )}
                     </div>
                     <div className="text-base font-bold border-t pt-2 px-4 min-w-[150px]" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
                       Arpit Kafle
