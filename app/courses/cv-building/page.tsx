@@ -152,9 +152,10 @@ export default function CVCoursePage() {
                   <div className="text-center flex flex-col items-center relative">
                     {/* Signature positioned absolutely to overlap the line */}
                     <div className="absolute bottom-[-140px] left-1/2 transform -translate-x-1/2 z-10">
-                       {signBase64 ? (
-                         <Image src={signBase64} alt="Signature" width={1000} height={500} className="h-[450px] w-auto object-contain" unoptimized />
-                       ) : (
+                      {signBase64 ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img src={signBase64} alt="Signature" className="h-[450px] w-auto object-contain" />
+                      ) : (
                          <div className="text-9xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
                        )}
                     </div>
