@@ -153,7 +153,7 @@ export default function CVCoursePage() {
                     {/* Signature positioned absolutely to overlap the line */}
                     <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
                        {signBase64 ? (
-                         <Image src={signBase64} alt="Signature" width={300} height={150} className="h-[118px] w-auto object-contain" unoptimized />
+                         <Image src={signBase64} alt="Signature" width={340} height={170} className="h-[134px] w-auto object-contain" unoptimized />
                        ) : (
                          <div className="text-5xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
                        )}
