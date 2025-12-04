@@ -219,8 +219,11 @@ export function PaymentModal({ isOpen, onClose, planName, amount, onSuccess }: P
       {/* Zoom Modal */}
       {mounted && zoomedQr && createPortal(
         <div 
-          className="fixed inset-0 z-[9999] bg-black/90 flex flex-col items-center justify-center p-4 cursor-pointer"
-          onClick={() => setZoomedQr(null)}
+          className="fixed inset-0 z-[9999] bg-black/90 flex flex-col items-center justify-center p-4 cursor-pointer pointer-events-auto"
+          onClick={(e) => {
+            e.stopPropagation();
+            setZoomedQr(null);
+          }}
         >
           <div className="relative w-full max-w-[500px] aspect-square bg-white p-2 rounded-lg shadow-2xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
