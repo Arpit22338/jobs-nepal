@@ -150,11 +150,11 @@ export default function CVCoursePage() {
                   </div>
                   
                   <div className="text-center flex flex-col items-center">
-                    <div className="mb-1 h-16 flex items-end justify-center">
+                    <div className="mb-2 h-32 flex items-end justify-center">
                        {signBase64 ? (
-                         <Image src={signBase64} alt="Signature" width={200} height={64} className="h-16 w-auto object-contain" unoptimized />
+                         <Image src={signBase64} alt="Signature" width={300} height={128} className="h-32 w-auto object-contain" unoptimized />
                        ) : (
-                         <div className="text-xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
+                         <div className="text-3xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
                        )}
                     </div>
                     <div className="text-base font-bold border-t pt-2 px-4 min-w-[150px]" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
