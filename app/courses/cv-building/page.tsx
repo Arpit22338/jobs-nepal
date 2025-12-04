@@ -151,14 +151,14 @@ export default function CVCoursePage() {
                   
                   <div className="text-center flex flex-col items-center relative">
                     {/* Signature positioned absolutely to overlap the line */}
-                    <div className="absolute bottom-[-60px] left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="absolute bottom-[10px] left-1/2 transform -translate-x-1/2 z-10">
                       {signBase64 ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
                         <img 
                           src={signBase64} 
                           alt="Signature" 
                           style={{ 
-                            height: '200px', 
+                            height: '150px', 
                             width: 'auto', 
                             maxWidth: 'none' 
                           }} 
