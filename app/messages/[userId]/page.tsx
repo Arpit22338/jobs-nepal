@@ -7,6 +7,17 @@ import Link from "next/link";
 import { User, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { deleteMessage } from "@/app/actions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Message {
   id: string;
@@ -201,19 +212,36 @@ export default function ChatPage() {
                 >
                   <p className="leading-relaxed text-[15px]">{formatMessageContent(msg.content, isMe)}</p>
                   {isMe && (
-                    <button
-                      onClick={async () => {
-                        if (confirm("Delete this message?")) {
-                          await deleteMessage(msg.id);
-                          // Optimistic update or refetch
-                          setMessages(prev => prev.filter(m => m.id !== msg.id));
-                        }
-                      }}
-                      className="absolute -top-2 -right-2 bg-white text-red-500 p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-md border border-gray-100 hover:bg-red-50"
-                      title="Delete message"
-                    >
-                      <Trash2 size={12} />
-                    </button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button
+                          className="absolute -top-2 -right-2 bg-white text-red-500 p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-md border border-gray-100 hover:bg-red-50"
+                          title="Delete message"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Message?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete this message from the conversation.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={async () => {
+                              await deleteMessage(msg.id);
+                              setMessages((prev) => prev.filter((m) => m.id !== msg.id));
+                            }}
+                            className="bg-red-600 hover:bg-red-700 text-white"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   )}
                 </div>
                 <p className={`text-[10px] mt-1.5 font-medium px-1 flex items-center gap-1 ${isMe ? "text-gray-400" : "text-gray-400"}`}>
