@@ -154,7 +154,15 @@ export default function CVCoursePage() {
                     <div className="absolute bottom-[-140px] left-1/2 transform -translate-x-1/2 z-10">
                       {signBase64 ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
-                        <img src={signBase64} alt="Signature" className="h-[450px] w-auto object-contain" />
+                        <img 
+                          src={signBase64} 
+                          alt="Signature" 
+                          style={{ 
+                            height: '450px', 
+                            width: 'auto', 
+                            maxWidth: 'none' 
+                          }} 
+                        />
                       ) : (
                          <div className="text-9xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
                        )}
