@@ -21,7 +21,16 @@ export default async function CoursesPage() {
     duration: "1 Hour",
   };
 
-  const allCourses = [cvCourse, ...courses];
+  const pythonCourse = {
+    id: "basic-python",
+    title: "Basic Python Programming",
+    description: "Master the fundamentals of Python programming. Includes certificate.",
+    price: 0,
+    instructor: "RojgaarNepal Team",
+    duration: "2 Hours",
+  };
+
+  const allCourses = [cvCourse, pythonCourse, ...courses];
 
   return (
     <div className="space-y-8">
