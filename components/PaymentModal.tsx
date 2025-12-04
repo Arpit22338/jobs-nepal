@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import {
   AlertDialog,
@@ -26,6 +27,11 @@ export function PaymentModal({ isOpen, onClose, planName, amount, onSuccess }: P
   const [phoneNumber, setPhoneNumber] = useState("");
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -211,7 +217,7 @@ export function PaymentModal({ isOpen, onClose, planName, amount, onSuccess }: P
       </AlertDialog>
 
       {/* Zoom Modal */}
-      {zoomedQr && (
+      {mounted && zoomedQr && createPortal(
         <div 
           className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4"
           onClick={() => setZoomedQr(null)}
@@ -233,7 +239,8 @@ export function PaymentModal({ isOpen, onClose, planName, amount, onSuccess }: P
               <X size={32} />
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
