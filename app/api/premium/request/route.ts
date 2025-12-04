@@ -11,9 +11,9 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { planType, amount, screenshotUrl } = body;
+    const { planType, amount, screenshotUrl, phoneNumber } = body;
 
-    if (!planType || !amount || !screenshotUrl) {
+    if (!planType || !amount || !screenshotUrl || !phoneNumber) {
       return new NextResponse("Missing fields", { status: 400 });
     }
 
@@ -23,6 +23,7 @@ export async function POST(req: Request) {
         planType,
         amount,
         screenshotUrl,
+        phoneNumber,
       },
     });
 

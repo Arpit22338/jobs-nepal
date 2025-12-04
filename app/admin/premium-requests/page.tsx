@@ -11,6 +11,7 @@ interface PremiumRequest {
   planType: string;
   amount: number;
   screenshotUrl: string;
+  phoneNumber?: string;
   status: string;
   createdAt: string;
 }
@@ -68,6 +69,7 @@ export default function PremiumRequestsPage() {
               <th className="p-4 text-left text-sm font-semibold text-gray-600">User</th>
               <th className="p-4 text-left text-sm font-semibold text-gray-600">Plan</th>
               <th className="p-4 text-left text-sm font-semibold text-gray-600">Amount</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-600">Phone</th>
               <th className="p-4 text-left text-sm font-semibold text-gray-600">Screenshot</th>
               <th className="p-4 text-left text-sm font-semibold text-gray-600">Date</th>
               <th className="p-4 text-left text-sm font-semibold text-gray-600">Status</th>
@@ -77,7 +79,7 @@ export default function PremiumRequestsPage() {
           <tbody>
             {requests.length === 0 ? (
               <tr>
-                <td colSpan={7} className="p-8 text-center text-gray-500">No requests found</td>
+                <td colSpan={8} className="p-8 text-center text-gray-500">No requests found</td>
               </tr>
             ) : (
               requests.map((req) => (
@@ -88,6 +90,7 @@ export default function PremiumRequestsPage() {
                   </td>
                   <td className="p-4 text-sm">{req.planType}</td>
                   <td className="p-4 text-sm">Rs. {req.amount}</td>
+                  <td className="p-4 text-sm font-mono">{req.phoneNumber || "N/A"}</td>
                   <td className="p-4 text-sm">
                     <a 
                       href={req.screenshotUrl} 

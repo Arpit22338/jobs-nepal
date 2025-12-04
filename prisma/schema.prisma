@@ -67,6 +67,7 @@ model PremiumRequest {
   planType      String
   amount        Float
   screenshotUrl String
+  phoneNumber   String?
   status        String   @default("PENDING") // PENDING, APPROVED, REJECTED
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
