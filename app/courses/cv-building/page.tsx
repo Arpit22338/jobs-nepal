@@ -151,16 +151,16 @@ export default function CVCoursePage() {
                   
                   <div className="text-center flex flex-col items-center relative translate-y-[15px]">
                     {/* Signature positioned absolutely to overlap the line */}
-                    <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10">
                        {signBase64 ? (
-                         <Image src={signBase64} alt="Signature" width={382} height={192} className="h-[160px] w-auto object-contain" unoptimized />
+                         <Image src={signBase64} alt="Signature" width={420} height={210} className="h-[180px] w-auto object-contain" unoptimized />
                        ) : (
-                         <div className="text-5xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
+                         <div className="text-6xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
                        )}
                     </div>
                     
                     {/* Name Line - Added margin top to make space for signature visual balance */}
-                    <div className="text-base font-bold border-t pt-2 px-8 min-w-[200px] mt-12 relative z-0" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
+                    <div className="text-base font-bold border-t pt-2 px-8 min-w-[200px] mt-16 relative z-0" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
                       Arpit Kafle
                     </div>
                     <div className="text-xs mt-1" style={{ color: '#6b7280' }}>CEO, RojgaarNepal</div>
