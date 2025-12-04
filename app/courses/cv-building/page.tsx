@@ -135,7 +135,7 @@ export default function CVCoursePage() {
                 <h2 className="text-xl font-bold mb-6" style={{ color: '#1e40af' }}>CV Writing Masterclass</h2>
                 
                 <div className="flex justify-between items-end w-full px-8 mt-4">
-                  <div className="text-center flex flex-col items-center">
+                  <div className="text-center flex flex-col items-center translate-y-[5px]">
                     <div className="text-base font-bold border-b px-4 pb-1 mb-1 min-w-[120px]" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
                       {new Date().toLocaleDateString()}
                     </div>
@@ -149,11 +149,11 @@ export default function CVCoursePage() {
                      </div>
                   </div>
                   
-                  <div className="text-center flex flex-col items-center relative">
+                  <div className="text-center flex flex-col items-center relative translate-y-[5px]">
                     {/* Signature positioned absolutely to overlap the line */}
                     <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
                        {signBase64 ? (
-                         <Image src={signBase64} alt="Signature" width={280} height={140} className="h-28 w-auto object-contain" unoptimized />
+                         <Image src={signBase64} alt="Signature" width={300} height={150} className="h-[118px] w-auto object-contain" unoptimized />
                        ) : (
                          <div className="text-5xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
                        )}
