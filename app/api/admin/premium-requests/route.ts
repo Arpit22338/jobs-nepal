@@ -30,6 +30,7 @@ export async function PUT(req: Request) {
     const now = new Date();
     const expiresAt = new Date();
     let isPremium = false;
+    let isMegaPremium = false;
     let jobLimitIncrement = 0;
     let talentLimitIncrement = 0;
 
@@ -67,8 +68,15 @@ export async function PUT(req: Request) {
           break;
 
         case "30_DAYS":
+        case "STANDARD_PREMIUM":
           isPremium = true;
           expiresAt.setDate(now.getDate() + 30);
+          break;
+
+        case "MEGA_PREMIUM":
+          isPremium = true;
+          expiresAt.setDate(now.getDate() + 90);
+          isMegaPremium = true;
           break;
 
         case "75_DAYS":
@@ -91,6 +99,10 @@ export async function PUT(req: Request) {
     const updateData: any = {
       premiumExpiresAt: expiresAt,
     };
+
+    if (isMegaPremium) {
+      updateData.isMegaPremium = true;
+    }
 
     if (isPremium) {
       updateData.isPremium = true;

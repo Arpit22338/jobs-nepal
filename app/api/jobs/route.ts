@@ -10,6 +10,8 @@ const jobSchema = z.object({
   description: z.string().min(10),
   location: z.string().min(2),
   salary: z.string().optional(),
+  salaryMin: z.number().optional(),
+  salaryMax: z.number().optional(),
   type: z.string(),
   requiredSkills: z.string().optional(),
 });
@@ -30,7 +32,8 @@ export async function POST(req: Request) {
     }
 
     // Check limits for Non-Premium Users
-    if (!user.isPremium) {
+    const isMegaPremium = (user as any).isMegaPremium;
+    if (!user.isPremium && !isMegaPremium) {
       const jobCount = await prisma.job.count({
         where: { employerId: user.id },
       });
@@ -46,13 +49,17 @@ export async function POST(req: Request) {
     const validatedData = jobSchema.parse(body);
 
     // Set expiry for non-premium users (24 hours)
-    const expiresAt = user.isPremium ? null : new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const expiresAt = (user.isPremium || isMegaPremium) ? null : new Date(Date.now() + 24 * 60 * 60 * 1000);
+    // Prompt says: "Mega badge on employer profile and job posts." "Search boost".
+    // Let's set isPremium = true if user is premium.
 
     const job = await prisma.job.create({
       data: {
         ...validatedData,
         employerId: user.id,
         expiresAt: expiresAt,
+        isPremium: user.isPremium || isMegaPremium,
+        isFeatured: isMegaPremium, // Example logic
       } as any,
     });
 
@@ -65,27 +72,80 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const q = searchParams.get("q");
+    const location = searchParams.get("location");
+    const type = searchParams.get("type");
+    const minSalary = searchParams.get("minSalary");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const skip = (page - 1) * limit;
+
     const whereClause: Prisma.JobWhereInput = {
-      OR: [
-        { expiresAt: null } as any,
-        { expiresAt: { gt: new Date() } } as any
+      AND: [
+        {
+          OR: [
+            { expiresAt: null },
+            { expiresAt: { gt: new Date() } }
+          ]
+        }
       ]
     };
 
-    const jobs = await prisma.job.findMany({
-      where: whereClause,
-      include: {
-        employer: {
-          include: {
-            employerProfile: true,
+    if (q) {
+      (whereClause.AND as any[]).push({
+        OR: [
+          { title: { contains: q, mode: "insensitive" } },
+          { description: { contains: q, mode: "insensitive" } },
+          { employer: { employerProfile: { companyName: { contains: q, mode: "insensitive" } } } }
+        ]
+      });
+    }
+
+    if (location) {
+      (whereClause.AND as any[]).push({
+        location: { contains: location, mode: "insensitive" }
+      });
+    }
+
+    if (type) {
+      (whereClause.AND as any[]).push({
+        type: { equals: type, mode: "insensitive" }
+      });
+    }
+
+    if (minSalary) {
+      // This assumes salaryMin is populated. If not, it might miss legacy jobs.
+      // For MVP, we filter on salaryMin if it exists.
+      (whereClause.AND as any[]).push({
+        salaryMin: { gte: parseInt(minSalary) }
+      });
+    }
+
+    const [jobs, total] = await Promise.all([
+      prisma.job.findMany({
+        where: whereClause,
+        include: {
+          employer: {
+            include: {
+              employerProfile: true,
+            },
           },
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
-    return NextResponse.json({ jobs });
+        orderBy: [
+          { isFeatured: "desc" } as any, // Featured/Mega jobs first
+          { isPremium: "desc" } as any,  // Premium jobs second
+          { createdAt: "desc" }
+        ],
+        skip,
+        take: limit,
+      }),
+      prisma.job.count({ where: whereClause })
+    ]);
+
+    return NextResponse.json({ jobs, total, page, totalPages: Math.ceil(total / limit) });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

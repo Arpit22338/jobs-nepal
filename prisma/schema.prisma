@@ -35,6 +35,13 @@ model User {
   otp              String?
   otpExpires       DateTime?
   
+  // New User Fields
+  phoneNumber      String?
+  lastActivityAt   DateTime?
+  isMegaPremium    Boolean   @default(false)
+  megaPremiumUntil DateTime?
+  qrCodeUrl        String?   // For teachers
+
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
   talentPosts      TalentPost[]
@@ -75,6 +82,7 @@ model PremiumRequest {
   amount        Float
   screenshotUrl String
   phoneNumber   String?
+  whatsappNumber String?
   status        String   @default("PENDING") // PENDING, APPROVED, REJECTED
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -92,6 +100,8 @@ model Report {
   targetUser   User?   @relation("ReportedUser", fields: [targetUserId], references: [id], onDelete: Cascade)
   
   reason    String
+  description String?
+  screenshotUrl String?
   status    String   @default("PENDING") // PENDING, RESOLVED, DISMISSED
   createdAt DateTime @default(now())
 }
@@ -160,6 +170,10 @@ model Job {
   description String
   location    String
   salary      String?
+  salaryMin   Int?
+  salaryMax   Int?
+  isFeatured  Boolean       @default(false)
+  isPremium   Boolean       @default(false)
   type        String        // Full-time, Part-time, etc.
   employerId  String
   employer    User          @relation("EmployerJobs", fields: [employerId], references: [id], onDelete: Cascade)
@@ -206,6 +220,7 @@ model Notification {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   content   String
+  type      String   @default("INFO") // message, applicationStatus, etc.
   isRead    Boolean  @default(false)
   link      String?
   createdAt DateTime @default(now())
@@ -251,9 +266,11 @@ model Course {
 
   // New fields
   thumbnailUrl         String?
+  qrCodeUrl            String?   // Specific QR for this course
   totalRequiredMinutes Int          @default(0)
   priceNpr             Float?
   isPublished          Boolean      @default(false)
+  isAdminOwned         Boolean      @default(false)
   editCount            Int          @default(0)
   
   createdAt            DateTime     @default(now())

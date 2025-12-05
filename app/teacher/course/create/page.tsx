@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default function CreateCoursePage() {
   const router = useRouter();
@@ -15,8 +19,17 @@ export default function CreateCoursePage() {
     description: "",
     priceNpr: 299,
     totalRequiredMinutes: 660, // 11 hours default
-    thumbnailUrl: ""
+    thumbnailUrl: "",
+    qrCodeUrl: "", // New field for teacher's payment QR
   });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'priceNpr' || name === 'totalRequiredMinutes' ? Number(value) : value
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +48,9 @@ export default function CreateCoursePage() {
         throw new Error(data.error || "Failed to create course");
       }
 
-      router.push("/teacher/dashboard");
+      const data = await res.json();
+      // Redirect to the course edit page or dashboard
+      router.push(`/teacher/course/${data.id}/edit`);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -49,85 +64,126 @@ export default function CreateCoursePage() {
         <ArrowLeft size={20} className="mr-2" /> Back to Dashboard
       </Link>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Create Your Course</h1>
-
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-6">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Course Title</label>
-          <input
-            type="text"
-            required
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g. Complete Python Bootcamp"
-          />
+          <h1 className="text-3xl font-bold text-gray-900">Create New Course</h1>
+          <p className="text-gray-600 mt-2">Start building your curriculum</p>
         </div>
+      </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-          <textarea
-            required
-            rows={4}
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="What will students learn?"
-          />
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Course Details</CardTitle>
+          <CardDescription>Basic information about your course.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
 
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Price (NPR)</label>
-            <input
-              type="number"
-              required
-              min="0"
-              value={formData.priceNpr}
-              onChange={(e) => setFormData({ ...formData, priceNpr: parseInt(e.target.value) })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Duration (Minutes)</label>
-            <input
-              type="number"
-              required
-              min="0"
-              value={formData.totalRequiredMinutes}
-              onChange={(e) => setFormData({ ...formData, totalRequiredMinutes: parseInt(e.target.value) })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-            <p className="text-xs text-gray-500 mt-1">660 mins = 11 hours</p>
-          </div>
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="title">Course Title</Label>
+              <Input
+                id="title"
+                name="title"
+                required
+                placeholder="e.g. Advanced Python for Data Science"
+                value={formData.title}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Thumbnail URL</label>
-          <input
-            type="url"
-            value={formData.thumbnailUrl}
-            onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="https://example.com/image.jpg"
-          />
-          <p className="text-xs text-gray-500 mt-1">Direct link to image (max 1MB)</p>
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <textarea
+                id="description"
+                name="description"
+                required
+                rows={4}
+                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder="What will students learn in this course?"
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </div>
 
-        {error && (
-          <div className="p-4 bg-red-50 text-red-600 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="priceNpr">Price (NPR)</Label>
+                <Input
+                  id="priceNpr"
+                  name="priceNpr"
+                  type="number"
+                  required
+                  min="0"
+                  value={formData.priceNpr}
+                  onChange={handleChange}
+                />
+              </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
-        >
-          <Save size={20} /> {loading ? "Creating..." : "Create Course"}
-        </button>
-      </form>
+              <div className="space-y-2">
+                <Label htmlFor="totalRequiredMinutes">Duration (Minutes)</Label>
+                <Input
+                  id="totalRequiredMinutes"
+                  name="totalRequiredMinutes"
+                  type="number"
+                  required
+                  min="1"
+                  value={formData.totalRequiredMinutes}
+                  onChange={handleChange}
+                />
+                <p className="text-xs text-gray-500">
+                  {Math.floor(formData.totalRequiredMinutes / 60)} hours {formData.totalRequiredMinutes % 60} minutes
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="thumbnailUrl">Thumbnail URL</Label>
+              <Input
+                id="thumbnailUrl"
+                name="thumbnailUrl"
+                placeholder="https://..."
+                value={formData.thumbnailUrl}
+                onChange={handleChange}
+              />
+              <p className="text-xs text-gray-500">Link to an image for your course card.</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="qrCodeUrl">Payment QR Code URL</Label>
+              <Input
+                id="qrCodeUrl"
+                name="qrCodeUrl"
+                placeholder="https://..."
+                value={formData.qrCodeUrl}
+                onChange={handleChange}
+              />
+              <p className="text-xs text-gray-500">
+                Upload your payment QR code (eSewa/Khalti/Bank) to a hosting service and paste the link here. 
+                Students will scan this to pay you directly.
+              </p>
+            </div>
+
+            <div className="pt-4 flex justify-end">
+              <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700">
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" /> Create Course
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

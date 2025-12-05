@@ -7,6 +7,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import html2canvas from "html2canvas";
 import { PaymentModal } from "@/components/PaymentModal";
+import PythonPlayground from "@/components/PythonPlayground";
 import { COURSE_MODULES, FINAL_EXAM_DATA } from "./data";
 import ReactMarkdown from "react-markdown";
 
@@ -113,96 +114,153 @@ export default function PythonCoursePage() {
 
   // --- Render Components ---
 
-  const renderLessons = () => (
-    <div className="space-y-8">
-      <div className="prose max-w-none mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Course Curriculum</h2>
-        <p className="text-gray-600 text-lg">
-          This comprehensive 40+ hour course will take you from a complete beginner to a job-ready Python developer.
-          Master the fundamentals, data structures, OOP, and build real-world projects.
-        </p>
-      </div>
+  const renderLessons = () => {
+    const activeLesson = COURSE_MODULES
+      .flatMap(m => m.lessons)
+      .find(l => l.id === activeLessonId);
 
-      <div className="space-y-4">
-        {COURSE_MODULES.map((module) => (
-          <div key={module.id} className="border rounded-xl overflow-hidden bg-white shadow-sm">
-            <button
-              onClick={() => setExpandedModule(expandedModule === module.id ? null : module.id)}
-              className="w-full flex items-center justify-between p-6 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
-            >
-              <div>
-                <h3 className="text-xl font-bold text-gray-900">{module.title}</h3>
-                <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
-                  <Clock size={14} /> {module.duration} • {module.lessons.length} Lessons
-                </p>
-              </div>
-              {expandedModule === module.id ? <ChevronUp className="text-gray-400" /> : <ChevronDown className="text-gray-400" />}
-            </button>
-
-            {expandedModule === module.id && (
-              <div className="divide-y">
-                {module.lessons.map((lesson) => (
-                  <div key={lesson.id} className="p-6 bg-white">
-                    <div className="flex items-start gap-4">
-                      <div className="mt-1">
-                        <PlayCircle className="text-blue-600" size={24} />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-lg font-semibold text-gray-900 mb-2">{lesson.title}</h4>
-                        <div className="prose prose-sm max-w-none text-gray-600 mb-6 bg-gray-50 p-4 rounded-lg border">
-                          <ReactMarkdown>{lesson.content}</ReactMarkdown>
-                        </div>
-
-                        {/* Lesson Quiz */}
-                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                          <h5 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
-                            <HelpCircle size={16} /> Quick Check
-                          </h5>
-                          <p className="text-sm font-medium text-gray-800 mb-3">{lesson.quiz.question}</p>
-                          <div className="space-y-2">
-                            {lesson.quiz.options.map((opt, idx) => (
-                              <button
-                                key={idx}
-                                onClick={() => setLessonQuizAnswers(prev => ({ ...prev, [lesson.id]: idx }))}
-                                className={`w-full text-left px-4 py-2 rounded text-sm transition-colors ${
-                                  lessonQuizAnswers[lesson.id] === idx
-                                    ? idx === lesson.quiz.answer
-                                      ? "bg-green-100 text-green-800 border border-green-200"
-                                      : "bg-red-100 text-red-800 border border-red-200"
-                                    : "bg-white hover:bg-gray-50 border border-gray-200"
-                                }`}
-                              >
-                                {opt}
-                                {lessonQuizAnswers[lesson.id] === idx && (
-                                  <span className="float-right font-bold">
-                                    {idx === lesson.quiz.answer ? "Correct!" : "Try Again"}
-                                  </span>
-                                )}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+    return (
+      <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-200px)] min-h-[800px]">
+        {/* Sidebar - Curriculum */}
+        <div className="w-full lg:w-1/4 bg-white border rounded-xl overflow-hidden flex flex-col shadow-sm">
+          <div className="p-4 bg-gray-50 border-b">
+            <h3 className="font-bold text-gray-900">Course Curriculum</h3>
+            <p className="text-xs text-gray-500 mt-1">Select a lesson to start</p>
+          </div>
+          <div className="overflow-y-auto flex-1 p-2 space-y-2">
+            {COURSE_MODULES.map((module) => (
+              <div key={module.id} className="border rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setExpandedModule(expandedModule === module.id ? null : module.id)}
+                  className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 text-left text-sm font-medium transition-colors"
+                >
+                  <span className="truncate font-semibold text-gray-700">{module.title}</span>
+                  {expandedModule === module.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </button>
+                {expandedModule === module.id && (
+                  <div className="bg-white divide-y">
+                    {module.lessons.map((lesson) => (
+                      <button
+                        key={lesson.id}
+                        onClick={() => setActiveLessonId(lesson.id)}
+                        className={`w-full text-left p-3 text-sm flex items-center gap-3 transition-all ${
+                          activeLessonId === lesson.id 
+                            ? "bg-blue-50 text-blue-700 font-medium border-l-4 border-blue-600 pl-2" 
+                            : "text-gray-600 hover:bg-gray-50 hover:pl-4 border-l-4 border-transparent"
+                        }`}
+                      >
+                        {lessonQuizAnswers[lesson.id] === lesson.quiz.answer ? (
+                          <CheckCircle size={14} className="text-green-500 shrink-0" />
+                        ) : (
+                          <PlayCircle size={14} className="shrink-0" />
+                        )}
+                        <span className="truncate">{lesson.title}</span>
+                      </button>
+                    ))}
                   </div>
-                ))}
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col lg:flex-row gap-6 overflow-hidden">
+          {/* Lesson Content (Left/Top) */}
+          <div className="flex-1 overflow-y-auto pr-2 bg-white rounded-xl shadow-sm border p-6">
+            {activeLesson ? (
+              <div className="space-y-8">
+                <div>
+                  <div className="flex items-center gap-2 text-sm text-blue-600 font-medium mb-2">
+                    <BookOpen size={16} />
+                    <span>Lesson Content</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">{activeLesson.title}</h2>
+                  <div className="prose prose-sm max-w-none text-gray-700">
+                    <ReactMarkdown>{activeLesson.content}</ReactMarkdown>
+                  </div>
+                </div>
+
+                {/* Quiz Section */}
+                <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                  <h5 className="font-bold text-blue-900 mb-4 flex items-center gap-2">
+                    <HelpCircle size={18} /> Knowledge Check
+                  </h5>
+                  <p className="text-sm font-medium text-gray-800 mb-4">{activeLesson.quiz.question}</p>
+                  <div className="space-y-2">
+                    {activeLesson.quiz.options.map((opt, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setLessonQuizAnswers(prev => ({ ...prev, [activeLesson.id]: idx }))}
+                        className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-all border ${
+                          lessonQuizAnswers[activeLesson.id] === idx
+                            ? idx === activeLesson.quiz.answer
+                              ? "bg-green-100 text-green-800 border-green-200 shadow-sm"
+                              : "bg-red-100 text-red-800 border-red-200"
+                            : "bg-white hover:bg-gray-50 border-gray-200"
+                        }`}
+                      >
+                        <div className="flex justify-between items-center">
+                          <span>{opt}</span>
+                          {lessonQuizAnswers[activeLesson.id] === idx && (
+                            <span className="font-bold text-xs uppercase tracking-wider">
+                              {idx === activeLesson.quiz.answer ? "Correct" : "Incorrect"}
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                <BookOpen size={48} className="mb-4 opacity-20" />
+                <p>Select a lesson from the curriculum to start learning</p>
               </div>
             )}
           </div>
-        ))}
-      </div>
 
-      <div className="text-center pt-8">
-        <button 
-          onClick={() => setActiveTab("quiz")}
-          className="bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-blue-700 transition-transform hover:scale-105 shadow-lg flex items-center mx-auto"
-        >
-          <Award className="mr-2" />
-          Take Final Exam to Get Certified
-        </button>
+          {/* Playground (Right/Bottom) */}
+          <div className="w-full lg:w-[45%] h-[500px] lg:h-auto flex flex-col">
+             {activeLesson?.challenge ? (
+               <div className="h-full flex flex-col bg-gray-900 rounded-xl overflow-hidden shadow-xl border border-gray-800">
+                 <div className="bg-gray-800 px-4 py-3 border-b border-gray-700 flex justify-between items-center">
+                   <span className="text-gray-300 text-sm font-mono flex items-center gap-2 font-bold">
+                     <Code size={16} className="text-blue-400" /> Python Playground
+                   </span>
+                   <span className="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded border border-gray-700">Pyodide Engine</span>
+                 </div>
+                 <div className="p-4 bg-gray-800/50 border-b border-gray-700">
+                   <p className="text-sm text-gray-300">
+                     <span className="text-yellow-400 font-bold uppercase text-xs tracking-wider mr-2">Challenge</span> 
+                     {activeLesson.challenge.description}
+                   </p>
+                 </div>
+                 <div className="flex-1 relative">
+                   <PythonPlayground 
+                     initialCode={activeLesson.challenge.initialCode}
+                     expectedOutput={activeLesson.challenge.expectedOutput}
+                     onSuccess={() => {
+                       // Optional: Mark lesson as complete or show confetti
+                     }}
+                   />
+                 </div>
+               </div>
+             ) : (
+               <div className="h-full bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 border-2 border-dashed border-gray-200">
+                 <div className="text-center p-6">
+                   <Code size={48} className="mx-auto mb-4 opacity-20" />
+                   <p className="font-medium">No coding challenge for this lesson.</p>
+                   <p className="text-sm mt-2 opacity-70">Focus on the reading material and quiz.</p>
+                 </div>
+               </div>
+             )}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderQuiz = () => {
     const currentQuestion = FINAL_EXAM_DATA[currentQuestionIndex];

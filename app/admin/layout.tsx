@@ -16,6 +16,12 @@ export default function AdminLayout({
             <Link href="/admin/premium-requests" className="py-4 text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap">
               Premium Requests
             </Link>
+            <Link href="/admin/teacher-activation" className="py-4 text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap">
+              Teacher Activation
+            </Link>
+            <Link href="/admin/kyc" className="py-4 text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap">
+              KYC
+            </Link>
             <Link href="/admin/users" className="py-4 text-sm font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600 whitespace-nowrap">
               Users & Bans
             </Link>
