@@ -123,7 +123,7 @@ export default async function Home() {
                             </span>
                           ));
                         }
-                      } catch (e) {
+                      } catch {
                         // If JSON parse fails, try regex for malformed JSON
                         if (skills.includes('"name":')) {
                           const extractedSkills = [];

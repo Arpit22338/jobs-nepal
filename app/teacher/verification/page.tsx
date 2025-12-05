@@ -15,18 +15,17 @@ export default function TeacherVerificationPage() {
   const [error, setError] = useState<string | null>(null);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
+  const [paymentPhone, setPaymentPhone] = useState("");
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     } else if (status === "authenticated") {
       if (session.user.role !== "TEACHER") {
         router.push("/");
-      } else if (session.user.isPremium) {
-        // Already approved
-        setVerificationStatus("APPROVED");
       } else {
         // Check for pending request
-        fetch("/api/teacher/verify")
+        fetch("/api/teacher/activation")
           .then((res) => res.json())
           .then((data) => {
             if (data.request) {
@@ -61,13 +60,20 @@ export default function TeacherVerificationPage() {
       setError("Please upload a screenshot");
       return;
     }
+    if (!paymentPhone || paymentPhone.length < 10) {
+      setError("Please enter a valid phone number used for payment");
+      return;
+    }
 
     setLoading(true);
     try {
-      const res = await fetch("/api/teacher/verify", {
+      const res = await fetch("/api/teacher/activation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ screenshotUrl: screenshot }),
+        body: JSON.stringify({ 
+          paymentScreenshotUrl: screenshot,
+          paymentPhone: paymentPhone
+        }),
       });
 
       if (!res.ok) {
@@ -91,13 +97,13 @@ export default function TeacherVerificationPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
         <CheckCircle className="text-green-500 w-20 h-20 mb-4" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Account Verified!</h1>
-        <p className="text-gray-600 mb-8">You are now a verified Skill Teacher.</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Activation Approved!</h1>
+        <p className="text-gray-600 mb-8">Your teacher account is now active. Next step: Verify your identity (KYC).</p>
         <button 
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/teacher/kyc")}
           className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
         >
-          Go to Dashboard
+          Proceed to KYC
         </button>
       </div>
     );
@@ -171,8 +177,22 @@ export default function TeacherVerificationPage() {
         </div>
 
         <div className="p-6">
-          <h2 className="font-semibold text-lg mb-4">Step 2: Upload Screenshot</h2>
+          <h2 className="font-semibold text-lg mb-4">Step 2: Verify Payment</h2>
           
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Payment Phone Number
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. 98XXXXXXXX"
+              value={paymentPhone}
+              onChange={(e) => setPaymentPhone(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">Enter the phone number used to make the payment.</p>
+          </div>
+
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:bg-gray-50 transition-colors relative">
             <input
               type="file"

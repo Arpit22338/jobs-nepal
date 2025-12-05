@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, BookOpen, Code, CheckCircle, Terminal, Cpu, Award, HelpCircle, Download, ChevronDown, ChevronUp, PlayCircle } from "lucide-react";
+import { ArrowLeft, BookOpen, Code, CheckCircle, Award, HelpCircle, Download, ChevronDown, ChevronUp, PlayCircle, Clock } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import html2canvas from "html2canvas";
@@ -13,6 +13,7 @@ import ReactMarkdown from "react-markdown";
 export default function PythonCoursePage() {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState<"lessons" | "quiz" | "exam" | "certificate">("lessons");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [quizScore, setQuizScore] = useState<number | null>(null);
   const [examPassed, setExamPassed] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -21,6 +22,7 @@ export default function PythonCoursePage() {
   
   // Lesson State
   const [expandedModule, setExpandedModule] = useState<string | null>("module-1");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeLessonId, setActiveLessonId] = useState<string>("l1-1");
   const [lessonQuizAnswers, setLessonQuizAnswers] = useState<Record<string, number>>({});
 
@@ -74,6 +76,7 @@ export default function PythonCoursePage() {
     getBase64FromUrl('/uploads/ceo-sign.png').then((base64) => setSignBase64(base64 as string));
   }, []);
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const handleQuizSubmit = (answers: number[]) => {
     let score = 0;
     answers.forEach((ans, idx) => {
@@ -226,6 +229,13 @@ export default function PythonCoursePage() {
           setSubmitted(true);
           setExamPassed(true);
           setQuizScore(FINAL_EXAM_DATA.length); // Perfect score if they made it here
+
+          // Call API to mark completion
+          fetch("/api/courses/complete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ courseId: "basic-python" }),
+          }).catch(err => console.error("Failed to mark completion", err));
         } else {
           setCurrentQuestionIndex(prev => prev + 1);
         }
@@ -236,9 +246,9 @@ export default function PythonCoursePage() {
         // Find module for the lesson
         const lessonId = currentQuestion.relatedLessonId;
         if (lessonId) {
-          const module = COURSE_MODULES.find(m => m.lessons.some(l => l.id === lessonId));
-          if (module) {
-            setExpandedModule(module.id);
+          const targetModule = COURSE_MODULES.find(m => m.lessons.some(l => l.id === lessonId));
+          if (targetModule) {
+            setExpandedModule(targetModule.id);
             setActiveLessonId(lessonId);
             setActiveTab("lessons");
             

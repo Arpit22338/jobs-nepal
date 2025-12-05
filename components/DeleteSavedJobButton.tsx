@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BookmarkCheck, Bookmark } from "lucide-react";
 
 interface DeleteSavedJobButtonProps {
   jobId: string;

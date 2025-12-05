@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 
 export default function RecommendedJobs() {
   const { data: session } = useSession();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [jobs, setJobs] = useState<any[]>([]);
 
   useEffect(() => {

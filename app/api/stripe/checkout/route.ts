@@ -9,6 +9,7 @@ const stripe = process.env.STRIPE_SECRET_KEY
     })
   : null;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(req: Request) {
   try {
     if (!stripe) {

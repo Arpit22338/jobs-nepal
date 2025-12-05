@@ -35,7 +35,6 @@ export async function updateApplicationStatus(applicationId: string, status: "PE
     });
 
     // Notify Job Seeker
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (prisma as any).notification.create({
       data: {
         userId: application.userId,

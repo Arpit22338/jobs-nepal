@@ -49,6 +49,13 @@ model User {
   reportsReceived  Report[]  @relation("ReportedUser")
   premiumRequests  PremiumRequest[]
   supportTickets   SupportTicket[]
+  
+  // Teacher & Course Features
+  teacherActivationRequests TeacherActivationRequest[]
+  kycRecords                KycRecord[]
+  courses                   Course[]
+  pushSubscriptions         PushSubscription[]
+  certificates              Certificate[]
 }
 
 model TempRegistration {
@@ -227,28 +234,141 @@ model Application {
 }
 
 model Course {
-  id          String       @id @default(cuid())
+  id                   String       @id @default(cuid())
+  
+  // New fields (Optional to avoid reset)
+  teacherId            String?
+  teacher              User?        @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  
+  title                String
+  description          String
+  
+  // Old fields (Keep to avoid data loss)
+  price                Float?
+  instructor           String?
+  duration             String?
+  thumbnail            String?
+
+  // New fields
+  thumbnailUrl         String?
+  totalRequiredMinutes Int          @default(0)
+  priceNpr             Float?
+  isPublished          Boolean      @default(false)
+  editCount            Int          @default(0)
+  
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt @default(now())
+  
+  lessons              Lesson[]
+  enrollments          Enrollment[]
+  certificates         Certificate[]
+}
+
+model Lesson {
+  id          String         @id @default(cuid())
+  courseId    String
+  course      Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
   title       String
-  description String
-  price       Float
-  instructor  String?
-  duration    String?
-  thumbnail   String?
-  createdAt   DateTime     @default(now())
-  enrollments Enrollment[]
+  content     String
+  youtubeUrl  String?
+  orderIndex  Int
+  quizQuestions QuizQuestion[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model QuizQuestion {
+  id            String   @id @default(cuid())
+  lessonId      String
+  lesson        Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  questionText  String
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctOption String   // A, B, C, D
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Enrollment {
-  id        String   @id @default(cuid())
-  courseId  String
-  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  progress  Int      @default(0)
-  status    String   @default("PENDING") // PENDING, APPROVED
-  createdAt DateTime @default(now())
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId              String
+  course                Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  status                String   @default("PENDING") // PENDING, APPROVED, REJECTED, COMPLETED
+  
+  // Old fields
+  progress              Int      @default(0)
+
+  // New fields
+  paymentScreenshotUrl  String?
+  paymentPhone          String?
+  timeSpentMinutes      Int      @default(0)
+  hasCompletedFirstQuiz Boolean  @default(false)
+  finalScore            Float    @default(0)
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt @default(now())
+  quizResults           QuizResult[]
 
   @@unique([courseId, userId])
+}
+
+model QuizResult {
+  id           String   @id @default(cuid())
+  enrollmentId String
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lessonId     String
+  score        Float
+  completedAt  DateTime @default(now())
+}
+
+model Certificate {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId       String
+  course         Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  score          Float
+  certificateUrl String
+  issuedAt       DateTime @default(now())
+}
+
+model TeacherActivationRequest {
+  id                 String   @id @default(cuid())
+  teacherId          String
+  teacher            User     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  paymentPhone       String
+  paymentScreenshotUrl String
+  status             String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  adminNote          String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model KycRecord {
+  id            String   @id @default(cuid())
+  teacherId     String
+  teacher       User     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  documentType  String   // citizenship, passport, national_id
+  frontImageUrl String
+  backImageUrl  String
+  status        String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  adminNote     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
 }
 
 model SupportTicket {

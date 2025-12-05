@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((session?.user as any)?.role !== "ADMIN") return new NextResponse("Unauthorized", { status: 401 });
 
   const { id } = await params;

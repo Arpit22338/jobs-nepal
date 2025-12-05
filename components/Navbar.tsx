@@ -98,6 +98,11 @@ export default function Navbar() {
             <Link href="/courses" className={getLinkClass("/courses")}>
               Skill Courses
             </Link>
+            {session && (
+              <Link href="/my-certificates" className={getLinkClass("/my-certificates")}>
+                Certificates
+              </Link>
+            )}
             {user?.role === "JOBSEEKER" && (
               <>
                 <Link href="/talent/new" className={getLinkClass("/talent/new")}>

@@ -2,7 +2,7 @@
 
 import { BookOpen, Clock, User, Lock, Unlock } from "lucide-react";
 import { useState } from "react";
-import { PaymentModal } from "@/components/PaymentModal";
+import { CourseEnrollmentModal } from "@/components/CourseEnrollmentModal";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -39,7 +39,7 @@ export default function CoursesList({ courses }: { courses: Course[] }) {
         router.push(`/courses/${course.id}`);
       }
     } else {
-      // Paid and locked -> Open Payment Modal
+      // Paid and locked -> Open Enrollment Modal
       setSelectedCourse(course);
     }
   };
@@ -110,17 +110,12 @@ export default function CoursesList({ courses }: { courses: Course[] }) {
       </div>
 
       {selectedCourse && (
-        <PaymentModal
+        <CourseEnrollmentModal
           isOpen={!!selectedCourse}
           onClose={() => setSelectedCourse(null)}
-          planName={selectedCourse.title}
-          amount={selectedCourse.price}
-          onSuccess={() => {
-            // In a real app, we would wait for admin approval.
-            // For now, we can redirect them or just close the modal.
-            // The user knows it takes 24 hours.
-            setSelectedCourse(null);
-          }}
+          courseId={selectedCourse.id}
+          courseTitle={selectedCourse.title}
+          price={selectedCourse.price}
         />
       )}
     </>

@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import DeleteUserButton from "@/components/DeleteUserButton";
 import TogglePremiumButton from "@/components/TogglePremiumButton";
+import Link from "next/link";
+import { Users, FileText, GraduationCap, CreditCard } from "lucide-react";
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
@@ -15,6 +17,12 @@ export default async function AdminDashboard() {
   const userCount = await prisma.user.count();
   const jobCount = await prisma.job.count();
   const courseCount = await prisma.course.count();
+  
+  // Get pending counts
+  const pendingActivations = await (prisma as any).teacherActivationRequest.count({ where: { status: "PENDING" } });
+  const pendingKyc = await (prisma as any).kycRecord.count({ where: { status: "PENDING" } });
+  const pendingEnrollments = await prisma.enrollment.count({ where: { status: "PENDING" } });
+
   const users = await prisma.user.findMany({
     take: 10,
     orderBy: { createdAt: "desc" },
@@ -23,6 +31,56 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+
+      {/* Quick Actions / Management Links */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Link href="/admin/teacher-activation" className="block p-6 bg-white border rounded-lg shadow-sm hover:shadow-md transition group">
+          <div className="flex items-center justify-between mb-2">
+            <Users className="w-6 h-6 text-blue-600" />
+            {pendingActivations > 0 && (
+              <span className="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded-full">
+                {pendingActivations} Pending
+              </span>
+            )}
+          </div>
+          <h3 className="font-semibold text-gray-900 group-hover:text-blue-600">Teacher Activations</h3>
+          <p className="text-sm text-gray-500">Approve teacher payments</p>
+        </Link>
+
+        <Link href="/admin/kyc" className="block p-6 bg-white border rounded-lg shadow-sm hover:shadow-md transition group">
+          <div className="flex items-center justify-between mb-2">
+            <FileText className="w-6 h-6 text-purple-600" />
+            {pendingKyc > 0 && (
+              <span className="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded-full">
+                {pendingKyc} Pending
+              </span>
+            )}
+          </div>
+          <h3 className="font-semibold text-gray-900 group-hover:text-purple-600">KYC Requests</h3>
+          <p className="text-sm text-gray-500">Verify teacher documents</p>
+        </Link>
+
+        <Link href="/admin/enrollments" className="block p-6 bg-white border rounded-lg shadow-sm hover:shadow-md transition group">
+          <div className="flex items-center justify-between mb-2">
+            <GraduationCap className="w-6 h-6 text-green-600" />
+            {pendingEnrollments > 0 && (
+              <span className="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded-full">
+                {pendingEnrollments} Pending
+              </span>
+            )}
+          </div>
+          <h3 className="font-semibold text-gray-900 group-hover:text-green-600">Course Enrollments</h3>
+          <p className="text-sm text-gray-500">Approve student payments</p>
+        </Link>
+
+        <Link href="/admin/premium-requests" className="block p-6 bg-white border rounded-lg shadow-sm hover:shadow-md transition group">
+          <div className="flex items-center justify-between mb-2">
+            <CreditCard className="w-6 h-6 text-orange-600" />
+          </div>
+          <h3 className="font-semibold text-gray-900 group-hover:text-orange-600">Premium Requests</h3>
+          <p className="text-sm text-gray-500">Approve job seeker premium</p>
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-sm border">

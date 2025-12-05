@@ -60,6 +60,7 @@ export default async function CoursesPage() {
       ...c,
       instructor: c.instructor || "Unknown",
       duration: c.duration || "Self-paced",
+      price: c.price || (c as any).priceNpr || 0,
       isUnlocked: unlockedTitles.includes(c.title)
     }))
   ];

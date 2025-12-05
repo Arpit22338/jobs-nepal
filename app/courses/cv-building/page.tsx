@@ -49,6 +49,13 @@ export default function CVCoursePage() {
     setShowCertificate(true);
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Call API to mark completion
+    fetch("/api/courses/complete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ courseId: "cv-building" }),
+    }).catch(err => console.error("Failed to mark completion", err));
   };
 
   const downloadCertificate = async () => {
