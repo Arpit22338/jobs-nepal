@@ -239,6 +239,7 @@ export default function Navbar() {
                           <span className={`${user?.isPremium ? 'text-yellow-700' : 'text-blue-600'} font-bold text-xs`}>{getInitials(user?.name || "U")}</span>
                        )}
                     </div>
+                    <ChevronDown size={14} className={`text-gray-500 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   {isProfileOpen && (
@@ -284,9 +285,9 @@ export default function Navbar() {
 
       {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-0 z-[100] bg-black/20 backdrop-blur-sm" onClick={() => setIsOpen(false)}>
+        <div className="lg:hidden fixed inset-0 z-[200] bg-black/20 backdrop-blur-sm" onClick={() => setIsOpen(false)}>
           <div 
-            className="fixed inset-y-0 right-0 w-[280px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col"
+            className="fixed inset-y-0 right-0 w-[280px] bg-white shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 border-b flex items-center justify-between">
