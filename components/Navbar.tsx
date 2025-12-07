@@ -282,11 +282,12 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-      </nav>
+      </div>
+    </nav>
 
       {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="fixed inset-0 z-[200] lg:hidden" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+        <div className="fixed inset-0 z-[200] lg:hidden">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
           <div 
             className="absolute inset-y-0 right-0 w-[280px] bg-white shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300"
