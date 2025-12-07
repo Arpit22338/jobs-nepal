@@ -30,7 +30,7 @@ export default function Navbar() {
 
   const getLinkClass = (path: string) => {
     const isActive = path === "/" ? pathname === "/" : pathname.startsWith(path);
-    return `${isActive ? "text-blue-600 font-semibold" : "text-gray-600 hover:text-blue-600 font-medium"} text-sm transition-colors tracking-wide`;
+    return `${isActive ? "text-blue-600 font-semibold" : "text-gray-600 hover:text-blue-600 font-medium"} text-[13px] transition-colors tracking-wide`;
   };
 
   const router = useRouter();
@@ -84,7 +84,7 @@ export default function Navbar() {
           </div>
 
           {/* Center: Desktop Menu */}
-          <div className="hidden lg:flex flex-1 justify-center items-center gap-8">
+          <div className="hidden lg:flex flex-1 justify-start items-center gap-6 ml-10">
             <Link href="/" className={`${getLinkClass("/")} whitespace-nowrap`}>
               Home
             </Link>
@@ -216,14 +216,60 @@ export default function Navbar() {
               </Link>
             )}
             {session && (
-              <Link href="/messages" className="text-gray-600 hover:text-blue-600 relative">
-                <MessageSquare size={22} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center ring-2 ring-white">
-                    {unreadCount}
-                  </span>
-                )}
-              </Link>
+              <>
+                <NotificationBell />
+                <Link href="/messages" className="text-gray-600 hover:text-blue-600 relative">
+                  <MessageSquare size={22} />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center ring-2 ring-white">
+                      {unreadCount}
+                    </span>
+                  )}
+                </Link>
+                
+                <div className="relative">
+                  <button 
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="flex items-center gap-1 focus:outline-none"
+                  >
+                    <div className={`relative w-8 h-8 rounded-full flex items-center justify-center overflow-hidden ${user?.isPremium ? 'border-2 border-yellow-500 bg-yellow-50' : 'border border-blue-200 bg-blue-100'}`}>
+                       {userImage ? (
+                          <Image src={userImage} alt={user?.name || "User"} fill className="object-cover" />
+                       ) : (
+                          <span className={`${user?.isPremium ? 'text-yellow-700' : 'text-blue-600'} font-bold text-xs`}>{getInitials(user?.name || "U")}</span>
+                       )}
+                    </div>
+                  </button>
+
+                  {isProfileOpen && (
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                      <div className="px-4 py-3 border-b border-gray-50 mb-1">
+                        <p className="font-semibold text-gray-900 truncate">{user?.name}</p>
+                        <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                      </div>
+                      <div className="px-2 space-y-0.5">
+                        <Link href="/profile" className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors" onClick={() => setIsProfileOpen(false)}>
+                          <User size={16} className="text-gray-400"/> Profile
+                        </Link>
+                        <Link href="/profile/edit" className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors" onClick={() => setIsProfileOpen(false)}>
+                          <Settings size={16} className="text-gray-400"/> Edit Profile
+                        </Link>
+                        <Link href="/premium" className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 rounded-lg transition-colors" onClick={() => setIsProfileOpen(false)}>
+                          <Crown size={16} className="text-yellow-500"/> Buy Premium
+                        </Link>
+                        <Link href="/support" className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors" onClick={() => setIsProfileOpen(false)}>
+                          <HelpCircle size={16} className="text-gray-400"/> Premium Support
+                        </Link>
+                      </div>
+                      <div className="border-t border-gray-50 my-1 pt-1 px-2">
+                        <button onClick={() => signOut()} className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors text-left">
+                          <LogOut size={16}/> Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
             )}
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -300,31 +346,7 @@ export default function Navbar() {
               )}
             </div>
 
-            {session ? (
-              <div className="p-4 border-t bg-gray-50">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`relative w-10 h-10 rounded-full flex items-center justify-center overflow-hidden ${user?.isPremium ? 'ring-2 ring-yellow-400' : 'bg-white border'}`}>
-                      {userImage ? (
-                          <Image src={userImage} alt={user?.name || "User"} fill className="object-cover" />
-                       ) : (
-                          <span className={`${user?.isPremium ? 'text-yellow-700' : 'text-blue-600'} font-bold`}>{getInitials(user?.name || "U")}</span>
-                       )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 truncate">{user?.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <Link href="/profile" className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-white border text-sm font-medium text-gray-700 hover:bg-gray-50" onClick={() => setIsOpen(false)}>
-                    <User size={16} /> Profile
-                  </Link>
-                  <button onClick={() => signOut()} className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-white border text-sm font-medium text-red-600 hover:bg-red-50">
-                    <LogOut size={16} /> Sign Out
-                  </button>
-                </div>
-              </div>
-            ) : (
+            {!session && (
               <div className="p-4 border-t space-y-3">
                 <Link href="/login" className="block w-full text-center px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50" onClick={() => setIsOpen(false)}>
                   Login
