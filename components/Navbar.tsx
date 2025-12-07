@@ -30,7 +30,7 @@ export default function Navbar() {
 
   const getLinkClass = (path: string) => {
     const isActive = path === "/" ? pathname === "/" : pathname.startsWith(path);
-    return `${isActive ? "text-blue-600 font-semibold" : "text-gray-600 hover:text-blue-600"} text-base transition-colors`;
+    return `${isActive ? "text-blue-600 font-semibold" : "text-gray-600 hover:text-blue-600 font-medium"} text-sm transition-colors tracking-wide`;
   };
 
   const router = useRouter();
@@ -73,7 +73,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 flex-nowrap">
           {/* Left: Logo */}
-          <div className="flex-shrink-0 flex items-center">
+          <div className="flex-shrink-0 flex items-center mr-8">
             <Link href="/" className="flex items-center gap-2 group">
               <Image src="/logo.png" alt="Rojgaar Logo" width={32} height={32} className="object-contain group-hover:scale-105 transition-transform" />
               <div className="text-xl font-bold flex items-center tracking-tight whitespace-nowrap">
@@ -84,7 +84,7 @@ export default function Navbar() {
           </div>
 
           {/* Center: Desktop Menu */}
-          <div className="hidden lg:flex flex-1 justify-center items-center gap-6 xl:gap-8">
+          <div className="hidden lg:flex flex-1 justify-center items-center gap-8">
             <Link href="/" className={`${getLinkClass("/")} whitespace-nowrap`}>
               Home
             </Link>
