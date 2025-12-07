@@ -69,9 +69,10 @@ export default function Navbar() {
   }, [session]);
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 flex-nowrap">
+    <>
+      <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 flex-nowrap">
           {/* Left: Logo */}
           <div className="flex-shrink-0 flex items-center mr-8">
             <Link href="/" className="flex items-center gap-2 group">
@@ -278,16 +279,17 @@ export default function Navbar() {
               aria-label="Toggle menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            </div>
           </div>
         </div>
-      </div>
+      </nav>
 
       {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-0 z-[200] bg-black/20 backdrop-blur-sm" onClick={() => setIsOpen(false)}>
+        <div className="fixed inset-0 z-[200] lg:hidden" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
           <div 
-            className="fixed inset-y-0 right-0 w-[280px] bg-white shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300"
+            className="absolute inset-y-0 right-0 w-[280px] bg-white shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 border-b flex items-center justify-between">
@@ -360,6 +362,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </nav>
+    </>
   );
 }
