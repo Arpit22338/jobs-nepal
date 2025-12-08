@@ -77,19 +77,32 @@ export default function PythonPlayground({
     setStatus("idle");
 
     try {
-      // Redirect stdout to capture print statements
-      await pyodide.runPythonAsync(`
+      // Setup output capture
+      pyodide.runPython(`
         import sys
-        from io import StringIO
-        sys.stdout = StringIO()
+        import io
+        sys.stdout = io.StringIO()
+        sys.stderr = io.StringIO()
       `);
 
       // Run the user's code
-      await pyodide.runPythonAsync(code);
+      try {
+        pyodide.runPython(code);
+      } catch (err) {
+        // Capture any runtime errors
+        const stderr = pyodide.runPython("sys.stderr.getvalue()");
+        if (stderr) {
+          throw new Error(stderr);
+        }
+        throw err;
+      }
 
       // Get the output
-      const stdout = await pyodide.runPythonAsync("sys.stdout.getvalue()");
-      setOutput(stdout);
+      const stdout = pyodide.runPython("sys.stdout.getvalue()");
+      const stderr = pyodide.runPython("sys.stderr.getvalue()");
+      
+      const fullOutput = stderr ? `${stdout}\n${stderr}` : stdout;
+      setOutput(fullOutput || "(No output)");
 
       if (expectedOutput) {
         // Normalize outputs (trim whitespace)

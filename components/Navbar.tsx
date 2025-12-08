@@ -37,7 +37,8 @@ export default function Navbar() {
 
   useEffect(() => {
     if (session && user?.role === "TEACHER" && !user.isPremium) {
-      if (pathname !== "/teacher/verification" && pathname !== "/login") {
+      const allowedPaths = ["/teacher/verification", "/teacher/kyc", "/login"];
+      if (!allowedPaths.some(path => pathname.startsWith(path))) {
         router.push("/teacher/verification");
       }
     }
