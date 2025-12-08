@@ -116,7 +116,7 @@ export default function Navbar() {
           </div>
 
           {/* Center: Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-3 flex-1">
+          <div className="hidden lg:flex items-center gap-3 flex-1 ml-8">
             <Link href="/" className={`${getLinkClass("/")} whitespace-nowrap`}>
               Home
             </Link>
@@ -180,7 +180,7 @@ export default function Navbar() {
           </div>
 
           {/* Right: Icons & Auth */}
-          <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
+          <div className="hidden lg:flex items-center gap-4">
             {session ? (
               <>
                 <NotificationBell />

@@ -216,7 +216,7 @@ sys.stdout = _stdout_capture
       </div>
 
       {/* Output Panel */}
-      <div className="h-[180px] sm:h-[200px] md:h-[240px] bg-black border-t border-slate-700 flex flex-col shrink-0">
+      <div className="flex-1 min-h-0 bg-black border-t border-slate-700 flex flex-col shrink-0">
         <div className="px-2.5 sm:px-3 md:px-4 py-2 bg-slate-950 border-b border-slate-800 text-[10px] sm:text-xs font-mono flex justify-between items-center shrink-0">
           <span className="text-slate-500 font-semibold">OUTPUT</span>
           {status === "success" && (
