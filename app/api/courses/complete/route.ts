@@ -85,6 +85,7 @@ export async function POST(req: Request) {
       where: { courseId, userId: session.user.id },
     });
 
+    let certificateCreated = false;
     if (!existingCert) {
       await prisma.certificate.create({
         data: {
@@ -94,9 +95,15 @@ export async function POST(req: Request) {
           certificateUrl: "",
         },
       });
+      certificateCreated = true;
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true, 
+      certificateCreated,
+      certificateAlreadyExists: !!existingCert,
+      message: certificateCreated ? "Certificate created successfully" : "Certificate already exists"
+    });
   } catch (error) {
     console.error("Completion error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

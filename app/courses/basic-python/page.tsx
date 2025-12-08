@@ -333,12 +333,17 @@ export default function PythonCoursePage() {
               if (response.ok) {
                 const data = await response.json();
                 console.log("Course completed successfully:", data);
+                console.log("Certificate should now be available in My Certificates page");
               } else {
                 const error = await response.json();
                 console.error("Failed to mark completion:", error);
+                alert("Failed to save your certificate. Please contact support.");
               }
             })
-            .catch(err => console.error("Failed to mark completion", err));
+            .catch(err => {
+              console.error("Failed to mark completion", err);
+              alert("Network error while saving certificate. Please try again later.");
+            });
         } else {
           setCurrentQuestionIndex(prev => prev + 1);
         }
