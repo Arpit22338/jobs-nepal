@@ -65,8 +65,16 @@ export async function POST(req: Request) {
            }
          });
       } else {
-        return NextResponse.json({ error: "Not enrolled" }, { status: 400 });
+        return NextResponse.json({ error: "Not enrolled in this course" }, { status: 400 });
       }
+    }
+
+    // Auto-approve enrollment if it's still pending (for paid courses that user completed)
+    if (enrollment.status === "PENDING") {
+      enrollment = await prisma.enrollment.update({
+        where: { id: enrollment.id },
+        data: { status: "APPROVED" }
+      });
     }
 
     // 2. Mark as completed (In a real app, this would happen after quizzes)

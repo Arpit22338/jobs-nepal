@@ -123,47 +123,47 @@ export default function CertificateTemplate({
             has successfully completed the comprehensive course on
           </p>
           
-          <h2 className="text-xl font-bold mb-6" style={{ color: '#1e40af' }}>{courseName}</h2>
+          <h2 className="text-xl font-bold mb-8" style={{ color: '#1e40af' }}>{courseName}</h2>
           
-          <div className="flex justify-between items-end w-full px-8 mt-4">
-            <div className="text-center flex flex-col items-center">
-              <div className="text-base font-bold border-b px-4 pb-1 mb-1 min-w-[120px]" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%', paddingLeft: '60px', paddingRight: '60px', marginTop: '40px' }}>
+            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ fontSize: '16px', fontWeight: 'bold', borderBottom: '1px solid #9ca3af', paddingLeft: '16px', paddingRight: '16px', paddingBottom: '4px', marginBottom: '4px', minWidth: '120px', color: '#1f2937' }}>
                 {new Date(completionDate).toLocaleDateString()}
               </div>
-              <div className="text-xs" style={{ color: '#6b7280' }}>Date</div>
+              <div style={{ fontSize: '12px', color: '#6b7280' }}>Date</div>
             </div>
 
-            <div className="flex flex-col items-center">
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                {/* Seal */}
-               <div className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold shadow-lg border-4 mb-2" style={{ backgroundColor: '#eab308', borderColor: '#ca8a04' }}>
-                  <Award size={32} />
+               <div style={{ width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#eab308', border: '4px solid #ca8a04', marginBottom: '8px' }}>
+                  <Award size={32} style={{ color: '#ffffff' }} />
                </div>
             </div>
             
-            <div className="text-center flex flex-col items-center relative">
-              {/* Signature positioned absolutely to overlap the line */}
-              <div className="absolute bottom-[10px] left-1/2 transform -translate-x-1/2 z-10">
+            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+              {/* Signature */}
+              <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
                 {signBase64 ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img 
                     src={signBase64} 
                     alt="Signature" 
                     style={{ 
-                      height: '150px', 
+                      height: '100px', 
                       width: 'auto', 
                       maxWidth: 'none' 
                     }} 
                   />
                 ) : (
-                   <div className="text-9xl font-script font-cursive" style={{ fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
+                   <div style={{ fontSize: '48px', fontFamily: 'cursive', color: '#1e3a8a' }}>Arpit</div>
                  )}
               </div>
               
               {/* Name Line */}
-              <div className="text-base font-bold border-t pt-2 px-8 min-w-[200px] mt-8 relative z-0" style={{ color: '#1f2937', borderColor: '#9ca3af' }}>
+              <div style={{ fontSize: '16px', fontWeight: 'bold', borderTop: '1px solid #9ca3af', paddingTop: '8px', paddingLeft: '32px', paddingRight: '32px', minWidth: '200px', marginTop: '60px', position: 'relative', zIndex: 0, color: '#1f2937' }}>
                 {instructorName}
               </div>
-              <div className="text-xs mt-1" style={{ color: '#6b7280' }}>CEO, RojgaarNepal</div>
+              <div style={{ fontSize: '12px', marginTop: '4px', color: '#6b7280' }}>CEO, RojgaarNepal</div>
             </div>
           </div>
         </div>
