@@ -202,7 +202,7 @@ sys.stdout = _stdout_capture
       </div>
 
       {/* Editor Area */}
-      <div className="h-[160px] sm:h-[180px] md:h-[220px] relative overflow-hidden group shrink-0">
+      <div className="h-[120px] sm:h-[140px] md:h-[160px] relative overflow-hidden group shrink-0">
         <textarea
           value={code}
           onChange={(e) => setCode(e.target.value)}
@@ -216,7 +216,7 @@ sys.stdout = _stdout_capture
       </div>
 
       {/* Output Panel */}
-      <div className="h-[100px] sm:h-[120px] md:h-[160px] bg-black border-t border-slate-700 flex flex-col shrink-0">
+      <div className="h-[140px] sm:h-[160px] md:h-[200px] bg-black border-t border-slate-700 flex flex-col shrink-0">
         <div className="px-2.5 sm:px-3 md:px-4 py-2 bg-slate-950 border-b border-slate-800 text-[10px] sm:text-xs font-mono flex justify-between items-center shrink-0">
           <span className="text-slate-500 font-semibold">OUTPUT</span>
           {status === "success" && (
