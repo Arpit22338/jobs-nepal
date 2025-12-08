@@ -116,7 +116,7 @@ export default function Navbar() {
           </div>
 
           {/* Center: Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-3 flex-1 ml-8">
+          <div className="hidden lg:flex items-center gap-3 flex-1 ml-16">
             <Link href="/" className={`${getLinkClass("/")} whitespace-nowrap`}>
               Home
             </Link>
