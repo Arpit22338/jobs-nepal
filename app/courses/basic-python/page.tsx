@@ -236,7 +236,7 @@ export default function PythonCoursePage() {
                         </div>
                         <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">Python 3.10</span>
                       </div>
-                      <div className="h-[500px] w-full">
+                      <div className="w-full">
                         <PythonPlayground 
                           initialCode={lesson.challenge.initialCode}
                           expectedOutput={lesson.challenge.expectedOutput}
