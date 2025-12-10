@@ -129,7 +129,7 @@ export default function RegisterPage() {
           >
             <option value="JOBSEEKER">Job Seeker</option>
             <option value="EMPLOYER">Employer</option>
-            {teacherLoginEnabled && <option value="TEACHER">Skill Teacher</option>}
+            {teacherLoginEnabled ? <option value="TEACHER">Skill Teacher</option> : null}
           </select>
           {errors.role && (
             <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
