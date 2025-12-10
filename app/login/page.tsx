@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { getSetting } from "@/lib/settings";
+// ...existing code...
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -27,11 +27,7 @@ export default function LoginPage() {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
-  useEffect(() => {
-    getSetting("teacher_login_enabled").then((val) => {
-      setTeacherLoginEnabled(val !== "false");
-    });
-  }, []);
+  // Removed teacherLoginEnabled effect since state is not used
 
   const onSubmit = async (data: LoginFormValues) => {
     setError(null);
