@@ -19,7 +19,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [teacherLoginEnabled, setTeacherLoginEnabled] = useState(true);
+  // Removed teacherLoginEnabled state since role dropdown is not used
   const {
     register,
     handleSubmit,
@@ -92,15 +92,7 @@ export default function LoginPage() {
               <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
             )}
           </div>
-          {/* Login role dropdown */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Login as</label>
-            <select className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-gray-900">
-              <option value="JOBSEEKER">Job Seeker</option>
-              <option value="EMPLOYER">Employer</option>
-              {teacherLoginEnabled && <option value="TEACHER">Skill Teacher</option>}
-            </select>
-          </div>
+          {/* ...existing code... */}
           <button
             type="submit"
             disabled={isSubmitting}
