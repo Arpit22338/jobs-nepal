@@ -1,4 +1,4 @@
-import { getSetting, setSetting } from "@/lib/settings";
+import { setSetting } from "@/lib/settings";
 import { useState } from "react";
 
 export default function TeacherLoginToggle({ initialValue }: { initialValue: boolean }) {
