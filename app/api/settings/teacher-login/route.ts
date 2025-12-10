@@ -1,14 +1,19 @@
 import { NextResponse } from "next/server";
-import { setSetting } from "@/lib/settings";
+
+// Temporary safe handlers: avoid direct Prisma usage until we diagnose production error.
+let inMemoryValue = "true";
+
+export async function GET() {
+  return NextResponse.json({ value: inMemoryValue });
+}
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { enabled } = body as { enabled: boolean };
-    await setSetting("teacher_login_enabled", enabled ? "true" : "false");
-    return NextResponse.json({ ok: true });
-  } catch (err) {
-    console.error("Error updating teacher login setting:", err);
-    return new NextResponse(JSON.stringify({ error: "Failed to update setting" }), { status: 500 });
+    const value = String(body?.value ?? "false");
+    inMemoryValue = value;
+    return NextResponse.json({ value });
+  } catch {
+    return NextResponse.json({ error: "Failed to update setting" }, { status: 500 });
   }
 }
