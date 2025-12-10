@@ -36,9 +36,12 @@ export default function RegisterPage() {
     },
   });
   useEffect(() => {
-    getSetting("teacher_login_enabled").then((val) => {
-      setTeacherLoginEnabled(val !== "false");
-    });
+    const interval = setInterval(() => {
+      getSetting("teacher_login_enabled").then((val) => {
+        setTeacherLoginEnabled(val !== "false");
+      });
+    }, 2000);
+    return () => clearInterval(interval);
   }, []);
 
   const onSubmit = async (data: RegisterFormValues) => {

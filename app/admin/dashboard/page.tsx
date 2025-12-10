@@ -35,7 +35,23 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-      <TeacherLoginToggle initialValue={teacherLoginEnabled} />
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
+          <TeacherLoginToggle initialValue={teacherLoginEnabled} />
+          <button
+            className="px-3 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold border border-gray-300"
+            onClick={() => window.location.reload()}
+          >
+            Refresh
+          </button>
+        </div>
+        <button
+          className="px-3 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold border border-gray-300"
+          onClick={() => window.location.reload()}
+        >
+          Refresh
+        </button>
+      </div>
       {/* Quick Actions / Management Links */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Link href="/admin/teacher-activation" className="block p-6 bg-white border rounded-lg shadow-sm hover:shadow-md transition group">
