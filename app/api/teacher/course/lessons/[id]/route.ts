@@ -19,21 +19,17 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const course = await prisma.course.findFirst({
-      where: { teacherId: session.user.id } as any
-    });
-
-    if (!course) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
-    }
-
-    // Verify lesson belongs to course
-    const existingLesson = await (prisma as any).lesson.findFirst({
-      where: { id, courseId: course.id }
+    const existingLesson = await (prisma as any).lesson.findUnique({
+      where: { id },
+      include: { course: true }
     });
 
     if (!existingLesson) {
       return NextResponse.json({ error: "Lesson not found" }, { status: 404 });
+    }
+
+    if (existingLesson.course.teacherId !== session.user.id) {
+      return NextResponse.json({ error: "Unauthorized: You do not own this course" }, { status: 403 });
     }
 
     const body = await req.json();
@@ -66,20 +62,17 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const course = await prisma.course.findFirst({
-      where: { teacherId: session.user.id } as any
-    });
-
-    if (!course) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
-    }
-
-    const existingLesson = await (prisma as any).lesson.findFirst({
-      where: { id, courseId: course.id }
+    const existingLesson = await (prisma as any).lesson.findUnique({
+      where: { id },
+      include: { course: true }
     });
 
     if (!existingLesson) {
       return NextResponse.json({ error: "Lesson not found" }, { status: 404 });
+    }
+
+    if (existingLesson.course.teacherId !== session.user.id) {
+      return NextResponse.json({ error: "Unauthorized: You do not own this course" }, { status: 403 });
     }
 
     await (prisma as any).lesson.delete({

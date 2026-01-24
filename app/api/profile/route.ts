@@ -53,7 +53,11 @@ export async function PUT(req: Request) {
     const { image } = body;
 
     console.log("Updating profile for:", userId, "Role:", role);
-    console.log("Update data:", body);
+
+    // Security: Never allow role escalation via profile update
+    if (body.role && body.role !== role) {
+      return NextResponse.json({ message: "Role changes are not allowed" }, { status: 403 });
+    }
 
     if (image) {
       await prisma.user.update({
@@ -64,7 +68,7 @@ export async function PUT(req: Request) {
 
     if (role === "JOBSEEKER") {
       const { bio, skills, location, experience, education, resumeUrl, portfolioUrl } = body;
-      
+
       await prisma.jobSeekerProfile.upsert({
         where: { userId },
         update: { bio, skills, location, experience, education, resumeUrl, portfolioUrl } as any,

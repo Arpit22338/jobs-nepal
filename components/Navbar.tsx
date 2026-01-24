@@ -7,7 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Settings, HelpCircle, LayoutDashboard } from "lucide-react";
 import { useState, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
-import ThemeToggle from "./ThemeToggle";
+import { ThemeToggle } from "./ui/theme-toggle";
 import { getCurrentUserImage } from "@/app/actions";
 
 export default function Navbar() {

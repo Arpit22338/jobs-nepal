@@ -69,7 +69,7 @@ export default function LoginPage() {
             <label className="block text-sm font-medium text-foreground mb-1.5">Email Address</label>
             <input
               type="email"
-              placeholder="name@example.com"
+              placeholder="example@gmail.com"
               {...register("email")}
               className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
             />

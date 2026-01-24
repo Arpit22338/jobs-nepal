@@ -39,10 +39,12 @@ export default async function Home() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-foreground leading-tight">
-            Unlock Your <span className="text-primary">Potential</span>
+            Top <span className="text-primary">Jobs in Nepal</span>
             <br />
-            Build Your <span className="text-primary">Future</span>
+            & <span className="text-primary">Freelancing</span> Portal
           </h1>
+
+          <h2 className="sr-only">Hire experts in Nepal, find Rojgaar, and learn Python or basic skills.</h2>
 
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
             Connecting ambitious talent with visionary employers across Nepal.

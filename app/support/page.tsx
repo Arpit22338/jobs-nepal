@@ -62,82 +62,101 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-6">Premium Customer Support</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <p className="text-gray-600 mb-8">
-            As a premium member, you have access to our priority support channel. 
-            Please describe your issue below.
+    <div className="min-h-[calc(100vh-80px)] py-12 px-4">
+      <div className="max-w-4xl mx-auto space-y-10">
+        <div className="text-center">
+          <h1 className="text-4xl font-black text-foreground mb-4">Premium Support</h1>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            As a premium member, you have access to our priority support channel.
+            We&apos;re here to help you succeed.
           </p>
-
-          <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-md border">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-              <input
-                type="text"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                className="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Brief summary of the issue"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="w-full border rounded-md px-4 py-2 h-32 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                placeholder="Describe your problem in detail..."
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-            >
-              {loading ? "Submitting..." : "Submit Ticket"}
-            </button>
-          </form>
         </div>
 
-        <div>
-          <h2 className="text-xl font-bold mb-4">Your Tickets</h2>
-          <div className="space-y-4 max-h-[600px] overflow-y-auto">
-            {tickets.length === 0 ? (
-              <p className="text-gray-500 italic">No tickets submitted yet.</p>
-            ) : (
-              tickets.map((ticket) => (
-                <div key={ticket.id} className="bg-white p-4 rounded-lg shadow border">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-semibold text-lg">{ticket.subject}</h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                      ticket.status === "OPEN" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                    }`}>
-                      {ticket.status}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-400 mb-3">
-                    {new Date(ticket.createdAt).toLocaleDateString()}
-                  </p>
-                  <div className="bg-gray-50 p-3 rounded mb-3 text-sm text-gray-700">
-                    {ticket.message}
-                  </div>
-                  
-                  {ticket.reply && (
-                    <div className="bg-blue-50 p-3 rounded border border-blue-100">
-                      <p className="text-xs font-bold text-blue-800 mb-1">Admin Reply:</p>
-                      <p className="text-sm text-gray-800">{ticket.reply}</p>
-                    </div>
-                  )}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+              <span className="w-1.5 h-6 bg-primary rounded-full"></span>
+              Submit a Ticket
+            </h2>
+            <div className="glass-card p-8 rounded-3xl border border-border/50 shadow-xl relative overflow-hidden">
+              {/* Background glow */}
+              <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl"></div>
+
+              <form onSubmit={handleSubmit} className="space-y-6 relative">
+                <div>
+                  <label className="block text-sm font-bold text-foreground mb-2">Subject</label>
+                  <input
+                    type="text"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    className="w-full bg-background/50 border border-input rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/50 font-medium"
+                    placeholder="मुद्दाको संक्षिप्त सारांश (Brief summary)"
+                    required
+                  />
                 </div>
-              ))
-            )}
+
+                <div>
+                  <label className="block text-sm font-bold text-foreground mb-2">Message</label>
+                  <textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="w-full bg-background/50 border border-input rounded-xl px-4 py-3 h-40 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none placeholder:text-muted-foreground/50 font-medium"
+                    placeholder="आफ्नो समस्याको विस्तारमा वर्णन गर्नुहोस्..."
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-primary text-primary-foreground font-black py-4 rounded-xl hover:bg-primary/90 transition-all active:scale-[0.98] shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? "Submitting..." : "Submit Ticket"}
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+              <span className="w-1.5 h-6 bg-green-500 rounded-full"></span>
+              Your History
+            </h2>
+            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+              {tickets.length === 0 ? (
+                <div className="glass-card p-10 rounded-3xl border-dashed border-2 flex flex-col items-center justify-center text-center">
+                  <p className="text-muted-foreground font-medium italic">No tickets submitted yet.</p>
+                </div>
+              ) : (
+                tickets.map((ticket) => (
+                  <div key={ticket.id} className="glass-card p-6 rounded-3xl border border-border/50 shadow-sm group hover:border-primary/30 transition-all">
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="font-black text-lg text-foreground group-hover:text-primary transition-colors">{ticket.subject}</h3>
+                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${ticket.status === "OPEN" ? "bg-green-500/10 text-green-600 border border-green-500/20" : "bg-muted text-muted-foreground border border-border"
+                        }`}>
+                        {ticket.status}
+                      </span>
+                    </div>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-1.5">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      {new Date(ticket.createdAt).toLocaleDateString()}
+                    </p>
+                    <div className="bg-accent/30 p-4 rounded-2xl text-sm text-foreground/80 font-medium mb-4 border border-border/20">
+                      {ticket.message}
+                    </div>
+
+                    {ticket.reply && (
+                      <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10 relative">
+                        <div className="absolute top-0 left-6 -translate-y-1/2 bg-primary text-primary-foreground text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-widest">
+                          Admin Reply
+                        </div>
+                        <p className="text-sm text-foreground/90 font-bold ">{ticket.reply}</p>
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>

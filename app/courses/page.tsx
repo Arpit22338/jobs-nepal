@@ -2,6 +2,13 @@ import { prisma } from "@/lib/prisma";
 import CoursesList from "@/components/CoursesList";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Professional Skill Courses in Nepal",
+  description: "Master Python, Digital Marketing, and CV building with our certified courses. Boost your employability with Rojgaar Nepal's career-focused education.",
+  keywords: ["python basic course in nepal", "skill development", "online courses nepal", "get certified nepal"],
+};
 
 export const dynamic = "force-dynamic";
 

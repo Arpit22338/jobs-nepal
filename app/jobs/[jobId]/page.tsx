@@ -8,6 +8,30 @@ import { applyForJob, deleteQuestion, createAnswer, deleteAnswer } from "@/app/a
 import { Trash2, MessageCircle, MapPin, Briefcase, Zap, Star, ShieldCheck, Send } from "lucide-react";
 import ReportButton from "@/components/ReportButton";
 import SaveJobButton from "@/components/SaveJobButton";
+import { Metadata, ResolvingMetadata } from "next";
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { jobId } = await params;
+  const job = await prisma.job.findUnique({
+    where: { id: jobId },
+    select: { title: true, description: true, location: true }
+  });
+
+  if (!job) return { title: "Job Not Found" };
+
+  return {
+    title: `${job.title} in ${job.location}`,
+    description: job.description.substring(0, 160),
+    openGraph: {
+      title: `${job.title} | Rojgaar Nepal`,
+      description: job.description.substring(0, 160),
+      type: "article",
+    },
+  };
+}
 
 interface Props {
   params: Promise<{
@@ -91,8 +115,45 @@ export default async function JobDetailsPage({ params }: Props) {
     if (saved) isSaved = true;
   }
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    "title": job.title,
+    "description": job.description,
+    "datePosted": job.createdAt.toISOString(),
+    "validThrough": job.expiresAt?.toISOString(),
+    "employmentType": job.type,
+    "hiringOrganization": {
+      "@type": "Organization",
+      "name": job.employer.employerProfile?.companyName || "Private Employer",
+      "sameAs": job.employer.employerProfile?.website || "https://rojgaarnepal.com",
+    },
+    "jobLocation": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": job.location,
+        "addressCountry": "NP",
+      },
+    },
+    "baseSalary": job.salaryMin ? {
+      "@type": "MonetaryAmount",
+      "currency": "NPR",
+      "value": {
+        "@type": "QuantitativeValue",
+        "minValue": job.salaryMin,
+        "maxValue": job.salaryMax,
+        "unitText": "MONTH"
+      }
+    } : undefined,
+  };
+
   return (
     <div className="max-w-5xl mx-auto py-12 px-4 space-y-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Job Header Card */}
       <div className="glass-card p-8 md:p-12 rounded-[40px] shadow-2xl relative overflow-hidden">
         {/* Background Accent */}
@@ -155,7 +216,7 @@ export default async function JobDetailsPage({ params }: Props) {
                   ) : hasCompletedProfile ? (
                     <form action={async () => {
                       "use server";
-                      await applyForJob(job.id, job.employerId);
+                      await applyForJob(job.id);
                     }}>
                       <button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-black px-6 py-4 rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-center">
                         Apply Instantly

@@ -68,7 +68,7 @@ export default function ContactPage() {
                                     <input
                                         {...register("firstName", { required: true })}
                                         className="w-full px-4 py-3 rounded-xl border border-input bg-background/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                        placeholder="John"
+                                        placeholder="Aakash"
                                     />
                                     {errors.firstName && <span className="text-xs text-red-500">Required</span>}
                                 </div>
@@ -77,7 +77,7 @@ export default function ContactPage() {
                                     <input
                                         {...register("lastName", { required: true })}
                                         className="w-full px-4 py-3 rounded-xl border border-input bg-background/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                        placeholder="Doe"
+                                        placeholder="Rijal"
                                     />
                                     {errors.lastName && <span className="text-xs text-red-500">Required</span>}
                                 </div>
@@ -89,7 +89,7 @@ export default function ContactPage() {
                                     type="email"
                                     {...register("email", { required: true })}
                                     className="w-full px-4 py-3 rounded-xl border border-input bg-background/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                    placeholder="you@company.com"
+                                    placeholder="example@gmail.com"
                                 />
                                 {errors.email && <span className="text-xs text-red-500">Required</span>}
                             </div>
@@ -100,7 +100,7 @@ export default function ContactPage() {
                                     {...register("message", { required: true })}
                                     rows={4}
                                     className="w-full px-4 py-3 rounded-xl border border-input bg-background/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none"
-                                    placeholder="Tell us what you need help with..."
+                                    placeholder="हामीलाई कसरी मद्दत गर्न सक्छौं, बताउनुहोस्..."
                                 />
                                 {errors.message && <span className="text-xs text-red-500">Required</span>}
                             </div>

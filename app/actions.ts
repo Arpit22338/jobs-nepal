@@ -84,13 +84,30 @@ export async function toggleTrust(trustedId: string) {
   }
 }
 
-export async function applyForJob(jobId: string, employerId: string) {
+export async function applyForJob(jobId: string) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
 
   const userId = session.user.id;
+
+  // Fetch job details first to verify it exists and get the real employerId
+  const job = await prisma.job.findUnique({
+    where: { id: jobId },
+    select: {
+      id: true,
+      title: true,
+      employerId: true,
+      employer: { select: { email: true } }
+    }
+  });
+
+  if (!job) {
+    throw new Error("Job not found");
+  }
+
+  const employerId = job.employerId;
 
   // Check if already applied
   const existingApplication = await prisma.application.findFirst({
@@ -113,15 +130,9 @@ export async function applyForJob(jobId: string, employerId: string) {
     },
   });
 
-  // Fetch job details for the message
-  const job = await prisma.job.findUnique({
-    where: { id: jobId },
-    select: { title: true, employer: { select: { email: true } } }
-  });
+  const jobTitle = job.title || "this job";
 
-  const jobTitle = job?.title || "this job";
-
-  // Send notification message to employer
+  // Send notification message to employer (REAL employerId from DB)
   await prisma.message.create({
     data: {
       senderId: userId,
@@ -131,7 +142,7 @@ export async function applyForJob(jobId: string, employerId: string) {
   });
 
   // Send email
-  if (job?.employer?.email && session.user.name) {
+  if (job.employer?.email && session.user.name) {
     await sendApplicationEmail(job.employer.email, jobTitle, session.user.name);
   }
 
@@ -167,9 +178,9 @@ export async function deleteJob(jobId: string) {
 
 export async function deleteUser(userId: string) {
   const session = await getServerSession(authOptions);
-  
+
   console.log("Delete User Action - Session:", session?.user);
-  
+
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     console.log("Unauthorized delete attempt");
     throw new Error("Unauthorized");
@@ -179,11 +190,11 @@ export async function deleteUser(userId: string) {
     // Delete related records first if necessary (Prisma cascade should handle most)
     // But let's be explicit about what we are deleting to debug
     console.log("Deleting user:", userId);
-    
+
     await prisma.user.delete({
       where: { id: userId },
     });
-    
+
     console.log("User deleted successfully");
     revalidatePath("/admin/dashboard");
   } catch (error) {
@@ -250,7 +261,7 @@ export async function deleteMessage(messageId: string) {
   await prisma.message.delete({
     where: { id: messageId },
   });
-  
+
   // We can't easily revalidate the specific chat page from here since we don't know the other user's ID easily without fetching more data,
   // but the client-side polling in ChatPage will pick up the change.
 }
@@ -272,7 +283,7 @@ export async function createAnswer(questionId: string, content: string) {
 
   // Allow anyone to reply? User said "others can reply to anyone of their choice".
   // So yes, any authenticated user can reply.
-  
+
   await (prisma as any).answer.create({
     data: {
       content,
@@ -339,7 +350,7 @@ export async function deleteAnswer(answerId: string) {
   const question = await prisma.question.findUnique({
     where: { id: answer.questionId },
   });
-  
+
   if (question) {
     revalidatePath(`/jobs/${question.jobId}`);
   }
@@ -376,7 +387,7 @@ export async function markNotificationAsRead(notificationId: string) {
     where: { id: notificationId },
     data: { isRead: true },
   });
-  
+
   revalidatePath("/"); // Revalidate everywhere? Or just let client state handle it.
 }
 
@@ -420,12 +431,12 @@ export async function deleteTalentPost(postId: string) {
 export async function getCurrentUserImage() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return null;
-  
+
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
     select: { image: true }
   });
-  
+
   return user?.image;
 }
 

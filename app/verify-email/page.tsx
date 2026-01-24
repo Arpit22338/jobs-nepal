@@ -93,7 +93,7 @@ function VerifyEmailContent() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-              placeholder="your@email.com"
+              placeholder="example@gmail.com"
             />
           </div>
           <div>

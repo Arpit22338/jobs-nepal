@@ -52,11 +52,10 @@ export async function GET(
       profileData = { image: user.image };
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       user: {
         id: user.id,
         name: user.name,
-        email: user.email,
         role: user.role,
         image: user.image,
       },

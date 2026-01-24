@@ -52,7 +52,7 @@ export default function NewTalentPostPage() {
           <input
             {...register("title")}
             className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
-            placeholder="e.g. Senior React Developer looking for new opportunities"
+            placeholder="उदा. वरिष्ठ डिजाइनर (Senior Designer) नयाँ अवसरको खोजीमा"
           />
           {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
         </div>
@@ -63,7 +63,7 @@ export default function NewTalentPostPage() {
             {...register("bio")}
             rows={4}
             className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
-            placeholder="Tell employers about yourself..."
+            placeholder="आफ्नो बारेमा रोजगारदाताहरूलाई केही रोचक कुरा बताउनुहोस्..."
           />
           {errors.bio && <p className="text-red-500 text-sm mt-1">{errors.bio.message}</p>}
         </div>
@@ -73,7 +73,7 @@ export default function NewTalentPostPage() {
           <input
             {...register("skills")}
             className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
-            placeholder="React, Node.js, TypeScript"
+            placeholder="Photoshop, Excel, Video Editing, Sales"
           />
           {errors.skills && <p className="text-red-500 text-sm mt-1">{errors.skills.message}</p>}
         </div>

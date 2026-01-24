@@ -19,6 +19,7 @@
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@stripe/stripe-js": "^8.5.3",
+    "@types/three": "^0.182.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -35,6 +36,7 @@
     "stripe": "^20.0.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.182.0",
     "web-push": "^3.6.7",
     "zod": "^4.1.13"
   },

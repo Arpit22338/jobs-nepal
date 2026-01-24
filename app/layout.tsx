@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import MobileFooter from "../components/MobileFooter";
 import Footer from "../components/Footer";
 import CursorGlow from "../components/CursorGlow";
+import AnimatedShaderBackground from "@/components/ui/animated-shader-background";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,8 +19,41 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RojgaarNepal",
-  description: "Connecting Nepali Youth with Opportunities",
+  metadataBase: new URL("https://rojgaarnepal.com"),
+  title: {
+    default: "Rojgaar Nepal - Top Job & Freelancing Site in Nepal",
+    template: "%s | Rojgaar Nepal"
+  },
+  description: "Rojgaar Nepal is the #1 platform for finding jobs in Nepal, freelancing opportunities, and professional skill courses. Hire experts or find your dream career today.",
+  keywords: [
+    "job in nepal",
+    "freelancing in nepal",
+    "freelancing site in nepal",
+    "hire experts nepal",
+    "rojgar",
+    "rojgarnepal",
+    "rojgaarnepal",
+    "python basic course in nepal",
+    "nepal job portal",
+    "online jobs nepal"
+  ],
+  authors: [{ name: "Rojgaar Nepal Team" }],
+  creator: "Rojgaar Nepal",
+  openGraph: {
+    type: "website",
+    locale: "en_NP",
+    url: "https://rojgaarnepal.com",
+    siteName: "Rojgaar Nepal",
+    title: "Rojgaar Nepal - Jobs, Freelancing & Courses",
+    description: "Connect with the best opportunities in Nepal. Find jobs, hire talent, and learn new skills.",
+    images: ["/og-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rojgaar Nepal - Career Opportunities Waiting",
+    description: "Launch your career or find the best talent in Nepal.",
+    images: ["/og-image.png"],
+  },
   icons: {
     icon: "/logo.png",
   },
@@ -36,6 +70,7 @@ export default function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <Providers>
+          <AnimatedShaderBackground />
           <CursorGlow />
           <div className="min-h-screen flex flex-col bg-background relative">
             <Navbar />

@@ -99,7 +99,7 @@ export default function RegisterPage() {
             <label className="block text-sm font-medium text-foreground mb-1.5">Full Name / Company Name</label>
             <input
               type="text"
-              placeholder="John Doe"
+              placeholder="Aakash Rijal"
               {...register("name")}
               className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
             />
@@ -111,7 +111,7 @@ export default function RegisterPage() {
             <label className="block text-sm font-medium text-foreground mb-1.5">Email Address</label>
             <input
               type="email"
-              placeholder="name@example.com"
+              placeholder="example@gmail.com"
               {...register("email")}
               className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
             />

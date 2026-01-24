@@ -271,7 +271,7 @@ export default function EditProfilePage() {
                   onChange={(e) => setSkillInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   className="flex-1 rounded-md border-input bg-background shadow-sm border p-2 text-foreground"
-                  placeholder="Type a skill (e.g. React) and press Enter"
+                  placeholder="एउटा सीप टाइप गर्नुहोस् (उदा. React) र इन्टर थिच्नुहोस्"
                 />
                 <button
                   type="button"
@@ -328,7 +328,7 @@ export default function EditProfilePage() {
               <input
                 {...register("experience", { required: "Experience is required" })}
                 className="mt-1 block w-full rounded-md border-input bg-background shadow-sm border p-2 text-foreground"
-                placeholder="2 years as Frontend Dev"
+                placeholder="२ वर्षको अनुभव (2 years of experience)"
               />
               {getError("experience") && <p className="text-red-500 text-sm">{getError("experience")}</p>}
             </div>
