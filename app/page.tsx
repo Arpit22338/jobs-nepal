@@ -79,7 +79,7 @@ export default async function Home() {
                 </Link>
                 <Link
                   href="/talent"
-                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-primary bg-white border-2 border-primary/10 rounded-full hover:bg-accent hover:border-primary/30 shadow-sm transition-all hover:scale-105 active:scale-95"
+                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-black bg-white border-2 border-primary/10 rounded-full hover:bg-accent hover:border-primary/30 shadow-sm transition-all hover:scale-105 active:scale-95"
                 >
                   Find Talent
                 </Link>
@@ -227,32 +227,33 @@ export default async function Home() {
       </section>
 
       {/* Call to Action */}
-      <section className="container mx-auto px-4 mb-10">
-        <div className="relative overflow-hidden rounded-3xl bg-primary px-6 py-16 md:px-12 md:py-20 text-center shadow-2xl">
-          <div className="absolute top-0 left-0 w-full h-full opacity-10">
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-black rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
+      <section className="container mx-auto px-4 mb-20">
+        <div className="relative overflow-hidden rounded-[40px] border border-border/50 bg-gradient-to-br from-card/80 via-primary/5 to-card px-6 py-16 md:px-12 md:py-24 text-center shadow-2xl backdrop-blur-3xl">
+          <div className="absolute top-0 left-0 w-full h-full -z-10 group">
+            <div className="absolute -top-24 -right-24 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] transition-transform duration-1000 group-hover:scale-110"></div>
+            <div className="absolute -bottom-24 -left-24 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[150px] transition-transform duration-1000 group-hover:scale-95"></div>
           </div>
 
           <div className="relative z-10 space-y-8 max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
-              Ready to shape your career?
+            <h2 className="text-4xl md:text-6xl font-black text-foreground tracking-tight leading-tight">
+              Ready to shape <br className="md:hidden" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">your career?</span>
             </h2>
-            <p className="text-xl text-primary-foreground/90 max-w-2xl mx-auto">
-              Join thousands of professionals and companies building the future of Nepal together.
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
+              Join thousands of professionals and visionary companies building the future of Nepal together.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-6 pt-4">
               {!session ? (
                 <>
                   <Link
                     href="/register"
-                    className="inline-flex h-12 items-center justify-center px-8 text-lg font-bold text-primary bg-white rounded-full hover:bg-gray-100 transition-colors shadow-lg"
+                    className="premium-button text-lg group"
                   >
                     Get Started Free
+                    <ArrowRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                   <Link
                     href="/login"
-                    className="inline-flex h-12 items-center justify-center px-8 text-lg font-bold text-white border-2 border-white/30 hover:bg-white/10 rounded-full transition-colors backdrop-blur-sm"
+                    className="inline-flex h-12 md:h-14 items-center justify-center px-10 text-lg font-bold text-foreground border border-border hover:bg-accent rounded-full transition-all backdrop-blur-sm"
                   >
                     Login
                   </Link>
@@ -260,9 +261,10 @@ export default async function Home() {
               ) : (
                 <Link
                   href="/jobs"
-                  className="inline-flex h-12 items-center justify-center px-8 text-lg font-bold text-primary bg-white rounded-full hover:bg-gray-100 transition-colors shadow-lg"
+                  className="premium-button text-lg group"
                 >
                   Browse Opportunities
+                  <ArrowRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               )}
             </div>

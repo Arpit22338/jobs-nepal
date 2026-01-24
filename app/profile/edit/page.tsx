@@ -174,9 +174,11 @@ export default function EditProfilePage() {
       });
 
       if (res.ok) {
-        alert("Profile updated successfully!");
+        // Force update by getting fresh session data
         router.push("/profile");
-        router.refresh();
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
       } else {
         const errorData = await res.json();
         console.error("Profile update failed:", errorData);
@@ -271,7 +273,7 @@ export default function EditProfilePage() {
                   onChange={(e) => setSkillInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   className="flex-1 rounded-md border-input bg-background shadow-sm border p-2 text-foreground"
-                  placeholder="एउटा सीप टाइप गर्नुहोस् (उदा. React) र इन्टर थिच्नुहोस्"
+                  placeholder="Type a skill (e.g. React) and press Enter"
                 />
                 <button
                   type="button"
