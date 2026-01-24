@@ -139,8 +139,8 @@ export default function PublicProfilePage() {
               <button
                 onClick={handleTrust}
                 className={`px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${isTrusted
-                    ? "bg-accent text-foreground hover:bg-accent/80 border border-border"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90 border border-transparent shadow-lg shadow-primary/20"
+                  ? "bg-accent text-foreground hover:bg-accent/80 border border-border"
+                  : "bg-primary text-primary-foreground hover:bg-primary/90 border border-transparent shadow-lg shadow-primary/20"
                   }`}
               >
                 {isTrusted ? "Trusted" : "Trust"}
@@ -191,17 +191,19 @@ export default function PublicProfilePage() {
                 const skills = JSON.parse(profile.skills);
                 if (Array.isArray(skills)) {
                   return (
-                    <div className="space-y-2 mt-2">
+                    <div className="space-y-4 mt-4">
                       {skills.map((skill: { name: string; level: number }, idx: number) => (
-                        <div key={idx} className="flex items-center gap-4">
-                          <span className="w-32 font-medium truncate">{skill.name}</span>
-                          <div className="flex-1 h-2 bg-accent rounded-full overflow-hidden">
+                        <div key={idx} className="group">
+                          <div className="flex justify-between items-center mb-1.5">
+                            <span className="font-semibold text-foreground text-sm tracking-wide uppercase">{skill.name}</span>
+                            <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{skill.level}%</span>
+                          </div>
+                          <div className="h-2.5 bg-accent/50 rounded-full overflow-hidden border border-border/20">
                             <div
-                              className="h-full bg-blue-600 rounded-full"
+                              className="h-full bg-primary rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(var(--primary),0.3)]"
                               style={{ width: `${skill.level}%` }}
                             />
                           </div>
-                          <span className="text-xs text-muted-foreground w-8">{skill.level}%</span>
                         </div>
                       ))}
                     </div>
@@ -226,17 +228,19 @@ export default function PublicProfilePage() {
 
                   if (extractedSkills.length > 0) {
                     return (
-                      <div className="space-y-2 mt-2">
+                      <div className="space-y-4 mt-4">
                         {extractedSkills.map((skill, idx) => (
-                          <div key={idx} className="flex items-center gap-4">
-                            <span className="w-32 font-medium truncate">{skill.name}</span>
-                            <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div key={idx} className="group">
+                            <div className="flex justify-between items-center mb-1.5">
+                              <span className="font-semibold text-foreground text-sm tracking-wide uppercase">{skill.name}</span>
+                              <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{skill.level}%</span>
+                            </div>
+                            <div className="h-2.5 bg-accent/50 rounded-full overflow-hidden border border-border/20">
                               <div
-                                className="h-full bg-blue-600 rounded-full"
+                                className="h-full bg-primary rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(var(--primary),0.3)]"
                                 style={{ width: `${skill.level}%` }}
                               />
                             </div>
-                            <span className="text-xs text-gray-500 w-8">{skill.level}%</span>
                           </div>
                         ))}
                       </div>

@@ -71,84 +71,91 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold">
-            <span className="text-blue-600">Rojgaar</span>
-            <span className="text-gray-900">Nepal</span>
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4">
+      <div className="max-w-md w-full glass-card border border-border/50 rounded-2xl shadow-2xl p-8 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl invisible dark:visible"></div>
+        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl invisible dark:visible"></div>
+
+        <div className="text-center mb-8 relative">
+          <h1 className="text-3xl font-bold tracking-tight">
+            <span className="text-primary">Rojgaar</span>
+            <span className="text-foreground">Nepal</span>
           </h1>
-          <p className="text-gray-600 text-sm mt-2">Create your account</p>
+          <p className="text-muted-foreground text-sm mt-3">Create your account to get started</p>
         </div>
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
             {error}
           </div>
         )}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex justify-center">
-          <AvatarUpload 
-            onImageChange={(base64) => setValue("image", base64)} 
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Full Name / Company Name</label>
-          <input
-            type="text"
-            {...register("name")}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-gray-900"
-          />
-          {errors.name && (
-            <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-          )}
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            {...register("email")}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-gray-900"
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-          )}
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Password</label>
-          <input
-            type="password"
-            {...register("password")}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-gray-900"
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-          )}
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">I am a...</label>
-          <select
-            {...register("role")}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-gray-900"
-          >
-            <option value="JOBSEEKER">Job Seeker</option>
-            <option value="EMPLOYER">Employer</option>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="flex justify-center">
+            <AvatarUpload
+              onImageChange={(base64) => setValue("image", base64)}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Full Name / Company Name</label>
+            <input
+              type="text"
+              placeholder="John Doe"
+              {...register("name")}
+              className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+            />
+            {errors.name && (
+              <p className="text-destructive text-xs mt-1.5 font-medium ml-1">{errors.name.message}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Email Address</label>
+            <input
+              type="email"
+              placeholder="name@example.com"
+              {...register("email")}
+              className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+            />
+            {errors.email && (
+              <p className="text-destructive text-xs mt-1.5 font-medium ml-1">{errors.email.message}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              {...register("password")}
+              className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+            />
+            {errors.password && (
+              <p className="text-destructive text-xs mt-1.5 font-medium ml-1">{errors.password.message}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">I am a...</label>
+            <select
+              {...register("role")}
+              className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none cursor-pointer"
+            >
+              <option value="JOBSEEKER">Job Seeker</option>
+              <option value="EMPLOYER">Employer</option>
               {teacherLoginEnabled && false && <option value="TEACHER">Skill Teacher</option>}
-          </select>
-          {errors.role && (
-            <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
-          )}
-        </div>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Creating account..." : "Create Account"}
-        </button>
-      </form>
-        <p className="mt-6 text-center text-sm text-gray-600">
+            </select>
+            {errors.role && (
+              <p className="text-destructive text-xs mt-1.5 font-medium ml-1">{errors.role.message}</p>
+            )}
+          </div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-primary text-primary-foreground font-bold py-3 px-4 rounded-xl hover:bg-primary/90 transition-all active:scale-[0.98] shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+          >
+            {isSubmitting ? "Creating account..." : "Create Account"}
+          </button>
+        </form>
+        <p className="mt-8 text-center text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 font-semibold hover:underline">
+          <Link href="/login" className="text-primary font-bold hover:underline">
             Login here
           </Link>
         </p>

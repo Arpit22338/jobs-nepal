@@ -46,60 +46,66 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold">
-            <span className="text-blue-600">Rojgaar</span>
-            <span className="text-gray-900">Nepal</span>
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4">
+      <div className="max-w-md w-full glass-card border border-border/50 rounded-2xl shadow-2xl p-8 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl invisible dark:visible"></div>
+        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl invisible dark:visible"></div>
+
+        <div className="text-center mb-8 relative">
+          <h1 className="text-3xl font-bold tracking-tight">
+            <span className="text-primary">Rojgaar</span>
+            <span className="text-foreground">Nepal</span>
           </h1>
-          <p className="text-gray-600 text-sm mt-2">Sign in to your account</p>
+          <p className="text-muted-foreground text-sm mt-3">Welcome back! Sign in to continue</p>
         </div>
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
             {error}
           </div>
         )}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 relative">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Email Address</label>
             <input
               type="email"
+              placeholder="name@example.com"
               {...register("email")}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-gray-900"
+              className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              <p className="text-destructive text-xs mt-1.5 font-medium ml-1">{errors.email.message}</p>
             )}
           </div>
           <div>
-            <div className="flex justify-between items-center">
-              <label className="block text-sm font-medium text-gray-700">Password</label>
-              <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="block text-sm font-medium text-foreground">Password</label>
+              <Link href="/forgot-password" university-link className="text-sm text-primary hover:text-primary/80 transition-colors">
                 Forgot Password?
               </Link>
             </div>
             <input
               type="password"
+              placeholder="••••••••"
               {...register("password")}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-gray-900"
+              className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
             />
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              <p className="text-destructive text-xs mt-1.5 font-medium ml-1">{errors.password.message}</p>
             )}
           </div>
           {/* ...existing code... */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-primary text-primary-foreground font-bold py-3 px-4 rounded-xl hover:bg-primary/90 transition-all active:scale-[0.98] shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
           >
             {isSubmitting ? "Signing in..." : "Sign In"}
           </button>
         </form>
-        <p className="mt-6 text-center text-sm text-gray-600">
+        <p className="mt-8 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-blue-600 font-semibold hover:underline">
+          <Link href="/register" className="text-primary font-bold hover:underline">
             Register here
           </Link>
         </p>

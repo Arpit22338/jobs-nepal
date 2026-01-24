@@ -50,69 +50,82 @@ function VerifyEmailContent() {
 
   if (success) {
     return (
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md text-center">
-        <div className="mb-4 text-green-500">
-          <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-          </svg>
+      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4">
+        <div className="max-w-md w-full glass-card border border-border/50 rounded-2xl shadow-2xl p-10 text-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
+          <div className="mb-6 text-green-500 bg-green-500/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold mb-3 text-foreground">Email Verified!</h2>
+          <p className="text-muted-foreground">Thank you for joining RojgaarNepal. Redirecting you to login...</p>
         </div>
-        <h2 className="text-2xl font-bold mb-2">Email Verified!</h2>
-        <p className="text-gray-600">Redirecting to login...</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center mb-6">Verify Your Email</h2>
-      <p className="text-center text-gray-600 mb-6">
-        We sent a verification code to your email. Please enter it below.
-      </p>
-      
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-4">
+      <div className="max-w-md w-full glass-card border border-border/50 rounded-2xl shadow-2xl p-8 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl invisible dark:visible"></div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2"
-            placeholder="your@email.com"
-          />
+        <div className="text-center mb-8 relative">
+          <h1 className="text-3xl font-bold tracking-tight mb-3 text-foreground">Verify Your Email</h1>
+          <p className="text-muted-foreground text-sm">
+            We sent a 6-digit verification code to your email. Please enter it below to activate your account.
+          </p>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Verification Code (OTP)</label>
-          <input
-            type="text"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            required
-            maxLength={6}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 tracking-widest text-center text-xl"
-            placeholder="123456"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? "Verifying..." : "Verify Email"}
-        </button>
-      </form>
-      
-      <p className="mt-4 text-center text-sm text-gray-600">
-        <Link href="/login" className="text-blue-600 hover:underline">
-          Back to Login
-        </Link>
-      </p>
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5 relative">
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Email Address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+              placeholder="your@email.com"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Verification Code (OTP)</label>
+            <input
+              type="text"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+              maxLength={6}
+              className="block w-full rounded-xl border border-input bg-background/50 px-4 py-3 text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none tracking-[1em] text-center text-2xl font-bold"
+              placeholder="000000"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-primary text-primary-foreground font-bold py-3 px-4 rounded-xl hover:bg-primary/90 transition-all active:scale-[0.98] shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+          >
+            {loading ? "Verifying..." : "Verify Email"}
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-sm text-muted-foreground">
+          <Link href="/login" className="text-primary font-bold hover:underline inline-flex items-center">
+            <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
