@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import GetPremiumButton from "@/components/GetPremiumButton";
-import { Crown } from "lucide-react";
 
 interface Skill {
   name: string;
@@ -25,8 +23,6 @@ interface Profile {
   education?: string;
   resumeUrl?: string;
   image?: string;
-  isPremium?: boolean;
-  premiumExpiresAt?: string;
 }
 
 export default function ProfilePage() {
@@ -55,15 +51,6 @@ export default function ProfilePage() {
     }
   }, [status, session, router]);
 
-  const getDaysRemaining = (dateString?: string) => {
-    if (!dateString) return 0;
-    const expiry = new Date(dateString);
-    const now = new Date();
-    const diff = expiry.getTime() - now.getTime();
-    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    return days > 0 ? days : 0;
-  };
-
   if (loading) return <div className="p-8 text-center">Loading...</div>;
 
   if (!profile) {
@@ -86,9 +73,9 @@ export default function ProfilePage() {
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
           {profile.image && (
-            <Image 
-              src={profile.image} 
-              alt="Profile" 
+            <Image
+              src={profile.image}
+              alt="Profile"
               width={64}
               height={64}
               className="rounded-full object-cover border"
@@ -97,14 +84,7 @@ export default function ProfilePage() {
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
               My Profile
-              {profile.isPremium && <Crown className="text-yellow-500" size={24} fill="currentColor" />}
             </h1>
-            {profile.isPremium && profile.premiumExpiresAt && (
-              <p className="text-sm text-yellow-600 font-medium mt-1">
-                Premium expires in {getDaysRemaining(profile.premiumExpiresAt)} days
-              </p>
-            )}
-            {!profile.isPremium && <div className="mt-2"><GetPremiumButton /></div>}
           </div>
         </div>
         <Link
@@ -173,8 +153,8 @@ export default function ProfilePage() {
                           <div key={idx} className="flex items-center gap-4">
                             <span className="w-32 font-medium truncate">{skill.name}</span>
                             <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-blue-600 rounded-full" 
+                              <div
+                                className="h-full bg-blue-600 rounded-full"
                                 style={{ width: `${skill.level}%` }}
                               />
                             </div>

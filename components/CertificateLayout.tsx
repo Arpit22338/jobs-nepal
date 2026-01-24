@@ -1,4 +1,6 @@
 import React from "react";
+import { Award } from "lucide-react";
+
 export interface CertificateLayoutProps {
   studentName: string;
   courseTitle: string;
@@ -21,92 +23,182 @@ const CertificateLayout = React.forwardRef<HTMLDivElement, CertificateLayoutProp
     },
     ref
   ) => {
-    const dateText = completionDate ? new Date(completionDate).toLocaleDateString() : new Date().toLocaleDateString();
+    const dateText = completionDate ? new Date(completionDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString();
 
     return (
-      <div className="w-full flex items-center justify-center">
+      <div className="w-full flex items-center justify-center p-8">
         <div
           ref={ref}
-          className="relative bg-white shadow-lg"
+          className="relative bg-[#FFFAF0] text-slate-900 shadow-2xl"
           style={{
             width: 800,
             height: 600,
             maxWidth: "100%",
             boxSizing: "border-box",
-            border: "20px double #1e3a8a",
+            position: "relative",
+            overflow: "hidden",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            fontFamily: "serif",
-            padding: 28,
-            position: "relative",
-            overflow: "hidden",
-            color: "#111827",
+            padding: "40px",
           }}
         >
-          {/* Watermark */}
-          {logoSrc && (
-            <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={logoSrc} alt="Watermark" style={{ width: 500, height: 500, objectFit: "contain" }} />
-            </div>
-          )}
+          {/* Decorative Border */}
+          <div
+            style={{
+              position: "absolute",
+              top: 10,
+              left: 10,
+              right: 10,
+              bottom: 10,
+              border: "2px solid #B45309", // Amber-700
+              opacity: 0.5,
+              pointerEvents: "none",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 15,
+              left: 15,
+              right: 15,
+              bottom: 15,
+              border: "1px solid #B45309", // Amber-700
+              opacity: 0.3,
+              pointerEvents: "none",
+            }}
+          />
 
-          <div style={{ zIndex: 10, width: "100%", textAlign: "center", display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {/* Top area: logo + title + name */}
-            <div style={{ width: '100%' }}>
-              {logoSrc && (
-                <div style={{ display: "flex", justifyContent: "center", marginBottom: 6 }}>
-                  <div style={{ width: 64, height: 64, borderRadius: "50%", overflow: "hidden" }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={logoSrc} alt="logo" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  </div>
-                </div>
-              )}
+          {/* Corner Ornaments (CSS only for portability) */}
+          <div style={{ position: "absolute", top: 10, left: 10, width: 60, height: 60, borderTop: "4px solid #B45309", borderLeft: "4px solid #B45309" }} />
+          <div style={{ position: "absolute", top: 10, right: 10, width: 60, height: 60, borderTop: "4px solid #B45309", borderRight: "4px solid #B45309" }} />
+          <div style={{ position: "absolute", bottom: 10, left: 10, width: 60, height: 60, borderBottom: "4px solid #B45309", borderLeft: "4px solid #B45309" }} />
+          <div style={{ position: "absolute", bottom: 10, right: 10, width: 60, height: 60, borderBottom: "4px solid #B45309", borderRight: "4px solid #B45309" }} />
 
-              <div style={{ letterSpacing: 2, color: "#1e3a8a", fontWeight: 700, fontSize: 12, marginBottom: 6 }}>
-                ROJGAARNEPAL SKILLS ACADEMY
+          {/* Background Pattern */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: "radial-gradient(#B45309 0.5px, transparent 0.5px), radial-gradient(#B45309 0.5px, #FFFAF0 0.5px)",
+              backgroundSize: "20px 20px",
+              backgroundPosition: "0 0, 10px 10px",
+              opacity: 0.03,
+              zIndex: 0,
+              pointerEvents: "none",
+            }}
+          />
+
+          {/* Content Layer */}
+          <div style={{ zIndex: 10, width: "100%", height: "100%", display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+
+            {/* Header */}
+            <div style={{ textAlign: "center", marginBottom: 30 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 12 }}>
+                {logoSrc ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={logoSrc} alt="Logo" style={{ height: 40, width: "auto" }} />
+                ) : (
+                  <Award size={40} color="#B45309" />
+                )}
+                <div style={{ fontSize: 14, fontWeight: 800, letterSpacing: 3, color: "#B45309", textTransform: "uppercase" }}>RojgaarNepal Academy</div>
               </div>
+              <h1 style={{ fontFamily: "serif", fontSize: 48, fontWeight: 700, color: "#1e3a8a", margin: 0, lineHeight: 1 }}>Certificate of Completion</h1>
+            </div>
 
-              <h1 style={{ fontSize: 28, margin: "6px 0", color: "#1e3a8a", fontWeight: 700 }}>Certificate of Completion</h1>
+            {/* Main Body */}
+            <div style={{ textAlign: "center", width: "80%" }}>
+              <p style={{ fontFamily: "serif", fontSize: 18, fontStyle: "italic", color: "#4b5563", marginBottom: 16 }}>This credentials is proudly presented to</p>
 
-              <p style={{ color: "#6b7280", marginBottom: 10, fontStyle: "italic" }}>This is to certify that</p>
-
-              <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>
+              <div style={{
+                fontFamily: "serif",
+                fontSize: 42,
+                fontWeight: 700,
+                color: "#0f172a",
+                borderBottom: "2px solid #e5e7eb",
+                paddingBottom: 8,
+                marginBottom: 24,
+                width: "100%"
+              }}>
                 {studentName}
               </div>
 
-              {/* light gray horizontal line */}
-              <div style={{ height: 2, background: "#e5e7eb", width: "50%", margin: "8px auto 18px" }} />
+              <p style={{ fontFamily: "serif", fontSize: 18, fontStyle: "italic", color: "#4b5563", marginBottom: 16 }}>
+                for successfully completing the rigorous curriculum and demonstrating proficiency in
+              </p>
 
-              <p style={{ color: "#6b7280", marginBottom: 10 }}>has successfully completed the comprehensive course on</p>
+              <div style={{
+                fontFamily: "sans-serif",
+                fontSize: 32,
+                fontWeight: 800,
+                color: "#B45309",
+                textTransform: "uppercase",
+                letterSpacing: 1,
+                marginBottom: 10
+              }}>
+                {courseTitle}
+              </div>
 
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#1e40af" }}>{courseTitle}</div>
+              <p style={{ fontSize: 14, color: "#6b7280" }}>
+                Verified Certificate ID: <span style={{ fontFamily: "monospace", fontWeight: 600 }}>{Date.now().toString(36).toUpperCase()}</span>
+              </p>
             </div>
 
-            {/* Footer area: date and signature aligned to bottom */}
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingLeft: 24, paddingRight: 24, paddingBottom: 8 }}>
-              <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", minWidth: 160 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, borderBottom: "2px solid #9ca3af", padding: "8px 14px", color: "#1f2937", minWidth: 120 }}>
+            {/* Footer */}
+            <div style={{
+              width: "100%",
+              marginTop: 50,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              padding: "0 60px"
+            }}>
+              <div style={{ textAlign: "center" }}>
+                <div style={{
+                  fontFamily: "monospace",
+                  fontSize: 16,
+                  fontWeight: 600,
+                  color: "#374151",
+                  borderBottom: "2px solid #9ca3af",
+                  paddingBottom: 4,
+                  minWidth: 150,
+                  marginBottom: 8
+                }}>
                   {dateText}
                 </div>
-                <div style={{ fontSize: 12, color: "#6b7280", marginTop: 6 }}>Date</div>
+                <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#9ca3af", letterSpacing: 1 }}>Date Issued</div>
               </div>
 
-              <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", minWidth: 220 }}>
-                <div style={{ minHeight: 120, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {/* Gold Seal */}
+              <div style={{
+                width: 100,
+                height: 100,
+                borderRadius: "50%",
+                background: "conic-gradient(#D97706, #F59E0B, #D97706, #B45309, #D97706)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+                border: "4px solid white"
+              }}>
+                <div style={{ width: 84, height: 84, borderRadius: "50%", border: "1px dashed rgba(255,255,255,0.5)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Award size={40} color="white" />
+                </div>
+              </div>
+
+              <div style={{ textAlign: "center" }}>
+                <div style={{ minWidth: 150, display: "flex", flexDirection: "column", alignItems: "center", borderBottom: "2px solid #9ca3af", paddingBottom: 4, marginBottom: 8 }}>
                   {signSrc ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={signSrc} alt="Signature" style={{ height: 140, width: "auto", display: "block" }} />
+                    <img src={signSrc} alt="Signature" style={{ height: 40, width: "auto" }} />
                   ) : (
-                    <div style={{ fontSize: 48, fontFamily: "cursive", color: "#1e3a8a" }}>Arpit</div>
+                    <div style={{ fontFamily: "cursive", fontSize: 24, color: "#1e3a8a" }}>Arpit Kafle</div>
                   )}
                 </div>
-
-                <div style={{ fontWeight: 700, color: "#1f2937", marginTop: 6 }}>{instructorName}</div>
-                <div style={{ fontSize: 12, color: "#6b7280" }}>CEO, RojgaarNepal</div>
+                <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#9ca3af", letterSpacing: 1 }}>Instructor Signature</div>
               </div>
             </div>
+
           </div>
         </div>
       </div>

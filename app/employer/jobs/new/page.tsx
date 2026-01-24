@@ -1,9 +1,6 @@
 "use client";
 
-import { getEmployerStats } from "@/app/actions";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Crown, AlertTriangle, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,8 +19,6 @@ type JobForm = z.infer<typeof jobSchema>;
 
 export default function NewJobPage() {
   const router = useRouter();
-  const [stats, setStats] = useState<{ isPremium: boolean; jobCount: number } | null>(null);
-  const [loading, setLoading] = useState(true);
 
   const {
     register,
@@ -32,13 +27,6 @@ export default function NewJobPage() {
   } = useForm<JobForm>({
     resolver: zodResolver(jobSchema),
   });
-
-  useEffect(() => {
-    getEmployerStats().then((data) => {
-      setStats(data);
-      setLoading(false);
-    });
-  }, []);
 
   const onSubmit = async (data: JobForm) => {
     try {
@@ -61,56 +49,9 @@ export default function NewJobPage() {
     }
   };
 
-  if (loading) return <div className="p-10 text-center">Loading...</div>;
-
-  const isLimitReached = stats && !stats.isPremium && stats.jobCount >= 1;
-
-  if (isLimitReached) {
-    return (
-      <div className="max-w-2xl mx-auto py-16 px-4 text-center">
-        <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Lock className="text-gray-500" size={32} />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Job Posting Limit Reached</h1>
-          <p className="text-gray-600 mb-8 text-lg">
-            You have reached the limit of 1 free job post. To post more jobs and unlock premium features, please upgrade your account.
-          </p>
-          <Link 
-            href="/premium" 
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-bold rounded-full hover:from-yellow-600 hover:to-yellow-700 transition-all transform hover:scale-105 shadow-md"
-          >
-            <Crown className="mr-2" size={24} />
-            Get Premium
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-2xl mx-auto py-10 px-4">
       <h1 className="text-2xl font-bold mb-6">Post a New Job</h1>
-      
-      {stats && !stats.isPremium && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded-r-lg">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <AlertTriangle className="h-5 w-5 text-yellow-400" aria-hidden="true" />
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-yellow-700">
-                You are not a premium user. Your listing will be removed after 24 hours.
-              </p>
-              <p className="mt-2 text-sm">
-                <Link href="/premium" className="font-medium text-yellow-700 underline hover:text-yellow-600">
-                  Buy Premium to remove limits &rarr;
-                </Link>
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow">
         <div>

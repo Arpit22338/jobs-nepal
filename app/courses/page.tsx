@@ -48,14 +48,14 @@ export default async function CoursesPage() {
   };
 
   // Filter out DB courses that duplicate the hardcoded ones
-  const filteredDbCourses = courses.filter(c => 
-    c.title !== "Basic Python Programming" && 
+  const filteredDbCourses = courses.filter(c =>
+    c.title !== "Basic Python Programming" &&
     c.title !== "CV Building Masterclass"
   );
 
   const allCourses = [
-    cvCourse, 
-    pythonCourse, 
+    cvCourse,
+    pythonCourse,
     ...filteredDbCourses.map(c => ({
       ...c,
       instructor: c.instructor || "Unknown",
@@ -66,9 +66,14 @@ export default async function CoursesPage() {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Skill Courses</h1>
+    <div className="space-y-12 max-w-6xl mx-auto px-4 pb-20">
+      <div className="text-center md:text-left space-y-4 pt-8">
+        <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight">
+          Level Up Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">Career</span>
+        </h1>
+        <p className="text-lg text-muted-foreground font-medium max-w-2xl">
+          Master in-demand skills with our curated selection of professional courses. Get certified and boost your chances of getting hired.
+        </p>
       </div>
 
       <CoursesList courses={allCourses} />

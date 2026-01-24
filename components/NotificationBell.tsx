@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Bell } from "lucide-react";
+import { Bell, Zap, BellOff } from "lucide-react";
 import { getNotifications, markNotificationAsRead, markAllNotificationsAsRead } from "@/app/actions";
 import { useRouter } from "next/navigation";
 
@@ -32,7 +32,7 @@ export default function NotificationBell() {
     };
 
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000); // Poll every 30s
+    const interval = setInterval(fetchNotifications, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -70,51 +70,61 @@ export default function NotificationBell() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative text-gray-600 hover:text-blue-600 p-1"
+        className="relative p-2.5 bg-accent/30 hover:bg-primary/10 text-muted-foreground hover:text-primary rounded-2xl transition-all shadow-sm active:scale-90"
       >
         <Bell size={20} />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black rounded-lg min-w-[18px] h-4.5 px-1 flex items-center justify-center ring-4 ring-background shadow-lg">
             {unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="fixed left-4 right-4 top-16 mt-2 md:absolute md:right-0 md:left-auto md:top-auto md:w-80 bg-white rounded-md shadow-lg py-1 z-50 border max-h-96 overflow-y-auto">
-          <div className="px-4 py-2 border-b flex justify-between items-center">
-            <h3 className="text-sm font-semibold text-gray-700">Notifications</h3>
+        <div className="fixed left-4 right-4 top-20 mt-2 md:absolute md:right-0 md:left-auto md:w-[360px] glass-card rounded-[32px] shadow-2xl py-2 z-[60] border-white/40 ring-1 ring-primary/5 animate-in fade-in zoom-in-95 duration-200">
+          <div className="px-6 py-4 border-b border-border/40 flex justify-between items-center bg-accent/10">
+            <h3 className="text-sm font-black text-foreground uppercase tracking-widest">Activity</h3>
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="text-xs text-blue-600 hover:text-blue-800"
+                className="text-[10px] font-black text-primary uppercase tracking-wider hover:underline"
               >
-                Mark all read
+                Clear All
               </button>
             )}
           </div>
-          {notifications.length === 0 ? (
-            <div className="px-4 py-3 text-sm text-gray-500 text-center">
-              No notifications
-            </div>
-          ) : (
-            notifications.map((notification) => (
-              <div
-                key={notification.id}
-                onClick={() => handleNotificationClick(notification)}
-                className={`px-4 py-3 border-b last:border-b-0 cursor-pointer hover:bg-gray-50 ${
-                  !notification.isRead ? "bg-blue-50" : ""
-                }`}
-              >
-                <p className={`text-sm ${!notification.isRead ? "font-semibold text-gray-800" : "text-gray-600"}`}>
-                  {notification.content}
-                </p>
-                <p className="text-xs text-gray-400 mt-1">
-                  {new Date(notification.createdAt).toLocaleDateString()}
-                </p>
+          <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+            {notifications.length === 0 ? (
+              <div className="px-8 py-12 text-center space-y-3">
+                <BellOff size={32} className="text-muted-foreground/20 mx-auto" />
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">No news is good news</p>
               </div>
-            ))
-          )}
+            ) : (
+              notifications.map((notification) => (
+                <div
+                  key={notification.id}
+                  onClick={() => handleNotificationClick(notification)}
+                  className={`px-6 py-4 border-b border-border/20 last:border-b-0 cursor-pointer transition-colors hover:bg-primary/5 flex gap-4 items-start ${!notification.isRead ? "bg-primary/[0.03]" : ""
+                    }`}
+                >
+                  <div className={`mt-1 shrink-0 p-2 rounded-xl border ${!notification.isRead ? "bg-primary/10 border-primary/20 text-primary" : "bg-accent/50 border-transparent text-muted-foreground"}`}>
+                    <Zap size={14} fill={!notification.isRead ? "currentColor" : "none"} />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <p className={`text-sm leading-relaxed ${!notification.isRead ? "font-black text-foreground" : "font-medium text-muted-foreground"}`}>
+                      {notification.content}
+                    </p>
+                    <p className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-tighter">
+                      {new Date(notification.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                  {!notification.isRead && (
+                    <div className="mt-2 w-2 h-2 bg-primary rounded-full shadow-sm shadow-primary/40"></div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bookmark, BookmarkCheck } from "lucide-react";
+import { Bookmark, BookmarkCheck, Star } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -16,21 +16,12 @@ export default function SaveJobButton({ jobId, initialSaved = false }: SaveJobBu
   const [saved, setSaved] = useState(initialSaved);
   const [loading, setLoading] = useState(false);
 
-  // If initialSaved is not provided/reliable, we might want to check it, 
-  // but usually we'll pass it from the parent which fetches the list of saved IDs.
-  // For now, we rely on the parent to set the initial state correctly or we can fetch it if needed.
-  // But to keep it simple and performant, we'll assume the parent handles the "is this saved?" check 
-  // or we just toggle from the current state.
-  
-  // Actually, for the list view, passing `initialSaved` is best.
-  // If the user is not logged in, clicking should redirect to login.
-
   useEffect(() => {
     setSaved(initialSaved);
   }, [initialSaved]);
 
   const toggleSave = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent link navigation if inside a card
+    e.preventDefault();
     e.stopPropagation();
 
     if (!session) {
@@ -39,7 +30,6 @@ export default function SaveJobButton({ jobId, initialSaved = false }: SaveJobBu
     }
 
     setLoading(true);
-    // Optimistic update
     const previousState = saved;
     setSaved(!saved);
 
@@ -55,7 +45,7 @@ export default function SaveJobButton({ jobId, initialSaved = false }: SaveJobBu
       }
     } catch (error) {
       console.error(error);
-      setSaved(previousState); // Revert on error
+      setSaved(previousState);
       alert("Something went wrong");
     } finally {
       setLoading(false);
@@ -66,12 +56,18 @@ export default function SaveJobButton({ jobId, initialSaved = false }: SaveJobBu
     <button
       onClick={toggleSave}
       disabled={loading}
-      className={`p-2 rounded-full transition-colors ${
-        saved ? "text-blue-600 bg-blue-50 hover:bg-blue-100" : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-      }`}
+      className={`p-2.5 rounded-2xl transition-all duration-300 scale-100 active:scale-90 border shadow-sm ${saved
+          ? "text-primary bg-primary/10 border-primary/20"
+          : "text-muted-foreground/40 bg-accent/40 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/10"
+        }`}
       title={saved ? "Unsave Job" : "Save Job"}
     >
-      {saved ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
+      {saved ? (
+        <div className="relative">
+          <BookmarkCheck size={20} />
+          <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-ping"></span>
+        </div>
+      ) : <Bookmark size={20} />}
     </button>
   );
 }

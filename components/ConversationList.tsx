@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { Search, MessageSquare, Zap } from "lucide-react";
 
 interface Conversation {
   user: {
@@ -41,74 +42,106 @@ export default function ConversationList() {
 
     if (status === "authenticated") {
       fetchConversations();
-      // Poll for updates
       const interval = setInterval(fetchConversations, 10000);
       return () => clearInterval(interval);
     }
   }, [status]);
 
-  if (status === "loading") return <div className="p-4 text-center">Loading...</div>;
-  if (status === "unauthenticated") return <div className="p-4 text-center text-gray-500">Please login to view messages.</div>;
-  if (loading) return <div className="p-4 text-center">Loading conversations...</div>;
-  if (conversations.length === 0) return <div className="p-4 text-center text-gray-500">No messages yet.</div>;
+  if (status === "loading") return <div className="p-8 text-center animate-pulse font-black text-muted-foreground uppercase text-xs">Syncing...</div>;
+  if (status === "unauthenticated") return <div className="p-8 text-center text-muted-foreground font-bold">Please login to view messages.</div>;
+
+  if (loading) return (
+    <div className="p-8 space-y-4">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="flex gap-4 animate-pulse">
+          <div className="w-12 h-12 bg-accent rounded-full"></div>
+          <div className="flex-1 space-y-2 py-1">
+            <div className="h-4 bg-accent rounded w-1/2"></div>
+            <div className="h-3 bg-accent rounded w-3/4"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
-    <div className="h-full flex flex-col bg-white">
-      <div className="p-6 pb-4">
-        <h2 className="text-2xl font-bold text-gray-800 tracking-tight">Messages</h2>
-        <p className="text-sm text-gray-500 mt-1">Your recent conversations</p>
+    <div className="h-full flex flex-col bg-transparent">
+      <div className="p-8 pb-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-black text-foreground tracking-tight">Inbox</h2>
+          <div className="p-2 bg-primary/10 text-primary rounded-xl">
+            <MessageSquare size={18} />
+          </div>
+        </div>
+
+        <div className="relative">
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground/40" />
+          <input
+            type="text"
+            placeholder="Filter chats..."
+            className="w-full pl-10 pr-4 py-3 bg-accent/20 border-2 border-transparent focus:border-primary/20 rounded-2xl text-xs font-bold focus:outline-none transition-all placeholder:text-muted-foreground/30"
+          />
+        </div>
       </div>
-      <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-1">
-        {conversations.map((conv) => {
-          const isActive = pathname === `/messages/${conv.user.id}`;
-          return (
-            <Link
-              key={conv.user.id}
-              href={`/messages/${conv.user.id}`}
-              className={`block p-3 rounded-xl transition-all duration-200 group ${
-                isActive 
-                  ? 'bg-blue-50 shadow-sm ring-1 ring-blue-100' 
-                  : 'hover:bg-gray-50 hover:shadow-sm'
-              } ${conv.unreadCount > 0 ? 'bg-blue-50/30' : ''}`}
-            >
-              <div className="flex items-center space-x-4">
-                <div className="relative flex-shrink-0">
-                  {conv.user.image ? (
-                    <Image
-                      src={conv.user.image}
-                      alt={conv.user.name || "User"}
-                      width={48}
-                      height={48}
-                      className="rounded-full object-cover ring-2 ring-white shadow-sm"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center text-blue-600 font-bold text-lg shadow-inner">
-                      {conv.user.name?.[0] || "U"}
-                    </div>
-                  )}
-                  {conv.unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center ring-2 ring-white shadow-sm">
-                      {conv.unreadCount}
-                    </span>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0 py-1">
-                  <div className="flex justify-between items-baseline mb-1">
-                    <p className={`text-sm font-semibold truncate ${conv.unreadCount > 0 ? 'text-gray-900' : 'text-gray-700 group-hover:text-gray-900'}`}>
-                      {conv.user.name}
-                    </p>
-                    <span className="text-[11px] text-gray-400 font-medium">
-                      {new Date(conv.lastMessage.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                    </span>
+
+      <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-2 custom-scrollbar">
+        {conversations.length === 0 ? (
+          <div className="text-center py-12 space-y-2">
+            <Zap size={24} className="text-muted-foreground/20 mx-auto" />
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-widest leading-loose">No active<br />conversations</p>
+          </div>
+        ) : (
+          conversations.map((conv) => {
+            const isActive = pathname === `/messages/${conv.user.id}`;
+            return (
+              <Link
+                key={conv.user.id}
+                href={`/messages/${conv.user.id}`}
+                className={`block p-4 rounded-3xl transition-all duration-300 group ${isActive
+                    ? 'bg-primary text-white shadow-xl shadow-primary/20 scale-[1.02]'
+                    : 'hover:bg-accent/40'
+                  } ${conv.unreadCount > 0 && !isActive ? 'bg-primary/5' : ''}`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="relative shrink-0">
+                    {conv.user.image ? (
+                      <Image
+                        src={conv.user.image}
+                        alt={conv.user.name || "User"}
+                        width={52}
+                        height={52}
+                        className={`rounded-2xl object-cover ring-4 transition-all ${isActive ? 'ring-white/20' : 'ring-accent group-hover:ring-primary/10'}`}
+                      />
+                    ) : (
+                      <div className={`w-[52px] h-[52px] rounded-2xl flex items-center justify-center font-black text-xl transition-all ${isActive ? 'bg-white/20 text-white' : 'bg-primary/10 text-primary group-hover:bg-primary/20'}`}>
+                        {conv.user.name?.[0] || "U"}
+                      </div>
+                    )}
+                    {conv.unreadCount > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black rounded-lg min-w-[20px] h-5 px-1 flex items-center justify-center ring-4 ring-background shadow-lg">
+                        {conv.unreadCount}
+                      </span>
+                    )}
                   </div>
-                  <p className={`text-xs truncate leading-relaxed ${conv.unreadCount > 0 ? 'font-medium text-gray-900' : 'text-gray-500 group-hover:text-gray-600'}`}>
-                    {conv.lastMessage.content}
-                  </p>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-baseline mb-0.5">
+                      <p className={`text-sm font-black truncate tracking-tight transition-colors ${isActive ? 'text-white' : 'text-foreground'}`}>
+                        {conv.user.name}
+                      </p>
+                      <span className={`text-[10px] font-black uppercase tracking-tighter opacity-40 ${isActive ? 'text-white' : 'text-muted-foreground'}`}>
+                        {new Date(conv.lastMessage.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                      </span>
+                    </div>
+                    <p className={`text-xs truncate font-medium transition-colors ${isActive ? 'text-white/70' : 'text-muted-foreground'}`}>
+                      {conv.lastMessage.content}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          );
-        })}
+              </Link>
+            );
+          })
+        )}
       </div>
     </div>
   );

@@ -3,6 +3,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import CertificateTemplate from "@/components/CertificateTemplate";
 import { redirect } from "next/navigation";
+import { AlertTriangle } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -26,19 +29,26 @@ export default async function CertificatePage({ params }: PageProps) {
 
   if (!certificate) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-2xl font-bold text-red-600">Certificate Not Found</h1>
-        <p className="text-gray-600">The certificate you are looking for does not exist.</p>
+      <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-6 text-center px-4">
+        <div className="w-24 h-24 bg-red-100 rounded-3xl flex items-center justify-center text-red-500">
+          <AlertTriangle size={48} />
+        </div>
+        <div>
+          <h1 className="text-3xl font-black text-foreground">Certificate Not Found</h1>
+          <p className="text-muted-foreground font-medium mt-2">The certificate ID you provided does not exist in our registry.</p>
+        </div>
+        <Link href="/">
+          <Button className="rounded-xl font-bold px-8">Return Home</Button>
+        </Link>
       </div>
     );
   }
 
-  // Optional: Check if the user is allowed to view this certificate
-  // For now, we allow anyone with the link to view it (common for verification), 
-  // or you can restrict it to the owner and admins.
-  
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-8">
+    <div className="min-h-screen bg-accent/20 flex flex-col items-center justify-center p-4 md:p-12 relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-primary/5 to-transparent -z-10"></div>
+
       <CertificateTemplate
         studentName={certificate.user.name || "Student"}
         courseName={certificate.course.title}
