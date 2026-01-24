@@ -31,7 +31,7 @@ export default function Navbar() {
 
   const getLinkClass = (path: string) => {
     const isActive = path === "/" ? pathname === "/" : pathname.startsWith(path);
-    return `${isActive ? "text-primary font-bold" : "text-secondary/70 hover:text-secondary font-medium"} text-sm transition-all duration-200 tracking-wide`;
+    return `${isActive ? "text-primary font-bold" : "text-foreground/80 hover:text-primary font-medium"} text-sm transition-all duration-200 tracking-wide`;
   };
 
   const router = useRouter();
@@ -113,7 +113,7 @@ export default function Navbar() {
     <>
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled
-          ? "bg-card/70 backdrop-blur-xl border-border/40 py-2 shadow-sm supports-[backdrop-filter]:bg-card/60"
+          ? "bg-card/50 backdrop-blur-md border-border/40 py-2 shadow-sm supports-[backdrop-filter]:bg-card/40"
           : "bg-transparent border-transparent py-4"
           }`}
       >

@@ -70,14 +70,14 @@ export default async function Home() {
               <>
                 <Link
                   href="/jobs"
-                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-white bg-primary rounded-full hover:bg-primary/90 shadow-lg hover:shadow-primary/30 transition-all hover:scale-105 active:scale-95 group"
+                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-primary-foreground bg-primary rounded-full hover:bg-primary/90 shadow-lg hover:shadow-primary/30 transition-all hover:scale-105 active:scale-95 group"
                 >
                   <Search className="mr-2 group-hover:rotate-12 transition-transform" size={22} />
                   Browse Jobs
                 </Link>
                 <Link
                   href="/talent"
-                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-foreground bg-white border border-input rounded-full hover:bg-accent hover:text-primary shadow-sm transition-all hover:scale-105 active:scale-95"
+                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-primary bg-white border-2 border-primary/10 rounded-full hover:bg-accent hover:border-primary/30 shadow-sm transition-all hover:scale-105 active:scale-95"
                 >
                   Find Talent
                 </Link>
@@ -227,8 +227,8 @@ export default async function Home() {
                     className="object-cover hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-8">
-                    <p className="text-white font-medium text-lg">&quot;RojgaarNepal helped me find my dream remote job in just 3 days!&quot;</p>
-                    <p className="text-white/70 text-sm mt-2">- Sarita K., Frontend Developer</p>
+                    <p className="text-white font-medium text-lg">&quot;The best platform for connecting skills with opportunity in Nepal.&quot;</p>
+                    <p className="text-white/70 text-sm mt-2">- Satisfied User</p>
                   </div>
                 </div>
               </div>

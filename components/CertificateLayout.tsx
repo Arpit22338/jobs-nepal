@@ -192,12 +192,15 @@ const CertificateLayout = React.forwardRef<HTMLDivElement, CertificateLayoutProp
                 <div style={{ minWidth: 150, display: "flex", flexDirection: "column", alignItems: "center", borderBottom: "2px solid #9ca3af", paddingBottom: 4, marginBottom: 8 }}>
                   {signSrc ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={signSrc} alt="Signature" style={{ height: 40, width: "auto" }} />
+                    <img src={signSrc} alt="Signature" style={{ height: 80, width: "auto" }} />
                   ) : (
                     <div style={{ fontFamily: "cursive", fontSize: 24, color: "#1e3a8a" }}>{instructorName}</div>
                   )}
                 </div>
-                <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#9ca3af", letterSpacing: 1 }}>Instructor Signature</div>
+                <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#9ca3af", letterSpacing: 1 }}>
+                  Arpit Kafle<br />
+                  <span style={{ fontSize: 10, fontWeight: 600 }}>CEO, RojgaarNepal</span>
+                </div>
               </div>
             </div>
 
