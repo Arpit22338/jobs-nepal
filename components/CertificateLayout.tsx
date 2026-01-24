@@ -42,7 +42,7 @@ const CertificateLayout = React.forwardRef<HTMLDivElement, CertificateLayoutProp
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            padding: "50px 50px 60px 50px",
+            padding: "40px 50px 90px 50px",
           }}
         >
           {/* Decorative Border */}

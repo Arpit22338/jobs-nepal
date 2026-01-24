@@ -23,20 +23,7 @@ export default function Footer() {
                         <p className="text-muted-foreground leading-relaxed">
                             Empowering Nepal's workforce by connecting talented individuals with visionary employers. Build your future with us.
                         </p>
-                        <div className="flex items-center gap-4">
-                            <a href="#" className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300">
-                                <Facebook size={20} />
-                            </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300">
-                                <Twitter size={20} />
-                            </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300">
-                                <Instagram size={20} />
-                            </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all duration-300">
-                                <Linkedin size={20} />
-                            </a>
-                        </div>
+
                     </div>
 
                     {/* Quick Links */}
@@ -99,15 +86,15 @@ export default function Footer() {
                         <ul className="space-y-4">
                             <li className="flex items-start gap-3 text-muted-foreground">
                                 <MapPin size={20} className="text-primary mt-1 flex-shrink-0" />
-                                <span>Kathmandu, Nepal</span>
+                                <span>Nepal</span>
                             </li>
                             <li className="flex items-center gap-3 text-muted-foreground">
                                 <Mail size={20} className="text-primary flex-shrink-0" />
-                                <a href="mailto:contact@rojgaarnepal.com" className="hover:text-primary transition-colors">contact@rojgaarnepal.com</a>
+                                <a href="mailto:rojggaarnepall@gmail.com" className="hover:text-primary transition-colors">rojggaarnepall@gmail.com</a>
                             </li>
                             <li className="flex items-center gap-3 text-muted-foreground">
                                 <Phone size={20} className="text-primary flex-shrink-0" />
-                                <a href="tel:+9771234567890" className="hover:text-primary transition-colors">+977 9800000000</a>
+                                <span>currently unavailable</span>
                             </li>
                         </ul>
                     </div>

@@ -244,6 +244,7 @@ export default function Navbar() {
 
             {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center gap-2">
+              <ThemeToggle />
               {!session && (
                 <Link
                   href="/login"

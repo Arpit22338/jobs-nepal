@@ -50,25 +50,25 @@ export default function NewJobPage() {
 
   return (
     <div className="max-w-2xl mx-auto py-10 px-4">
-      <h1 className="text-2xl font-bold mb-6">Post a New Job</h1>
+      <h1 className="text-2xl font-bold mb-6 text-foreground">Post a New Job</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-card p-6 rounded-lg shadow border border-border/50">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Job Title</label>
+          <label className="block text-sm font-medium text-foreground">Job Title</label>
           <input
             {...register("title")}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
             placeholder="e.g. Senior Frontend Developer"
           />
           {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <label className="block text-sm font-medium text-foreground">Description</label>
           <textarea
             {...register("description")}
             rows={5}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
             placeholder="Job responsibilities, requirements, etc."
           />
           {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
@@ -76,20 +76,20 @@ export default function NewJobPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Location</label>
+            <label className="block text-sm font-medium text-foreground">Location</label>
             <input
               {...register("location")}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
               placeholder="e.g. Kathmandu, Remote"
             />
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Job Type</label>
+            <label className="block text-sm font-medium text-foreground">Job Type</label>
             <select
               {...register("type")}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
             >
               <option value="">Select Type</option>
               <option value="Full-time">Full-time</option>
@@ -103,19 +103,19 @@ export default function NewJobPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Salary Range (Optional)</label>
+          <label className="block text-sm font-medium text-foreground">Salary Range (Optional)</label>
           <input
             {...register("salary")}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
             placeholder="e.g. NRs. 50,000 - 80,000 / month"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Required Skills (comma separated)</label>
+          <label className="block text-sm font-medium text-foreground">Required Skills (comma separated)</label>
           <input
             {...register("requiredSkills")}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-foreground"
             placeholder="React, Node.js, TypeScript"
           />
         </div>
@@ -123,7 +123,7 @@ export default function NewJobPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
+          className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-md hover:bg-primary/90 disabled:opacity-50 font-bold"
         >
           {isSubmitting ? "Posting..." : "Post Job"}
         </button>

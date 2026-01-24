@@ -13,7 +13,7 @@ export default async function Home() {
 
   const jobCount = await prisma.job.count();
   const jobSeekerCount = await prisma.user.count({ where: { role: "JOBSEEKER" } });
-  const courseCount = (await prisma.course.count()) + 2;
+  const courseCount = (await prisma.course.count()) - 1;
 
   // Fetch Latest Jobs (Instead of Premium)
   const latestJobs = await prisma.job.findMany({
