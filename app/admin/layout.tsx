@@ -1,10 +1,19 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
+
+  if (!session || (session.user as any).role !== "ADMIN") {
+    redirect("/");
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="bg-white shadow-sm border-b">

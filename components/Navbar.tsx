@@ -132,9 +132,22 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Center: Desktop Menu (Moved to persistent bottom nav to reduce crowding) */}
-            <div className="hidden">
-              <Link href="/" className={`${getLinkClass("/")}`}>Home</Link>
+            {/* Center: Desktop Menu */}
+            <div className="hidden lg:flex items-center gap-6">
+              <Link href="/" className={getLinkClass("/")}>Home</Link>
+              <Link href="/jobs" className={getLinkClass("/jobs")}>Jobs</Link>
+              <Link href="/people" className={getLinkClass("/people")}>Community</Link>
+              <Link href="/courses" className={getLinkClass("/courses")}>Courses</Link>
+              <Link href="/talent" className={getLinkClass("/talent")}>Find Talent</Link>
+
+              {user?.role === "ADMIN" && (
+                <Link
+                  href="/admin/dashboard"
+                  className="bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                >
+                  Admin Panel
+                </Link>
+              )}
             </div>
 
             {/* Right: Icons & Auth */}
@@ -190,6 +203,11 @@ export default function Navbar() {
                           <Link href="/profile/edit" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
                             <Settings size={16} className="text-muted-foreground" /> Settings
                           </Link>
+                          {user?.role === "ADMIN" && (
+                            <Link href="/admin/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 rounded-xl transition-colors font-bold" onClick={closeMenus}>
+                              <LayoutDashboard size={16} className="text-red-500" /> Admin Panel
+                            </Link>
+                          )}
                           <Link href="/support" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
                             <HelpCircle size={16} className="text-muted-foreground" /> Support
                           </Link>
