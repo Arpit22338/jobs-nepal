@@ -19,6 +19,7 @@ export default function CertificateTemplate({
   courseName,
   completionDate,
   instructorName,
+  certificateId,
 }: CertificateProps) {
   const certificateRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,7 +33,6 @@ export default function CertificateTemplate({
       if (containerRef.current) {
         const parentWidth = containerRef.current.offsetWidth;
         const certWidth = 800;
-        // Calculate scale needed to fit 800px into parent width, max 1
         const newScale = Math.min(parentWidth / certWidth, 1);
         setScale(newScale);
       }
@@ -44,18 +44,16 @@ export default function CertificateTemplate({
   }, []);
 
   useEffect(() => {
-    // Convert logo to base64 to avoid CORS issues in html2canvas
     const getBase64FromUrl = async (url: string) => {
       try {
         const data = await fetch(url);
-        if (!data.ok) throw new Error(`Failed to fetch ${url}`);
+        if (!data.ok) return "";
         const blob = await data.blob();
         return new Promise((resolve) => {
           const reader = new FileReader();
           reader.readAsDataURL(blob);
           reader.onloadend = () => {
-            const base64data = reader.result;
-            resolve(base64data);
+            resolve(reader.result as string);
           };
         });
       } catch (e) {
@@ -64,8 +62,12 @@ export default function CertificateTemplate({
       }
     };
 
-    // Replace these URLs with your actual assets logic or keep them empty to use default icons
-    // getBase64FromUrl('/logo.png').then((base64) => setLogoBase64(base64 as string));
+    getBase64FromUrl('/logo.png').then((base64) => {
+      if (base64) setLogoBase64(base64 as string);
+    });
+    getBase64FromUrl('/uploads/ceo-sign.png').then((base64) => {
+      if (base64) setSignBase64(base64 as string);
+    });
   }, []);
 
   const handleDownload = async () => {
@@ -148,6 +150,7 @@ export default function CertificateTemplate({
               instructorName={instructorName}
               logoSrc={logoBase64}
               signSrc={signBase64}
+              certificateId={certificateId}
             />
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
-import { MapPin, Briefcase, Search, ArrowRight, Star, MessageCircle } from "lucide-react";
+import { MapPin, Briefcase, Search, ArrowRight, MessageCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import SaveJobButton from "@/components/SaveJobButton";
@@ -165,7 +165,7 @@ function JobsContent() {
               <Search size={32} className="text-muted-foreground" />
             </div>
             <h3 className="text-2xl font-bold text-foreground">No matches found</h3>
-            <p className="text-muted-foreground max-w-sm mx-auto mt-2">We couldn't find any jobs matching your current search. Try adjusting your filters.</p>
+            <p className="text-muted-foreground max-w-sm mx-auto mt-2">We couldn&apos;t find any jobs matching your current search. Try adjusting your filters.</p>
           </div>
         ) : (
           <div className="grid gap-6">

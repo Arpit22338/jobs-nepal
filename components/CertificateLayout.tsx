@@ -8,6 +8,7 @@ export interface CertificateLayoutProps {
   instructorName?: string;
   logoSrc?: string; // base64 or url
   signSrc?: string; // base64 or url
+  certificateId?: string;
 }
 
 // Forward ref to the certificate root so html2canvas can target it
@@ -20,6 +21,7 @@ const CertificateLayout = React.forwardRef<HTMLDivElement, CertificateLayoutProp
       instructorName = "Arpit Kafle",
       logoSrc,
       signSrc,
+      certificateId,
     },
     ref
   ) => {
@@ -140,7 +142,7 @@ const CertificateLayout = React.forwardRef<HTMLDivElement, CertificateLayoutProp
               </div>
 
               <p style={{ fontSize: 14, color: "#6b7280" }}>
-                Verified Certificate ID: <span style={{ fontFamily: "monospace", fontWeight: 600 }}>{Date.now().toString(36).toUpperCase()}</span>
+                Verified Certificate ID: <span style={{ fontFamily: "monospace", fontWeight: 600 }}>{certificateId || "OFFICIAL-RN-CERT"}</span>
               </p>
             </div>
 
@@ -192,7 +194,7 @@ const CertificateLayout = React.forwardRef<HTMLDivElement, CertificateLayoutProp
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img src={signSrc} alt="Signature" style={{ height: 40, width: "auto" }} />
                   ) : (
-                    <div style={{ fontFamily: "cursive", fontSize: 24, color: "#1e3a8a" }}>Arpit Kafle</div>
+                    <div style={{ fontFamily: "cursive", fontSize: 24, color: "#1e3a8a" }}>{instructorName}</div>
                   )}
                 </div>
                 <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "#9ca3af", letterSpacing: 1 }}>Instructor Signature</div>

@@ -35,13 +35,13 @@ export default async function Home() {
         <div className="text-center px-4 max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-accent/50 border border-primary/20 text-primary text-sm font-medium mb-4 backdrop-blur-sm">
             <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-            #1 Job Platform in Nepal
+            Your Career Starts Here
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight text-foreground leading-tight">
-            Unlock Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">Potential</span>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-foreground leading-tight">
+            Unlock Your <span className="text-primary">Potential</span>
             <br />
-            Build Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Future</span>
+            Build Your <span className="text-primary">Future</span>
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
@@ -182,7 +182,7 @@ export default async function Home() {
                 Why <span className="text-primary">RojgaarNepal</span> is the best choice?
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                We've built a platform that puts user experience first. No clutter, just connections.
+                We&apos;ve built a platform that puts user experience first. No clutter, just connections.
               </p>
 
               <div className="space-y-6">
@@ -227,7 +227,7 @@ export default async function Home() {
                     className="object-cover hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-8">
-                    <p className="text-white font-medium text-lg">"RojgaarNepal helped me find my dream remote job in just 3 days!"</p>
+                    <p className="text-white font-medium text-lg">&quot;RojgaarNepal helped me find my dream remote job in just 3 days!&quot;</p>
                     <p className="text-white/70 text-sm mt-2">- Sarita K., Frontend Developer</p>
                   </div>
                 </div>

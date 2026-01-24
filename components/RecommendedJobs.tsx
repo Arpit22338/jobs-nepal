@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Sparkles, MapPin, Briefcase } from "lucide-react";
+import { Sparkles, MapPin } from "lucide-react";
 
 export default function RecommendedJobs() {
   const { data: session } = useSession();

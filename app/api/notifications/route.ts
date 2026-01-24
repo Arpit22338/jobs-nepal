@@ -16,12 +16,12 @@ export async function GET() {
       take: 20,
     });
     return NextResponse.json({ notifications });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: "Internal Error" }, { status: 500 });
   }
 }
 
-export async function PUT(req: Request) {
+export async function PUT(_req: Request) {
   const session = await getServerSession(authOptions);
   if (!session || !session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -33,7 +33,7 @@ export async function PUT(req: Request) {
       data: { isRead: true },
     });
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: "Internal Error" }, { status: 500 });
   }
 }

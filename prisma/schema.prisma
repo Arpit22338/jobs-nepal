@@ -41,6 +41,7 @@ model User {
   isMegaPremium    Boolean   @default(false)
   megaPremiumUntil DateTime?
   qrCodeUrl        String?   // For teachers
+  isProfileComplete Boolean  @default(false)
 
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bookmark, BookmarkCheck, Star } from "lucide-react";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -57,8 +57,8 @@ export default function SaveJobButton({ jobId, initialSaved = false }: SaveJobBu
       onClick={toggleSave}
       disabled={loading}
       className={`p-2.5 rounded-2xl transition-all duration-300 scale-100 active:scale-90 border shadow-sm ${saved
-          ? "text-primary bg-primary/10 border-primary/20"
-          : "text-muted-foreground/40 bg-accent/40 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/10"
+        ? "text-primary bg-primary/10 border-primary/20"
+        : "text-muted-foreground/40 bg-accent/40 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/10"
         }`}
       title={saved ? "Unsave Job" : "Save Job"}
     >

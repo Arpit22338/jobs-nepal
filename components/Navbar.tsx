@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Settings, HelpCircle, LayoutDashboard } from "lucide-react";
 import { useState, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
+import ThemeToggle from "./ThemeToggle";
 import { getCurrentUserImage } from "@/app/actions";
 
 export default function Navbar() {
@@ -121,7 +122,7 @@ export default function Navbar() {
               <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-105 active:scale-95 duration-200">
                 <Image src="/logo.png" alt="Rojgaar Logo" width={36} height={36} className="object-contain" />
                 <div className="text-2xl font-black tracking-tighter whitespace-nowrap hidden sm:block">
-                  <span className="text-primary bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-indigo-600">Rojgaar</span>
+                  <span className="text-primary">Rojgaar</span>
                   <span className="text-foreground">Nepal</span>
                 </div>
               </Link>
@@ -159,7 +160,8 @@ export default function Navbar() {
             </div>
 
             {/* Right: Icons & Auth */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-2">
+              <ThemeToggle />
               {session ? (
                 <>
                   <NotificationBell />

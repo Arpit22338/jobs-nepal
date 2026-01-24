@@ -2,6 +2,7 @@
 
 import { SessionProvider, useSession } from "next-auth/react";
 import { useEffect } from "react";
+import ProfileCompletionCheck from "@/components/ProfileCompletionCheck";
 
 function OnlineStatusTracker() {
   const { data: session } = useSession();
@@ -33,6 +34,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <OnlineStatusTracker />
+      <ProfileCompletionCheck />
       {children}
     </SessionProvider>
   );
