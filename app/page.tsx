@@ -32,66 +32,78 @@ export default async function Home() {
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/30 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
         </div>
 
-        <div className="text-center px-4 max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-accent/50 border border-primary/20 text-primary text-sm font-medium mb-4 backdrop-blur-sm">
-            <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-            Your Career Starts Here
+        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center relative z-10">
+          <div className="space-y-8 animate-in fade-in slide-in-from-left-10 duration-1000">
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest backdrop-blur-sm">
+              <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
+              The Future of Rojgaar in Nepal
+            </div>
+
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight text-foreground leading-[1.1]">
+              Connecting <span className="text-primary italic">Ambition</span> <br />
+              with <span className="text-primary">Opportunity</span>
+            </h1>
+
+            <p className="text-xl text-muted-foreground font-medium max-w-xl leading-relaxed">
+              The premier professional freelancing site and job portal for the Nepalese workforce. Find top jobs, master new skills, and hire experts.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              {user?.role === "TEACHER" ? (
+                <>
+                  <Link
+                    href="/teacher/course"
+                    className="inline-flex h-14 items-center justify-center px-10 text-lg font-bold text-white bg-primary rounded-2xl hover:bg-primary/90 shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
+                  >
+                    <Briefcase className="mr-2" size={22} />
+                    Start Teaching
+                  </Link>
+                  <Link
+                    href="/teacher/dashboard"
+                    className="inline-flex h-14 items-center justify-center px-10 text-lg font-bold text-foreground bg-card/50 backdrop-blur-sm border border-border rounded-2xl hover:bg-accent hover:text-primary transition-all hover:scale-105 active:scale-95"
+                  >
+                    Dashboard
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/jobs"
+                    className="inline-flex h-14 items-center justify-center px-10 text-lg font-bold text-primary-foreground bg-primary rounded-2xl hover:bg-primary/90 shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95 group"
+                  >
+                    <Search className="mr-2 group-hover:rotate-12 transition-transform" size={22} />
+                    Browse Jobs
+                  </Link>
+                  <Link
+                    href="/talent"
+                    className="inline-flex h-14 items-center justify-center px-10 text-lg font-bold text-foreground bg-card/50 backdrop-blur-sm border-2 border-primary/20 rounded-2xl hover:bg-card hover:border-primary/50 hover:shadow-[0_0_25px_rgba(13,148,136,0.15)] transition-all hover:scale-105 active:scale-95"
+                  >
+                    Find Talent
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-foreground leading-tight">
-            Top <span className="text-primary">Jobs in Nepal</span>
-            <br />
-            & <span className="text-primary">Freelancing</span> Portal
-          </h1>
+          <div className="relative hidden lg:block animate-in fade-in slide-in-from-right-10 duration-1000">
+            <div className="absolute inset-0 bg-primary/20 rounded-[60px] blur-3xl -rotate-6"></div>
+            <div className="relative glass-card-deep rounded-[50px] p-8 md:p-12 space-y-6 border-white/20">
+              <h2 className="text-3xl font-black text-foreground">About the Portal</h2>
+              <h3 className="sr-only">Rojgaar Nepal: The ultimate freelancing site and job portal for finding jobs in Nepal and learning professional skills.</h3>
 
-          <h2 className="sr-only">Rojgaar Nepal: The ultimate freelancing site and job portal for finding jobs in Nepal and learning professional skills.</h2>
+              <p className="text-lg text-muted-foreground font-medium leading-[1.8]">
+                Welcome to <strong className="text-foreground font-bold">Rojgaar Nepal</strong>, the professional landscape connecting ambitious talent with visionary employers across the region.
+              </p>
 
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto font-light leading-relaxed">
-            Welcome to <strong className="text-foreground font-semibold">Rojgaar Nepal</strong>, the premier professional freelancing site and job portal connecting ambitious talent with visionary employers across the region.
-            Whether you are looking for top <span className="text-primary font-medium">Jobs in Nepal</span>, high-paying remote freelancing opportunities, or professional skill development, our portal provides the tools you need to succeed.
-          </p>
+              <p className="text-base text-muted-foreground leading-relaxed opacity-80">
+                Whether you are looking for top <span className="text-primary font-bold">Jobs in Nepal</span>, high-paying remote freelancing opportunities, or professional skill development, our portal provides the high-end tools you need to succeed.
+              </p>
 
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto font-normal leading-relaxed opacity-80 pb-4">
-            Our mission is to bridge the gap between skilled individuals and the ever-growing demand for experts in sectors ranging from Tech and Finance to Creative Arts. With a focus on the local economy, we empower every job seeker and freelancer to build a sustainable career right here in Nepal.
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
-            {user?.role === "TEACHER" ? (
-              <>
-                <Link
-                  href="/teacher/course"
-                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-white bg-primary rounded-full hover:bg-primary/90 shadow-lg hover:shadow-primary/30 transition-all hover:scale-105 active:scale-95"
-                >
-                  <Briefcase className="mr-2" size={22} />
-                  Start Teaching
-                </Link>
-                <Link
-                  href="/teacher/dashboard"
-                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-foreground bg-white border border-input rounded-full hover:bg-accent hover:text-primary shadow-sm transition-all hover:scale-105 active:scale-95"
-                >
-                  Dashboard
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/jobs"
-                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-primary-foreground bg-primary rounded-full hover:bg-primary/90 shadow-lg hover:shadow-primary/30 transition-all hover:scale-105 active:scale-95 group"
-                >
-                  <Search className="mr-2 group-hover:rotate-12 transition-transform" size={22} />
-                  Browse Jobs
-                </Link>
-                <Link
-                  href="/talent"
-                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-foreground bg-card/50 backdrop-blur-sm border-2 border-primary/20 rounded-full hover:bg-card hover:border-primary/50 hover:shadow-[0_0_25px_rgba(13,148,136,0.2)] dark:hover:shadow-[0_0_25px_rgba(20,184,166,0.3)] transition-all hover:scale-105 active:scale-95"
-                >
-                  Find Talent
-                </Link>
-              </>
-            )}
+              <p className="text-base text-muted-foreground leading-relaxed opacity-80 border-t border-border/50 pt-6">
+                Our mission is to bridge the gap between skilled individuals and the ever-growing demand for experts in sectors ranging from Tech and Finance to Creative Arts. With a focus on the local economy, we empower every job seeker and freelancer to build a sustainable career right here in Nepal.
+              </p>
+            </div>
           </div>
-
-
         </div>
       </section>
 
