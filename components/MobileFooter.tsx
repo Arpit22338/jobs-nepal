@@ -10,9 +10,11 @@ export default function MobileFooter() {
     const { data: session } = useSession();
     const user = session?.user as { role?: string } | undefined;
 
-    // Don't show footer on login/register pages
+    // Don't show footer on login/register pages and individual chat pages
     const hiddenPaths = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
-    if (hiddenPaths.some((p) => pathname.startsWith(p))) {
+    const isChatPage = pathname.startsWith("/messages/") && pathname.length > 10;
+
+    if (hiddenPaths.some((p) => pathname.startsWith(p)) || isChatPage) {
         return null;
     }
 
