@@ -8,6 +8,7 @@ import { applyForJob, deleteQuestion, createAnswer, deleteAnswer } from "@/app/a
 import { Trash2, MessageCircle, MapPin, Briefcase, Zap, Star, ShieldCheck, Send } from "lucide-react";
 import ReportButton from "@/components/ReportButton";
 import SaveJobButton from "@/components/SaveJobButton";
+import QnaSection from "@/components/QnaSection";
 import { Metadata, ResolvingMetadata } from "next";
 
 export async function generateMetadata(
@@ -250,152 +251,13 @@ export default async function JobDetailsPage({ params }: Props) {
             </div>
           </section>
 
-          {/* QnA Section */}
-          <section className="space-y-8 pt-8 border-t border-border/40">
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-black text-foreground">Community Q&A</h2>
-              <div className="px-4 py-1.5 bg-accent rounded-full text-[10px] font-black text-primary uppercase tracking-widest">
-                {job.questions.length} Discussion{job.questions.length !== 1 ? 's' : ''}
-              </div>
-            </div>
-
-            {/* Ask Question Form */}
-            {session?.user.role === "JOBSEEKER" && (
-              <form action={async (formData) => {
-                "use server";
-                const content = formData.get("content");
-                if (!content) return;
-
-                await prisma.question.create({
-                  data: {
-                    content: content as string,
-                    jobId: job.id,
-                    userId: session.user.id,
-                  },
-                });
-              }} className="relative">
-                <input
-                  name="content"
-                  type="text"
-                  placeholder="Got a question? Ask the employer publicly..."
-                  className="w-full pl-6 pr-24 py-5 bg-accent/20 border-2 border-transparent focus:border-primary/30 rounded-[28px] focus:outline-none focus:bg-background transition-all text-foreground font-bold placeholder:text-muted-foreground/50 shadow-inner"
-                  required
-                />
-                <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground font-black px-6 py-2.5 rounded-2xl hover:bg-primary/90 flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-primary/20">
-                  <Send size={16} /> Post
-                </button>
-              </form>
-            )}
-
-            <div className="space-y-8">
-              {job.questions.length === 0 ? (
-                <div className="text-center py-12 glass-card rounded-3xl border-dashed border-2">
-                  <MessageCircle size={40} className="text-muted-foreground/30 mx-auto mb-4" />
-                  <p className="text-muted-foreground font-bold">Be the first to start the conversation!</p>
-                </div>
-              ) : (
-                job.questions.map((q: any) => (
-                  <div key={q.id} className="space-y-4">
-                    <div className="glass-card p-6 rounded-[32px] border-primary/10">
-                      <div className="flex items-start gap-4 mb-4">
-                        <Link href={`/profile/${q.userId}`} className="flex-shrink-0 group">
-                          {q.user.image ? (
-                            <Image
-                              src={q.user.image}
-                              alt={q.user.name || "User"}
-                              width={48}
-                              height={48}
-                              className="rounded-2xl object-cover border-2 border-accent group-hover:border-primary transition-colors"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center text-primary font-black uppercase text-xl group-hover:bg-primary/10 transition-colors">
-                              {q.user.name?.[0] || "U"}
-                            </div>
-                          )}
-                        </Link>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-start">
-                            <Link href={`/profile/${q.userId}`} className="font-black text-foreground hover:text-primary transition-colors">
-                              {q.user.name}
-                            </Link>
-                            <div className="flex items-center gap-2">
-                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{q.createdAt.toLocaleDateString()}</span>
-                              {(session?.user.id === q.userId || session?.user.id === job.employerId || session?.user.role === "ADMIN") && (
-                                <form action={async () => {
-                                  "use server";
-                                  await deleteQuestion(q.id);
-                                }}>
-                                  <button type="submit" className="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-xl transition-all">
-                                    <Trash2 size={16} />
-                                  </button>
-                                </form>
-                              )}
-                            </div>
-                          </div>
-                          <p className="text-foreground/90 font-medium text-lg leading-relaxed mt-2">{q.content}</p>
-                        </div>
-                      </div>
-
-                      {/* Answers Section */}
-                      <div className="ml-16 space-y-4">
-                        {q.answers.map((answer: any) => (
-                          <div key={answer.id} className="bg-accent/30 p-4 rounded-2xl border border-border/40 relative">
-                            <div className="flex justify-between items-start mb-2">
-                              <div className="flex items-center gap-3">
-                                <span className="font-black text-sm text-foreground">
-                                  {answer.user.name}
-                                </span>
-                                {answer.userId === job.employerId && (
-                                  <span className="bg-primary/10 text-primary text-[10px] font-black px-2 py-0.5 rounded-lg uppercase tracking-wider border border-primary/20">
-                                    Employer
-                                  </span>
-                                )}
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                                  {answer.createdAt.toLocaleDateString()}
-                                </span>
-                              </div>
-                              {(session?.user.id === answer.userId || session?.user.role === "ADMIN") && (
-                                <form action={async () => {
-                                  "use server";
-                                  await deleteAnswer(answer.id);
-                                }}>
-                                  <button type="submit" className="text-red-400 hover:text-red-600 p-1.5 transition-colors">
-                                    <Trash2 size={14} />
-                                  </button>
-                                </form>
-                              )}
-                            </div>
-                            <p className="text-muted-foreground font-medium text-base">{answer.content}</p>
-                          </div>
-                        ))}
-
-                        {/* Reply Form */}
-                        {session && (
-                          <form action={async (formData) => {
-                            "use server";
-                            const content = formData.get("content");
-                            if (!content) return;
-                            await createAnswer(q.id, content as string);
-                          }} className="flex gap-2 group">
-                            <input
-                              name="content"
-                              type="text"
-                              placeholder="Share your thoughts..."
-                              className="flex-1 bg-accent/20 border-2 border-transparent focus:border-primary/20 rounded-2xl px-5 py-3 text-sm font-bold focus:outline-none transition-all"
-                              required
-                            />
-                            <button type="submit" className="bg-accent hover:bg-primary/10 text-primary font-black px-6 py-3 rounded-2xl text-xs uppercase tracking-widest transition-all active:scale-95 flex items-center gap-2">
-                              <MessageCircle size={16} /> Reply
-                            </button>
-                          </form>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </section>
+          <QnaSection
+            initialQuestions={job.questions}
+            jobId={job.id}
+            currentUserId={session?.user?.id}
+            employerId={job.employerId}
+            isAdmin={session?.user?.role === "ADMIN"}
+          />
         </div>
 
         {/* Sidebar Stats */}

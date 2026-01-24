@@ -141,6 +141,16 @@ export async function applyForJob(jobId: string) {
     },
   });
 
+  // Also create a proper Notification record for the employer
+  await (prisma as any).notification.create({
+    data: {
+      userId: employerId,
+      content: `New application received for "${jobTitle}" from ${session.user.name}`,
+      type: "INFO",
+      link: `/employer/jobs/${jobId}/applications`,
+    },
+  });
+
   // Send email
   if (job.employer?.email && session.user.name) {
     await sendApplicationEmail(job.employer.email, jobTitle, session.user.name);
@@ -331,14 +341,22 @@ export async function deleteAnswer(answerId: string) {
 
   const answer = await (prisma as any).answer.findUnique({
     where: { id: answerId },
+    include: { question: { include: { job: true } } },
   });
 
   if (!answer) {
     throw new Error("Answer not found");
   }
 
-  // Allow deletion if author or admin
-  if (answer.userId !== session.user.id && session.user.role !== "ADMIN") {
+  // Allow deletion if:
+  // 1. User is the author of the answer
+  // 2. User is the employer (job owner)
+  // 3. User is ADMIN
+  const isAuthor = answer.userId === session.user.id;
+  const isEmployer = answer.question.job.employerId === session.user.id;
+  const isAdmin = session.user.role === "ADMIN";
+
+  if (!isAuthor && !isEmployer && !isAdmin) {
     throw new Error("Unauthorized");
   }
 
@@ -346,14 +364,7 @@ export async function deleteAnswer(answerId: string) {
     where: { id: answerId },
   });
 
-  // We need to find the job ID to revalidate
-  const question = await prisma.question.findUnique({
-    where: { id: answer.questionId },
-  });
-
-  if (question) {
-    revalidatePath(`/jobs/${question.jobId}`);
-  }
+  revalidatePath(`/jobs/${answer.question.jobId}`);
 }
 
 export async function getNotifications() {
@@ -456,4 +467,19 @@ export async function getEmployerStats() {
   });
 
   return { isPremium: user.isPremium, jobCount };
+}
+
+export async function createQuestion(jobId: string, content: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  await prisma.question.create({
+    data: {
+      content,
+      jobId,
+      userId: session.user.id,
+    },
+  });
+
+  revalidatePath(`/jobs/${jobId}`);
 }

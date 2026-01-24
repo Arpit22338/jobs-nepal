@@ -21,9 +21,22 @@ export default function Footer() {
                             </div>
                         </Link>
                         <p className="text-muted-foreground leading-relaxed">
-                            Empowering Nepal's workforce by connecting talented individuals with visionary employers. Build your future with us.
+                            Empowering Nepal's digital workforce by connecting talented individuals with visionary employers. Build your future with Rojgaar Nepal today.
                         </p>
-
+                        <div className="flex items-center gap-4">
+                            <a href="https://facebook.com/rojgaarnepal" target="_blank" rel="noopener noreferrer" className="size-10 rounded-full bg-accent/50 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all" aria-label="Follow us on Facebook">
+                                <Facebook size={18} />
+                            </a>
+                            <a href="https://twitter.com/rojgaarnepal" target="_blank" rel="noopener noreferrer" className="size-10 rounded-full bg-accent/50 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all" aria-label="Follow us on Twitter">
+                                <Twitter size={18} />
+                            </a>
+                            <a href="https://linkedin.com/company/rojgaarnepal" target="_blank" rel="noopener noreferrer" className="size-10 rounded-full bg-accent/50 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all" aria-label="Follow us on LinkedIn">
+                                <Linkedin size={18} />
+                            </a>
+                            <a href="https://instagram.com/rojgaarnepal" target="_blank" rel="noopener noreferrer" className="size-10 rounded-full bg-accent/50 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all" aria-label="Follow us on Instagram">
+                                <Instagram size={18} />
+                            </a>
+                        </div>
                     </div>
 
                     {/* Quick Links */}
@@ -32,22 +45,22 @@ export default function Footer() {
                         <ul className="space-y-4">
                             <li>
                                 <Link href="/jobs" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                                    Find Jobs
+                                    Explore Job Openings
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/talent" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                                    Browse Talent
+                                    Hire Professional Talent
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/courses" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                                    Skill Courses
+                                    Browse Skill Courses
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/employer/jobs/new" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                                    Post a Job
+                                    Publish a New Listing
                                 </Link>
                             </li>
                         </ul>

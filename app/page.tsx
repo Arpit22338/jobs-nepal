@@ -44,11 +44,15 @@ export default async function Home() {
             & <span className="text-primary">Freelancing</span> Portal
           </h1>
 
-          <h2 className="sr-only">Hire experts in Nepal, find Rojgaar, and learn Python or basic skills.</h2>
+          <h2 className="sr-only">Rojgaar Nepal: The ultimate freelancing site and job portal for finding jobs in Nepal and learning professional skills.</h2>
 
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
-            Connecting ambitious talent with visionary employers across Nepal.
-            Find meaningful work, master new skills, and accelerate your career growth.
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto font-light leading-relaxed">
+            Welcome to <strong className="text-foreground font-semibold">Rojgaar Nepal</strong>, the premier professional freelancing site and job portal connecting ambitious talent with visionary employers across the region.
+            Whether you are looking for top <span className="text-primary font-medium">Jobs in Nepal</span>, high-paying remote freelancing opportunities, or professional skill development, our portal provides the tools you need to succeed.
+          </p>
+
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto font-normal leading-relaxed opacity-80 pb-4">
+            Our mission is to bridge the gap between skilled individuals and the ever-growing demand for experts in sectors ranging from Tech and Finance to Creative Arts. With a focus on the local economy, we empower every job seeker and freelancer to build a sustainable career right here in Nepal.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
@@ -79,7 +83,7 @@ export default async function Home() {
                 </Link>
                 <Link
                   href="/talent"
-                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-black bg-white border-2 border-primary/10 rounded-full hover:bg-accent hover:border-primary/30 shadow-sm transition-all hover:scale-105 active:scale-95"
+                  className="inline-flex h-14 items-center justify-center px-8 py-3 text-lg font-bold text-foreground bg-card/50 backdrop-blur-sm border-2 border-primary/20 rounded-full hover:bg-card hover:border-primary/50 hover:shadow-[0_0_25px_rgba(13,148,136,0.2)] dark:hover:shadow-[0_0_25px_rgba(20,184,166,0.3)] transition-all hover:scale-105 active:scale-95"
                 >
                   Find Talent
                 </Link>
@@ -128,13 +132,13 @@ export default async function Home() {
             <p className="text-muted-foreground text-lg">Fresh jobs from top companies added just now.</p>
           </div>
           <Link href="/jobs" className="group flex items-center font-bold text-primary hover:text-primary/80 transition-colors">
-            View All Jobs <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+            Discover More Opportunities <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
           </Link>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {latestJobs.map((job) => (
-            <Link key={job.id} href={`/jobs/${job.id}`} className="block group">
+            <Link key={job.id} href={`/jobs/${job.id}`} className="block group" aria-label={`View details for ${job.title} at ${job.employer.employerProfile?.companyName}`}>
               <div className="glass-card rounded-2xl p-6 h-full flex flex-col group-hover:border-primary/30 transition-all">
                 <div className="flex justify-between items-start mb-6">
                   <div className="w-14 h-14 bg-accent rounded-xl flex items-center justify-center text-2xl font-bold text-primary shadow-sm group-hover:scale-105 transition-transform">
@@ -168,10 +172,10 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
               <h2 className="text-4xl md:text-5xl font-black text-foreground leading-tight">
-                Why <span className="text-primary">RojgaarNepal</span> is the best choice?
+                Why <span className="text-primary">Rojgaar Nepal</span> is the Trusted Choice
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                We&apos;ve built a platform that puts user experience first. No clutter, just connections.
+              <p className="text-lg text-muted-foreground leading-relaxed font-normal">
+                We have meticulously built a professional landscape that prioritizes transparency and efficiency above all else. Unlike traditional job boards, our <strong className="text-foreground">Freelancing Portal</strong> specifically caters to the unique needs of the Nepalese market—offering a clutter-free interface where real connections are made between visionaries and builders.
               </p>
 
               <div className="space-y-6">
@@ -198,10 +202,17 @@ export default async function Home() {
                     <Zap size={24} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-foreground mb-1">Skill Development</h3>
-                    <p className="text-muted-foreground">Free high-quality courses to help you upgrade your CV and get hired faster.</p>
+                    <h3 className="text-xl font-bold text-foreground mb-1">Professional Growth</h3>
+                    <p className="text-muted-foreground">Beyond just job listings, our portal acts as a comprehensive career hub. We provide free high-quality courses to help you upgrade your CV, master the latest technologies, and ultimately get hired faster by top-tier firms.</p>
                   </div>
                 </div>
+              </div>
+
+              <div className="pt-6 border-t border-border/50">
+                <h4 className="text-lg font-bold text-foreground mb-3">Empowering the Local Workforce</h4>
+                <p className="text-muted-foreground leading-relaxed italic">
+                  At Rojgaar Nepal, we believe that the next big innovation will come from local talent. By providing a dedicated space for freelancing and formal jobs in Nepal, we help reduce the brain drain and foster a thriving digital ecosystem that benefits everyone from startup founders to independent consultants.
+                </p>
               </div>
             </div>
 
