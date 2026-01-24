@@ -132,35 +132,9 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Center: Desktop Menu */}
-            <div className="hidden lg:flex items-center gap-6 flex-1 justify-center">
+            {/* Center: Desktop Menu (Moved to persistent bottom nav to reduce crowding) */}
+            <div className="hidden">
               <Link href="/" className={`${getLinkClass("/")}`}>Home</Link>
-
-              {user?.role === "TEACHER" ? (
-                <>
-                  <Link href="/teacher/course" className={`${getLinkClass("/teacher/course")}`}>Add Course</Link>
-                  <Link href="/teacher/dashboard" className={`${getLinkClass("/teacher/dashboard")}`}>Teacher Dashboard</Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/jobs" className={`${getLinkClass("/jobs")}`}>Find Jobs</Link>
-                  <Link href="/people" className={`${getLinkClass("/people")}`}>Community</Link>
-                  <Link href="/talent" className={`${getLinkClass("/talent")}`}>Find Talent</Link>
-                </>
-              )}
-
-              <Link href="/courses" className={`${getLinkClass("/courses")}`}>Skill Courses</Link>
-
-              {(user?.role === "EMPLOYER" || user?.role === "ADMIN") && (
-                <div className="flex items-center gap-6 border-l border-border/50 pl-6 ml-2">
-                  {user?.role === "EMPLOYER" && (
-                    <Link href="/employer/jobs/new" className={`${getLinkClass("/employer/jobs/new")}`}>Post Job</Link>
-                  )}
-                  <Link href={user?.role === "ADMIN" ? "/admin/dashboard" : "/employer/dashboard"} className={`${getLinkClass(user?.role === "ADMIN" ? "/admin/dashboard" : "/employer/dashboard")}`}>
-                    Dashboard
-                  </Link>
-                </div>
-              )}
             </div>
 
             {/* Right: Icons & Auth */}

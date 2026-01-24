@@ -249,17 +249,25 @@ export default function PublicProfilePage() {
                 }
 
                 // Fallback for comma-separated or cleanup
+                const skillsArray = profile.skills.split(',').map(s => s.trim()).filter(s => s);
                 return (
-                  <div className="flex flex-wrap gap-2">
-                    {profile.skills.split(',').map((skill, index) => {
-                      const cleanSkill = skill.trim().replace(/[\[\]"{}]/g, '').replace(/name:/g, '').replace(/level:\d+/g, '');
-                      if (!cleanSkill) return null;
-                      return (
-                        <span key={index} className="bg-accent text-foreground px-3 py-1 rounded-full text-sm">
-                          {cleanSkill}
-                        </span>
-                      );
-                    })}
+                  <div className="space-y-4 mt-4">
+                    {skillsArray.map((skill, index) => (
+                      <div key={index} className="group">
+                        <div className="flex justify-between items-center mb-1.5">
+                          <span className="font-semibold text-foreground text-sm tracking-wide uppercase">
+                            {skill.replace(/[\[\]"{}]/g, '').replace(/name:/g, '').replace(/level:\d+/g, '')}
+                          </span>
+                          <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">90%</span>
+                        </div>
+                        <div className="h-2.5 bg-accent/50 rounded-full overflow-hidden border border-border/20">
+                          <div
+                            className="h-full bg-primary rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(var(--primary),0.3)]"
+                            style={{ width: `90%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 );
               }
