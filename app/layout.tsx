@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import Navbar from "../components/Navbar";
 import MobileFooter from "../components/MobileFooter";
+import CursorGlow from "../components/CursorGlow";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,7 +35,8 @@ export default function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <Providers>
-          <div className="min-h-screen flex flex-col bg-background">
+          <CursorGlow />
+          <div className="min-h-screen flex flex-col bg-background relative">
             <Navbar />
             <main className="flex-1 container mx-auto px-4 pt-20 pb-24 md:pb-8">
               {children}

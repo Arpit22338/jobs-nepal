@@ -112,7 +112,9 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled ? "glass border-border/40 py-2 shadow-sm" : "bg-transparent border-transparent py-4"
+        className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled
+          ? "bg-card/70 backdrop-blur-xl border-border/40 py-2 shadow-sm supports-[backdrop-filter]:bg-card/60"
+          : "bg-transparent border-transparent py-4"
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -122,8 +124,8 @@ export default function Navbar() {
               <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-105 active:scale-95 duration-200">
                 <Image src="/logo.png" alt="Rojgaar Logo" width={36} height={36} className="object-contain" />
                 <div className="text-2xl font-black tracking-tighter whitespace-nowrap hidden sm:block">
-                  <span className="text-secondary">Rojgaar</span>
-                  <span className="text-secondary/80 font-medium">Nepal</span>
+                  <span className="text-primary">Rojgaar</span>
+                  <span className="text-foreground">Nepal</span>
                 </div>
               </Link>
             </div>
