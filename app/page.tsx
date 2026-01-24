@@ -27,7 +27,7 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="relative pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden">
         {/* Abstract Background Shapes */}
-        <div className="absolute top-0 left-0 w-full h-full -z-10 bg-background overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full -z-10 bg-transparent overflow-hidden">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/30 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
         </div>

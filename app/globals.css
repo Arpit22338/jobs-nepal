@@ -116,6 +116,10 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
+  .dark body {
+    background-color: transparent !important;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply text-foreground font-bold tracking-tight;
   }

@@ -88,7 +88,7 @@ export default function RootLayout({
         <Providers>
           <AnimatedShaderBackground />
           <CursorGlow />
-          <div className="min-h-screen flex flex-col bg-background relative">
+          <div className="min-h-screen flex flex-col bg-transparent relative">
             <Navbar />
             <main className="flex-1 container mx-auto px-4 pt-20 pb-24 md:pb-8">
               {children}
