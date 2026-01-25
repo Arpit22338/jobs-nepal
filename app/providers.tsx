@@ -3,6 +3,8 @@
 import { SessionProvider, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import ProfileCompletionCheck from "@/components/ProfileCompletionCheck";
+import { ToastProvider } from "@/components/Toast";
+import { PushNotificationManager } from "@/components/PushNotificationManager";
 
 function OnlineStatusTracker() {
   const { data: session } = useSession();
@@ -33,9 +35,12 @@ function OnlineStatusTracker() {
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <OnlineStatusTracker />
-      <ProfileCompletionCheck />
-      {children}
+      <ToastProvider>
+        <OnlineStatusTracker />
+        <ProfileCompletionCheck />
+        <PushNotificationManager />
+        {children}
+      </ToastProvider>
     </SessionProvider>
   );
 }

@@ -64,6 +64,10 @@ model User {
   courses                   Course[]
   pushSubscriptions         PushSubscription[]
   certificates              Certificate[]
+  
+  // Blocked Users
+  blockedUsers              BlockedUser[] @relation("BlockedByUsers")
+  blockedByUsers            BlockedUser[] @relation("BlockedUsers")
 }
 
 model TempRegistration {
@@ -408,4 +412,15 @@ model SupportTicket {
   status    String   @default("OPEN") // OPEN, CLOSED
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model BlockedUser {
+  id        String   @id @default(cuid())
+  blockerId String
+  blocker   User     @relation("BlockedByUsers", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockedId String
+  blocked   User     @relation("BlockedUsers", fields: [blockedId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
 }

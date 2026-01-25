@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Settings, HelpCircle, LayoutDashboard } from "lucide-react";
+import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Settings, HelpCircle, LayoutDashboard, UserMinus } from "lucide-react";
 import { useState, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
 import { ThemeToggle } from "./ui/theme-toggle";
@@ -113,14 +113,15 @@ export default function Navbar() {
     <>
       <nav
         className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled
-          ? "bg-card/50 backdrop-blur-md border-border/40 py-2 shadow-sm supports-[backdrop-filter]:bg-card/40"
-          : "bg-transparent border-transparent py-4"
+          ? "bg-background/80 backdrop-blur-xl border-border/40 py-2 shadow-lg"
+          : "bg-background/50 backdrop-blur-md border-transparent py-4"
           }`}
+        style={{ WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14">
             {/* Left: Logo */}
-            <div className="flex-shrink-0 flex items-center mr-8">
+            <div className="shrink-0 flex items-center mr-8">
               <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-105 active:scale-95 duration-200">
                 <div className="hidden md:block relative w-10 h-10 md:w-14 md:h-14">
                   <Image src="/logo.png" alt="Rojgaar Logo" fill className="object-contain" />
@@ -138,6 +139,7 @@ export default function Navbar() {
               <Link href="/jobs" className={getLinkClass("/jobs")}>Jobs</Link>
               <Link href="/people" className={getLinkClass("/people")}>Community</Link>
               <Link href="/courses" className={getLinkClass("/courses")}>Courses</Link>
+              <Link href="/my-certificates" className={getLinkClass("/my-certificates")}>Certificates</Link>
               <Link href="/talent" className={getLinkClass("/talent")}>Find Talent</Link>
 
               {user?.role === "ADMIN" && (
@@ -192,7 +194,7 @@ export default function Navbar() {
                     </button>
 
                     {isProfileOpen && (
-                      <div className="absolute right-0 mt-3 w-64 glass-card rounded-2xl py-2 z-50 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                      <div className="absolute right-0 mt-3 w-64 bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl py-2 z-50 animate-in fade-in zoom-in-95 duration-200 origin-top-right shadow-2xl" style={{ WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}>
                         <div className="px-4 py-4 border-b border-border/40 mb-1 bg-accent/20">
                           <p className="font-bold text-foreground truncate text-sm">{user?.name}</p>
                           <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
@@ -218,12 +220,15 @@ export default function Navbar() {
                             </Link>
                           )}
                           {user?.role === "ADMIN" && (
-                            <Link href="/admin/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 rounded-xl transition-colors font-bold" onClick={closeMenus}>
+                            <Link href="/admin/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-500/10 dark:hover:bg-red-500/10 rounded-xl transition-colors" onClick={closeMenus}>
                               <LayoutDashboard size={16} className="text-red-500" /> Admin Panel
                             </Link>
                           )}
                           <Link href="/support" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
                             <HelpCircle size={16} className="text-muted-foreground" /> Support
+                          </Link>
+                          <Link href="/profile/blocked" className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-500/10 rounded-xl transition-colors" onClick={closeMenus}>
+                            <UserMinus size={16} className="text-red-500" /> Blocked Users
                           </Link>
                         </div>
                         <div className="border-t border-border/40 my-1 pt-1 px-2">
@@ -288,7 +293,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="fixed inset-0 z-[100] lg:hidden">
+        <div className="fixed inset-0 z-100 lg:hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={closeMenus} />
           <div
             className="absolute inset-y-0 right-0 w-[280px] bg-background/95 backdrop-blur-xl shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300 border-l border-border/50"
@@ -298,7 +303,7 @@ export default function Navbar() {
               <span className="font-bold text-lg text-foreground">Menu</span>
               <div className="flex items-center gap-2">
                 <ThemeToggle />
-                <button onClick={closeMenus} className="p-2 text-muted-foreground hover:bg-accent rounded-full text-foreground/80">
+                <button onClick={closeMenus} className="p-2 text-foreground/80 hover:bg-accent rounded-full">
                   <X size={20} />
                 </button>
               </div>
@@ -387,6 +392,9 @@ export default function Navbar() {
 
             {session && (
               <div className="p-4 border-t border-border/50 space-y-2 bg-accent/10">
+                <Link href="/profile/blocked" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-bold text-red-500 hover:bg-red-500/10 transition-colors" onClick={closeMenus}>
+                  <UserMinus size={18} className="text-red-500" /> Blocked Users
+                </Link>
                 <Link href="/profile/edit" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
                   <Settings size={18} className="text-muted-foreground" /> Settings
                 </Link>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Home, Briefcase, PlusCircle, MessageSquare, User } from "lucide-react";
+import { Home, Briefcase, PlusCircle, MessageSquare, User, Award } from "lucide-react";
 
 export default function MobileFooter() {
     const pathname = usePathname();
@@ -30,43 +30,51 @@ export default function MobileFooter() {
         { href: "/", icon: Home, label: "Home" },
         { href: "/jobs", icon: Briefcase, label: "Jobs" },
         { href: getPostLink(), icon: PlusCircle, label: "Post", isPrimary: true },
-        { href: "/messages", icon: MessageSquare, label: "Messages" },
+        { href: "/my-certificates", icon: Award, label: "Certs" },
         { href: "/profile", icon: User, label: "Profile" },
     ];
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border">
-            <div className="flex justify-around items-center h-16 px-2">
-                {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const active = isActive(item.href);
+        <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+            <div className="mx-3 mb-3 bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl">
+                <div className="flex justify-around items-center h-16 px-2">
+                    {navItems.map((item) => {
+                        const Icon = item.icon;
+                        const active = isActive(item.href);
 
-                    if (item.isPrimary) {
+                        if (item.isPrimary) {
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={session ? item.href : "/login"}
+                                    className="flex flex-col items-center justify-center -mt-8"
+                                >
+                                    <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-primary to-primary/80 flex items-center justify-center shadow-xl shadow-primary/40 active:scale-90 transition-all duration-200 border-4 border-background">
+                                        <Icon size={24} className="text-primary-foreground" />
+                                    </div>
+                                </Link>
+                            );
+                        }
+
                         return (
                             <Link
                                 key={item.href}
-                                href={session ? item.href : "/login"}
-                                className="flex flex-col items-center justify-center -mt-6"
+                                href={session ? item.href : item.href === "/" ? "/" : "/login"}
+                                className={`flex flex-col items-center justify-center gap-0.5 px-3 py-2 transition-all duration-200 rounded-xl ${active 
+                                    ? "text-primary bg-primary/10" 
+                                    : "text-muted-foreground hover:text-foreground"
+                                }`}
                             >
-                                <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30 active:scale-95 transition-transform">
-                                    <Icon size={24} className="text-primary-foreground" />
-                                </div>
+                                <Icon 
+                                    size={20} 
+                                    strokeWidth={active ? 2.5 : 1.5} 
+                                    className={`transition-transform duration-200 ${active ? 'scale-110' : ''}`}
+                                />
+                                <span className={`text-[10px] ${active ? 'font-bold' : 'font-medium'}`}>{item.label}</span>
                             </Link>
                         );
-                    }
-
-                    return (
-                        <Link
-                            key={item.href}
-                            href={session ? item.href : item.href === "/" ? "/" : "/login"}
-                            className={`flex flex-col items-center justify-center gap-1 px-3 py-2 transition-colors ${active ? "text-primary" : "text-muted-foreground"
-                                }`}
-                        >
-                            <Icon size={22} strokeWidth={active ? 2.5 : 2} />
-                            <span className="text-[10px] font-medium">{item.label}</span>
-                        </Link>
-                    );
-                })}
+                    })}
+                </div>
             </div>
         </nav>
     );

@@ -11,27 +11,21 @@ import {
   Trash2,
   UserMinus2,
   Send,
+  Reply,
+  Copy,
 } from "lucide-react";
 import { deleteMessage } from "@/app/actions";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/components/Toast";
 
 interface Message {
   id: string;
@@ -55,8 +49,10 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [otherUser, setOtherUser] = useState<ChatUser | null>(null);
   const [newMessage, setNewMessage] = useState("");
+  const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const { showToast, showConfirm } = useToast();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -156,17 +152,23 @@ export default function ChatPage() {
     if (!newMessage.trim()) return;
 
     try {
+      // If replying, prepend the replied message content
+      const messageContent = replyingTo 
+        ? `↩️ "${replyingTo.content.slice(0, 50)}${replyingTo.content.length > 50 ? '...' : ''}"\n\n${newMessage}`
+        : newMessage;
+
       const res = await fetch("/api/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           receiverId: otherUserId,
-          content: newMessage,
+          content: messageContent,
         }),
       });
 
       if (res.ok) {
         setNewMessage("");
+        setReplyingTo(null);
         fetchMessages();
       }
     } catch (error) {
@@ -251,7 +253,7 @@ export default function ChatPage() {
                 <div className={cn("flex flex-col max-w-[75%]", isMe ? "items-end" : "items-start")}>
                   <div
                     className={cn(
-                      "rounded-2xl px-4 py-2.5 text-sm shadow-sm relative group/bubble max-w-md break-words",
+                      "rounded-2xl px-4 py-2.5 text-sm shadow-sm relative group/bubble max-w-md wrap-break-word",
                       isMe
                         ? "bg-primary text-primary-foreground rounded-br-sm"
                         : "bg-accent text-foreground rounded-bl-sm border border-border/50"
@@ -259,40 +261,51 @@ export default function ChatPage() {
                   >
                     {formatMessageContent(msg.content, isMe)}
 
-                    {/* Message Actions (Hover) */}
+                    {/* Message Actions (3-dot menu) */}
                     <div className={cn(
                       "absolute top-0 opacity-0 group-hover/bubble:opacity-100 transition-opacity",
-                      isMe ? "-left-8" : "-right-8"
+                      isMe ? "-left-10" : "-right-10"
                     )}>
-                      {isMe && (
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" className="size-6 hover:bg-destructive/10 hover:text-destructive rounded-full">
-                              <Trash2 className="size-3" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Message?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete this message.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={async () => {
-                                  await deleteMessage(msg.id);
-                                  setMessages((prev) => prev.filter((m) => m.id !== msg.id));
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="size-7 hover:bg-accent rounded-full">
+                            <MoreVertical className="size-3.5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align={isMe ? "start" : "end"} className="w-40">
+                          <DropdownMenuItem onClick={() => setReplyingTo(msg)}>
+                            <Reply size={14} className="mr-2" /> Reply
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => {
+                            navigator.clipboard.writeText(msg.content);
+                            showToast("Copied to clipboard", "success");
+                          }}>
+                            <Copy size={14} className="mr-2" /> Copy
+                          </DropdownMenuItem>
+                          {isMe && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem 
+                                className="text-destructive focus:text-destructive"
+                                onClick={() => {
+                                  showConfirm({
+                                    title: "Delete Message",
+                                    message: "Delete this message for everyone?",
+                                    type: "danger",
+                                    onConfirm: async () => {
+                                      await deleteMessage(msg.id);
+                                      setMessages((prev) => prev.filter((m) => m.id !== msg.id));
+                                      showToast("Message deleted", "success");
+                                    }
+                                  });
                                 }}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      )}
+                                <Trash2 size={14} className="mr-2" /> Delete
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
 
@@ -322,28 +335,46 @@ export default function ChatPage() {
       </div>
 
       {/* Input Area */}
-      <div className="shrink-0 p-3 md:p-4 border-t border-border/40 bg-card/80 backdrop-blur-md pb-safe">
-        <form onSubmit={sendMessage} className="flex gap-2 items-center max-w-4xl mx-auto relative">
-          <input
-            type="text"
-            value={newMessage}
-            onFocus={() => {
-              // Ensure we scroll to bottom when keyboard comes up
-              setTimeout(scrollToBottom, 300);
-            }}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1 bg-background border border-input rounded-2xl md:rounded-full px-4 md:px-5 py-3 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none placeholder:text-muted-foreground text-foreground min-h-[44px]"
-          />
-          <Button
-            type="submit"
-            size="icon"
-            disabled={!newMessage.trim()}
-            className="rounded-full size-11 shrink-0 transition-all hover:scale-105 active:scale-95 shadow-md"
-          >
-            <Send className="size-5 ml-0.5" />
-          </Button>
-        </form>
+      <div className="shrink-0 border-t border-border/40 bg-card/80 backdrop-blur-md pb-safe">
+        {/* Reply indicator */}
+        {replyingTo && (
+          <div className="px-4 py-2 flex items-center gap-3 bg-accent/50 border-b border-border/30">
+            <Reply size={14} className="text-primary" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground">Replying to</p>
+              <p className="text-sm truncate text-foreground">{replyingTo.content}</p>
+            </div>
+            <button 
+              onClick={() => setReplyingTo(null)}
+              className="text-muted-foreground hover:text-foreground p-1"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+        <div className="p-3 md:p-4">
+          <form onSubmit={sendMessage} className="flex gap-2 items-center max-w-4xl mx-auto relative">
+            <input
+              type="text"
+              value={newMessage}
+              onFocus={() => {
+                // Ensure we scroll to bottom when keyboard comes up
+                setTimeout(scrollToBottom, 300);
+              }}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder={replyingTo ? "Type your reply..." : "Type a message..."}
+              className="flex-1 bg-background border border-input rounded-2xl md:rounded-full px-4 md:px-5 py-3 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none placeholder:text-muted-foreground text-foreground min-h-11"
+            />
+            <Button
+              type="submit"
+              size="icon"
+              disabled={!newMessage.trim()}
+              className="rounded-full size-11 shrink-0 transition-all hover:scale-105 active:scale-95 shadow-md"
+            >
+              <Send className="size-5 ml-0.5" />
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );

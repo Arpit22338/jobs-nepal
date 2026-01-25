@@ -65,10 +65,10 @@ export default function SupportPage() {
     <div className="min-h-[calc(100vh-80px)] py-12 px-4">
       <div className="max-w-4xl mx-auto space-y-10">
         <div className="text-center">
-          <h1 className="text-4xl font-black text-foreground mb-4">Premium Support</h1>
+          <h1 className="text-4xl font-black text-foreground mb-4">Help & Support</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            As a premium member, you have access to our priority support channel.
-            We&apos;re here to help you succeed.
+            Need assistance? Our support team is here to help you.
+            Submit a ticket and we&apos;ll get back to you as soon as possible.
           </p>
         </div>
 

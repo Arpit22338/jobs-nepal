@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
-import { MapPin, Briefcase, Search, ArrowRight, MessageCircle } from "lucide-react";
+import { MapPin, Briefcase, Search, ArrowRight, MessageCircle, SlidersHorizontal, X, Clock } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import SaveJobButton from "@/components/SaveJobButton";
@@ -78,8 +78,20 @@ function JobsContent() {
     fetchJobs();
   };
 
+  const [showFilters, setShowFilters] = useState(false);
+  const jobTypes = ["Full-time", "Part-time", "Freelance", "Internship", "Contract"];
+  const popularLocations = ["Remote", "Kathmandu", "Lalitpur", "Pokhara", "Bhaktapur"];
+
+  const clearFilters = () => {
+    setQuery("");
+    setLocation("");
+    setType("");
+  };
+
+  const hasActiveFilters = query || location || type;
+
   return (
-    <div className="space-y-12 max-w-6xl mx-auto px-4">
+    <div className="space-y-8 max-w-6xl mx-auto px-4">
       <div className="text-center md:text-left space-y-4 pt-8">
         <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight">
           Find Your <span className="text-gradient">Professional Path</span>
@@ -91,65 +103,158 @@ function JobsContent() {
 
       <RecommendedJobs />
 
-      {/* Search & Filters */}
-      <div className="glass-card p-6 rounded-3xl shadow-xl border-white/40">
-        <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-4 items-end">
-          <div className="flex-1 w-full space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Search</label>
-            <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={20} />
+      {/* Modern Search & Filters */}
+      <div className="space-y-4">
+        {/* Main Search Bar */}
+        <div className="glass-card p-4 rounded-2xl shadow-lg border-white/40">
+          <form onSubmit={handleSearch} className="flex gap-3 items-center">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
               <input
                 type="text"
-                placeholder="Job title, keywords, or company..."
-                className="w-full pl-12 pr-4 py-3.5 bg-accent/20 border border-border/50 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary focus:bg-background transition-all text-foreground font-medium placeholder:text-muted-foreground/60"
+                placeholder="Search jobs, companies, or keywords..."
+                className="w-full pl-12 pr-4 py-3.5 bg-accent/30 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-foreground font-medium placeholder:text-muted-foreground/60"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
             </div>
-          </div>
+            <button
+              type="button"
+              onClick={() => setShowFilters(!showFilters)}
+              className={`p-3.5 rounded-xl border transition-all ${showFilters || hasActiveFilters ? 'bg-primary text-primary-foreground border-primary' : 'bg-accent/30 border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent'}`}
+            >
+              <SlidersHorizontal size={20} />
+            </button>
+            <button
+              type="submit"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 hidden sm:flex items-center gap-2"
+            >
+              <Search size={18} />
+              Search
+            </button>
+          </form>
+        </div>
 
-          <div className="flex-1 w-full space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Location</label>
-            <div className="relative group">
-              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={20} />
-              <input
-                type="text"
-                placeholder="City or Remote"
-                className="w-full pl-12 pr-4 py-3.5 bg-accent/20 border border-border/50 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary focus:bg-background transition-all text-foreground font-medium placeholder:text-muted-foreground/60"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
+        {/* Expandable Filters */}
+        {showFilters && (
+          <div className="glass-card p-5 rounded-2xl shadow-lg border-white/40 animate-in slide-in-from-top-2 duration-200">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-foreground flex items-center gap-2">
+                <SlidersHorizontal size={16} className="text-primary" />
+                Filters
+              </h3>
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="text-xs font-bold text-red-500 hover:text-red-600 flex items-center gap-1"
+                >
+                  <X size={14} />
+                  Clear All
+                </button>
+              )}
             </div>
-          </div>
 
-          <div className="w-full lg:w-48 space-y-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Category</label>
-            <div className="relative">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-                <Briefcase size={20} />
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Location */}
+              <div className="space-y-3">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                  <MapPin size={14} />
+                  Location
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter city or area..."
+                  className="w-full px-4 py-3 bg-accent/30 border border-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-foreground font-medium placeholder:text-muted-foreground/60"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+                <div className="flex flex-wrap gap-2">
+                  {popularLocations.map((loc) => (
+                    <button
+                      key={loc}
+                      type="button"
+                      onClick={() => setLocation(loc)}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                        location === loc
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-accent/50 text-muted-foreground hover:bg-accent hover:text-foreground'
+                      }`}
+                    >
+                      {loc}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <select
-                className="w-full pl-12 pr-10 py-3.5 bg-accent/20 border border-border/50 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary focus:bg-background transition-all text-foreground font-medium appearance-none cursor-pointer"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-              >
-                <option value="">All Types</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Freelance">Freelance</option>
-                <option value="Internship">Internship</option>
-                <option value="Contract">Contract</option>
-              </select>
-            </div>
-          </div>
 
-          <button
-            type="submit"
-            className="w-full lg:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3.5 px-8 rounded-2xl shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
-          >
-            Search
-          </button>
-        </form>
+              {/* Job Type */}
+              <div className="space-y-3">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                  <Briefcase size={14} />
+                  Job Type
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {jobTypes.map((jobType) => (
+                    <button
+                      key={jobType}
+                      type="button"
+                      onClick={() => setType(type === jobType ? "" : jobType)}
+                      className={`px-4 py-2 text-sm font-bold rounded-xl transition-all flex items-center gap-2 ${
+                        type === jobType
+                          ? 'bg-primary text-primary-foreground shadow-md'
+                          : 'bg-accent/50 text-muted-foreground hover:bg-accent hover:text-foreground border border-border/50'
+                      }`}
+                    >
+                      {jobType === "Full-time" && <Clock size={14} />}
+                      {jobType === "Freelance" && <Briefcase size={14} />}
+                      {jobType}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={fetchJobs}
+              className="w-full mt-6 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 rounded-xl shadow-lg shadow-primary/20 transition-all sm:hidden"
+            >
+              Apply Filters
+            </button>
+          </div>
+        )}
+
+        {/* Active Filter Pills */}
+        {hasActiveFilters && !showFilters && (
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Active:</span>
+            {query && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary text-xs font-bold rounded-lg">
+                &quot;{query}&quot;
+                <button onClick={() => setQuery("")} className="hover:bg-primary/20 rounded p-0.5">
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            {location && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 text-blue-600 text-xs font-bold rounded-lg">
+                <MapPin size={12} />
+                {location}
+                <button onClick={() => setLocation("")} className="hover:bg-blue-500/20 rounded p-0.5">
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+            {type && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-500/10 text-green-600 text-xs font-bold rounded-lg">
+                <Briefcase size={12} />
+                {type}
+                <button onClick={() => setType("")} className="hover:bg-green-500/20 rounded p-0.5">
+                  <X size={12} />
+                </button>
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Job List */}

@@ -15,11 +15,15 @@ export async function GET(
       return NextResponse.json({ message: "Invalid User ID" }, { status: 400 });
     }
 
-    const user: any = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
         jobSeekerProfile: true,
         employerProfile: true,
+        talentPosts: {
+          orderBy: { createdAt: "desc" },
+          take: 10,
+        },
         _count: {
           select: { receivedTrusts: true }
         }
@@ -43,7 +47,7 @@ export async function GET(
       isTrusted = !!trust;
     }
 
-    let profileData: any = {};
+    let profileData: Record<string, unknown> = {};
     if (user.role === "JOBSEEKER" && user.jobSeekerProfile) {
       profileData = { ...user.jobSeekerProfile, image: user.image };
     } else if (user.role === "EMPLOYER" && user.employerProfile) {
@@ -60,6 +64,7 @@ export async function GET(
         image: user.image,
       },
       profile: profileData,
+      posts: user.talentPosts || [],
       trustCount: user._count.receivedTrusts,
       isTrusted
     });

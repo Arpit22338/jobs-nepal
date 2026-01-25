@@ -11,7 +11,8 @@ interface Props {
 
 export async function generateMetadata(
     { params }: Props,
-    parent: ResolvingMetadata
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _parent: ResolvingMetadata
 ): Promise<Metadata> {
     const { courseId } = await params;
     const course = await prisma.course.findUnique({

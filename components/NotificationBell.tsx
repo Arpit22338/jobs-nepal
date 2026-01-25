@@ -81,7 +81,10 @@ export default function NotificationBell() {
       </button>
 
       {isOpen && (
-        <div className="fixed left-4 right-4 top-20 mt-2 md:absolute md:right-0 md:left-auto md:w-[360px] bg-card/85 backdrop-blur-xl rounded-[32px] shadow-2xl py-2 z-[60] border border-white/20 ring-1 ring-primary/5 animate-in fade-in zoom-in-95 duration-200 supports-[backdrop-filter]:bg-card/60">
+        <div 
+          className="fixed left-4 right-4 top-20 mt-2 md:absolute md:right-0 md:left-auto md:w-[360px] bg-card rounded-4xl shadow-2xl py-2 z-60 border border-border/50 animate-in fade-in zoom-in-95 duration-200"
+          style={{ WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}
+        >
           <div className="px-6 py-4 border-b border-border/40 flex justify-between items-center bg-accent/10">
             <h3 className="text-sm font-black text-foreground uppercase tracking-widest">Activity</h3>
             {unreadCount > 0 && (
@@ -104,7 +107,7 @@ export default function NotificationBell() {
                 <div
                   key={notification.id}
                   onClick={() => handleNotificationClick(notification)}
-                  className={`px-6 py-4 border-b border-border/20 last:border-b-0 cursor-pointer transition-colors hover:bg-primary/5 flex gap-4 items-start ${!notification.isRead ? "bg-primary/[0.03]" : ""
+                  className={`px-6 py-4 border-b border-border/20 last:border-b-0 cursor-pointer transition-colors hover:bg-primary/5 flex gap-4 items-start ${!notification.isRead ? "bg-primary/3" : ""
                     }`}
                 >
                   <div className={`mt-1 shrink-0 p-2 rounded-xl border ${!notification.isRead ? "bg-primary/10 border-primary/20 text-primary" : "bg-accent/50 border-transparent text-muted-foreground"}`}>

@@ -2,34 +2,36 @@
 
 import { useEffect, useState, useRef } from "react";
 
-interface Particle {
+interface Meteor {
   x: number;
   y: number;
-  size: number;
-  speedX: number;
-  speedY: number;
+  length: number;
+  speed: number;
   opacity: number;
+  angle: number;
+  thickness: number;
 }
 
-function generateParticles(count: number): Particle[] {
-  const particles: Particle[] = [];
+function generateMeteors(count: number): Meteor[] {
+  const meteors: Meteor[] = [];
   for (let i = 0; i < count; i++) {
-    particles.push({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 4 + 2,
-      speedX: (Math.random() - 0.5) * 0.08,
-      speedY: (Math.random() - 0.5) * 0.08,
-      opacity: Math.random() * 0.4 + 0.2,
+    meteors.push({
+      x: Math.random() * 150 - 25, // Start off-screen sometimes
+      y: Math.random() * -50, // Start above screen
+      length: Math.random() * 80 + 40, // 40-120px length
+      speed: Math.random() * 0.3 + 0.15, // Very slow speed
+      opacity: Math.random() * 0.4 + 0.1, // 0.1-0.5 opacity
+      angle: Math.PI / 4 + (Math.random() - 0.5) * 0.2, // ~45 degrees with slight variation
+      thickness: Math.random() * 1.5 + 0.5, // 0.5-2px thin
     });
   }
-  return particles;
+  return meteors;
 }
 
 export default function ParticlesBackground() {
   const [isDark, setIsDark] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particlesRef = useRef<Particle[]>([]);
+  const meteorsRef = useRef<Meteor[]>([]);
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -73,9 +75,9 @@ export default function ParticlesBackground() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Initialize particles
-    if (particlesRef.current.length === 0) {
-      particlesRef.current = generateParticles(80);
+    // Initialize meteors
+    if (meteorsRef.current.length === 0) {
+      meteorsRef.current = generateMeteors(15); // Fewer meteors for elegance
     }
 
     // Animation loop
@@ -84,31 +86,44 @@ export default function ParticlesBackground() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      particlesRef.current.forEach((particle) => {
-        // Update position
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
+      meteorsRef.current.forEach((meteor) => {
+        // Update position - diagonal movement
+        meteor.x += Math.cos(meteor.angle) * meteor.speed;
+        meteor.y += Math.sin(meteor.angle) * meteor.speed;
 
-        // Wrap around edges
-        if (particle.x > 100) particle.x = 0;
-        if (particle.x < 0) particle.x = 100;
-        if (particle.y > 100) particle.y = 0;
-        if (particle.y < 0) particle.y = 100;
+        // Reset meteor when it goes off screen
+        if (meteor.y > 110 || meteor.x > 110) {
+          meteor.x = Math.random() * 100 - 20;
+          meteor.y = Math.random() * -30 - 10;
+          meteor.opacity = Math.random() * 0.4 + 0.1;
+        }
 
-        // Draw particle
-        const x = (particle.x / 100) * canvas.width;
-        const y = (particle.y / 100) * canvas.height;
+        // Calculate actual pixel positions
+        const x = (meteor.x / 100) * canvas.width;
+        const y = (meteor.y / 100) * canvas.height;
+        
+        // Calculate end point of meteor trail
+        const endX = x - Math.cos(meteor.angle) * meteor.length;
+        const endY = y - Math.sin(meteor.angle) * meteor.length;
+
+        // Draw meteor with gradient trail
+        const gradient = ctx.createLinearGradient(x, y, endX, endY);
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${meteor.opacity})`);
+        gradient.addColorStop(0.3, `rgba(255, 255, 255, ${meteor.opacity * 0.5})`);
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
         ctx.beginPath();
-        ctx.arc(x, y, particle.size, 0, Math.PI * 2);
-        
-        // Add glow effect
-        const gradient = ctx.createRadialGradient(x, y, 0, x, y, particle.size * 2);
-        gradient.addColorStop(0, `rgba(13, 148, 136, ${particle.opacity})`);
-        gradient.addColorStop(0.5, `rgba(13, 148, 136, ${particle.opacity * 0.5})`);
-        gradient.addColorStop(1, 'rgba(13, 148, 136, 0)');
-        
-        ctx.fillStyle = gradient;
+        ctx.moveTo(x, y);
+        ctx.lineTo(endX, endY);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = meteor.thickness;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // Add a small glow at the head
+        ctx.beginPath();
+        ctx.arc(x, y, meteor.thickness + 1, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${meteor.opacity * 0.8})`;
         ctx.fill();
       });
 

@@ -5,7 +5,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, MessageSquare, Zap } from "lucide-react";
+import { Search, MessageSquare, Zap, MoreVertical, Trash2, Flag, UserX } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useToast } from "@/components/Toast";
 
 interface Conversation {
   user: {
@@ -25,7 +32,9 @@ export default function ConversationList() {
   const { status } = useSession();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const pathname = usePathname();
+  const { showToast, showConfirm } = useToast();
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -46,6 +55,84 @@ export default function ConversationList() {
       return () => clearInterval(interval);
     }
   }, [status]);
+
+  const handleDeleteConversation = async (userId: string, userName: string) => {
+    showConfirm({
+      title: "Delete Conversation",
+      message: `Are you sure you want to delete your conversation with ${userName}? This cannot be undone.`,
+      type: "danger",
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/messages/conversation?userId=${userId}`, { method: "DELETE" });
+          if (res.ok) {
+            setConversations(prev => prev.filter(c => c.user.id !== userId));
+            showToast("Conversation deleted", "success");
+          } else {
+            showToast("Failed to delete conversation", "error");
+          }
+        } catch {
+          showToast("Something went wrong", "error");
+        }
+      }
+    });
+  };
+
+  const handleReportUser = async (userId: string, userName: string) => {
+    showConfirm({
+      title: "Report User",
+      message: `Report ${userName} for inappropriate behavior?`,
+      type: "warning",
+      confirmText: "Report",
+      onConfirm: async () => {
+        try {
+          const res = await fetch("/api/reports", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ targetType: "USER", targetId: userId, reason: "Reported from messages" })
+          });
+          if (res.ok) {
+            showToast("User reported successfully", "success");
+          } else {
+            const data = await res.json();
+            showToast(data.error || "Failed to report user", "error");
+          }
+        } catch {
+          showToast("Something went wrong", "error");
+        }
+      }
+    });
+  };
+
+  const handleBlockUser = async (userId: string, userName: string) => {
+    showConfirm({
+      title: "Block User",
+      message: `Block ${userName}? They won't be able to message you anymore.`,
+      type: "danger",
+      confirmText: "Block",
+      onConfirm: async () => {
+        try {
+          const res = await fetch("/api/users/block", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId })
+          });
+          if (res.ok) {
+            setConversations(prev => prev.filter(c => c.user.id !== userId));
+            showToast(`${userName} has been blocked`, "success");
+          } else {
+            showToast("Failed to block user", "error");
+          }
+        } catch {
+          showToast("Something went wrong", "error");
+        }
+      }
+    });
+  };
+
+  const filteredConversations = conversations.filter(conv =>
+    conv.user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    conv.lastMessage.content.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (status === "loading") return <div className="p-8 text-center animate-pulse font-black text-muted-foreground uppercase text-xs">Syncing...</div>;
   if (status === "unauthenticated") return <div className="p-8 text-center text-muted-foreground font-bold">Please login to view messages.</div>;
@@ -79,30 +166,36 @@ export default function ConversationList() {
           <input
             type="text"
             placeholder="Filter chats..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-3 bg-accent/20 border-2 border-transparent focus:border-primary/20 rounded-2xl text-xs font-bold focus:outline-none transition-all placeholder:text-muted-foreground/30"
           />
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-2 custom-scrollbar">
-        {conversations.length === 0 ? (
+        {filteredConversations.length === 0 ? (
           <div className="text-center py-12 space-y-2">
             <Zap size={24} className="text-muted-foreground/20 mx-auto" />
-            <p className="text-xs font-black text-muted-foreground uppercase tracking-widest leading-loose">No active<br />conversations</p>
+            <p className="text-xs font-black text-muted-foreground uppercase tracking-widest leading-loose">
+              {searchQuery ? "No matches found" : "No active\nconversations"}
+            </p>
           </div>
         ) : (
-          conversations.map((conv) => {
+          filteredConversations.map((conv) => {
             const isActive = pathname === `/messages/${conv.user.id}`;
             return (
-              <Link
+              <div
                 key={conv.user.id}
-                href={`/messages/${conv.user.id}`}
-                className={`block p-4 rounded-3xl transition-all duration-300 group ${isActive
+                className={`relative p-4 rounded-3xl transition-all duration-300 group ${isActive
                     ? 'bg-primary text-white shadow-xl shadow-primary/20 scale-[1.02]'
                     : 'hover:bg-accent/40'
                   } ${conv.unreadCount > 0 && !isActive ? 'bg-primary/5' : ''}`}
               >
-                <div className="flex items-center gap-4">
+                <Link
+                  href={`/messages/${conv.user.id}`}
+                  className="flex items-center gap-4"
+                >
                   <div className="relative shrink-0">
                     {conv.user.image ? (
                       <Image
@@ -118,7 +211,7 @@ export default function ConversationList() {
                       </div>
                     )}
                     {conv.unreadCount > 0 && (
-                      <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black rounded-lg min-w-[20px] h-5 px-1 flex items-center justify-center ring-4 ring-background shadow-lg">
+                      <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black rounded-lg min-w-5 h-5 px-1 flex items-center justify-center ring-4 ring-background shadow-lg">
                         {conv.unreadCount}
                       </span>
                     )}
@@ -137,8 +230,37 @@ export default function ConversationList() {
                       {conv.lastMessage.content}
                     </p>
                   </div>
-                </div>
-              </Link>
+                </Link>
+
+                {/* 3-dot menu */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button 
+                      className={`absolute top-4 right-4 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity ${isActive ? 'hover:bg-white/20 text-white' : 'hover:bg-accent text-muted-foreground'}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MoreVertical size={16} />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-44">
+                    <DropdownMenuItem 
+                      onClick={() => handleDeleteConversation(conv.user.id, conv.user.name || "User")}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      <Trash2 size={14} className="mr-2" /> Delete Chat
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleReportUser(conv.user.id, conv.user.name || "User")}>
+                      <Flag size={14} className="mr-2" /> Report User
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => handleBlockUser(conv.user.id, conv.user.name || "User")}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      <UserX size={14} className="mr-2" /> Block User
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             );
           })
         )}

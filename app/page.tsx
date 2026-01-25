@@ -94,6 +94,8 @@ export default async function Home() {
                 className="object-cover"
                 priority
               />
+              {/* Translucent overlay to reduce brightness */}
+              <div className="absolute inset-0 bg-black/25 pointer-events-none" />
             </div>
           </div>
         </div>
@@ -240,21 +242,27 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="relative">
-              <div className="absolute inset-0 bg-linear-to-tr from-primary/20 to-purple-500/20 rounded-3xl blur-2xl transform rotate-3"></div>
-              <div className="relative h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl border border-white/20 glass-card p-2">
-                <div className="relative h-full w-full rounded-2xl overflow-hidden">
-                  <Image
-                    src="/remotejob.jpeg"
-                    alt="Happy professional working"
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute bottom-0 left-0 w-full bg-linear-to-t from-black/80 to-transparent p-8">
-                    <p className="text-white font-medium text-lg">&quot;The best platform for connecting skills with opportunity in Nepal.&quot;</p>
-                    <p className="text-white/70 text-sm mt-2">- Satisfied User</p>
-                  </div>
-                </div>
+            {/* Stats Cards - Modern Design */}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-lg">
+                <div className="text-5xl font-black text-primary mb-2">500+</div>
+                <div className="text-foreground font-semibold">Active Jobs</div>
+                <p className="text-muted-foreground text-sm mt-2">Updated daily</p>
+              </div>
+              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-lg">
+                <div className="text-5xl font-black text-primary mb-2">1K+</div>
+                <div className="text-foreground font-semibold">Professionals</div>
+                <p className="text-muted-foreground text-sm mt-2">Growing community</p>
+              </div>
+              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-lg">
+                <div className="text-5xl font-black text-primary mb-2">50+</div>
+                <div className="text-foreground font-semibold">Companies</div>
+                <p className="text-muted-foreground text-sm mt-2">Trusted partners</p>
+              </div>
+              <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-lg">
+                <div className="text-5xl font-black text-primary mb-2">Free</div>
+                <div className="text-foreground font-semibold">Courses</div>
+                <p className="text-muted-foreground text-sm mt-2">Skill development</p>
               </div>
             </div>
           </div>

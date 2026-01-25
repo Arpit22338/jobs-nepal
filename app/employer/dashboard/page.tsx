@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import DeleteJobButton from "@/components/DeleteJobButton";
+import RepostJobButton from "@/components/RepostJobButton";
 import { PlusCircle, Briefcase, Eye, Users, Search } from "lucide-react";
 
 export default async function EmployerDashboard() {
@@ -103,6 +104,8 @@ export default async function EmployerDashboard() {
                         >
                           View Live
                         </Link>
+                        <div className="h-4 w-px bg-border/40"></div>
+                        <RepostJobButton jobId={job.id} />
                         <div className="h-4 w-px bg-border/40"></div>
                         <DeleteJobButton jobId={job.id} />
                       </div>

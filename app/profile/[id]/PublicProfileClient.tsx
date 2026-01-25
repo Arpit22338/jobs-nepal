@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, FileText, Briefcase } from "lucide-react";
+import { useToast } from "@/components/Toast";
 
 import { toggleTrust } from "@/app/actions";
 
@@ -30,16 +31,27 @@ interface Profile {
   resumeUrl?: string;
 }
 
+interface TalentPost {
+  id: string;
+  title: string;
+  bio: string;
+  skills: string;
+  createdAt: string;
+}
+
 export default function PublicProfilePage() {
   const { data: session } = useSession();
   const params = useParams();
+  const { showToast } = useToast();
   const id = params?.id as string;
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [posts, setPosts] = useState<TalentPost[]>([]);
   const [trustCount, setTrustCount] = useState(0);
   const [isTrusted, setIsTrusted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [activeTab, setActiveTab] = useState<"about" | "posts">("about");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -55,6 +67,7 @@ export default function PublicProfilePage() {
         setProfile(data.profile);
         setTrustCount(data.trustCount || 0);
         setIsTrusted(data.isTrusted || false);
+        setPosts(data.posts || []);
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
@@ -77,7 +90,7 @@ export default function PublicProfilePage() {
       setTrustCount((prev) => (result.trusted ? prev + 1 : prev - 1));
     } catch (error) {
       console.error("Failed to toggle trust", error);
-      alert("Failed to update trust status");
+      showToast("Failed to update trust status", "error");
     }
   };
 
@@ -88,7 +101,7 @@ export default function PublicProfilePage() {
   return (
     <div className="max-w-3xl mx-auto p-6 glass-card rounded-2xl border border-border/50 my-8">
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8">
-        <div className="relative w-32 h-32 flex-shrink-0">
+        <div className="relative w-32 h-32 shrink-0">
           {user.image ? (
             <Image
               src={user.image}
@@ -135,7 +148,7 @@ export default function PublicProfilePage() {
           )}
 
           {session?.user?.id !== user.id && (
-            <div className="mt-4 flex gap-3 justify-center md:justify-start">
+            <div className="mt-4 flex flex-wrap gap-3 justify-center md:justify-start">
               <button
                 onClick={handleTrust}
                 className={`px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${isTrusted
@@ -151,11 +164,78 @@ export default function PublicProfilePage() {
               >
                 Message
               </Link>
+              {user.role === "JOBSEEKER" && posts.length > 0 && (
+                <button
+                  onClick={() => setActiveTab("posts")}
+                  className="inline-flex items-center gap-2 px-6 py-2 border border-primary/30 rounded-md text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
+                >
+                  <FileText size={16} />
+                  View Posts ({posts.length})
+                </button>
+              )}
             </div>
           )}
         </div>
       </div>
 
+      {/* Tab Navigation */}
+      {user.role === "JOBSEEKER" && posts.length > 0 && (
+        <div className="flex gap-1 border-b border-border/50 mb-6">
+          <button
+            onClick={() => setActiveTab("about")}
+            className={`px-6 py-3 text-sm font-bold transition-colors relative ${
+              activeTab === "about"
+                ? "text-primary"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Briefcase size={16} className="inline mr-2" />
+            About
+            {activeTab === "about" && (
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab("posts")}
+            className={`px-6 py-3 text-sm font-bold transition-colors relative ${
+              activeTab === "posts"
+                ? "text-primary"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <FileText size={16} className="inline mr-2" />
+            Posts ({posts.length})
+            {activeTab === "posts" && (
+              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+            )}
+          </button>
+        </div>
+      )}
+
+      {/* Posts Tab Content */}
+      {activeTab === "posts" && posts.length > 0 && (
+        <div className="space-y-4 mb-8">
+          {posts.map((post) => (
+            <div key={post.id} className="p-5 bg-accent/20 rounded-xl border border-border/50">
+              <h3 className="font-bold text-lg text-foreground mb-2">{post.title}</h3>
+              <p className="text-muted-foreground text-sm mb-3">{post.bio}</p>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {post.skills.split(",").map((skill, i) => (
+                  <span key={i} className="px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full">
+                    {skill.trim()}
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Posted {new Date(post.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* About Tab Content */}
+      {activeTab === "about" && (
       <div className="border-t border-border/50 pt-6 space-y-6">
         {user.role === "EMPLOYER" && profile?.companyName && (
           <div>
@@ -306,6 +386,7 @@ export default function PublicProfilePage() {
           </div>
         )}
       </div>
+      )}
     </div>
   );
 }
