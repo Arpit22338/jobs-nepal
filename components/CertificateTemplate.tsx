@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import html2canvas from "html2canvas";
 import CertificateLayout from "@/components/CertificateLayout";
 import { Button } from "@/components/ui/button";
 import { Loader2, Download, Maximize2 } from "lucide-react";
@@ -46,7 +45,7 @@ export default function CertificateTemplate({
   useEffect(() => {
     const getBase64FromUrl = async (url: string) => {
       try {
-        const data = await fetch(url);
+        const data = await fetch(url, { mode: 'cors' });
         if (!data.ok) return "";
         const blob = await data.blob();
         return new Promise((resolve) => {
@@ -55,6 +54,7 @@ export default function CertificateTemplate({
           reader.onloadend = () => {
             resolve(reader.result as string);
           };
+          reader.onerror = () => resolve("");
         });
       } catch (e) {
         console.error("Error loading image:", url, e);
@@ -75,6 +75,10 @@ export default function CertificateTemplate({
 
     try {
       setIsGenerating(true);
+      
+      // Dynamically import html2canvas
+      const html2canvas = (await import("html2canvas")).default;
+      
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const el = certificateRef.current as HTMLDivElement;
@@ -88,14 +92,15 @@ export default function CertificateTemplate({
 
       const canvas = await html2canvas(el, {
         scale: 4, // Ultra high quality
-        logging: false,
+        logging: true, // Enable logging for debugging
         backgroundColor: '#FFFAF0',
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false, // Changed to false to prevent tainted canvas
         width: 800,
         height: 600,
         windowWidth: 800,
         windowHeight: 600,
+        imageTimeout: 15000, // Wait longer for images
         onclone: (doc) => {
           // Ensure fonts and styles are loaded in the clone
           const clonedEl = doc.querySelector('[data-certificate="true"]') as HTMLElement;
@@ -117,7 +122,7 @@ export default function CertificateTemplate({
       link.click();
     } catch (error) {
       console.error("Error generating certificate:", error);
-      alert("Failed to generate certificate. Please try again.");
+      alert("Failed to generate certificate. Please try again. Error: " + (error instanceof Error ? error.message : "Unknown error"));
     } finally {
       setIsGenerating(false);
     }

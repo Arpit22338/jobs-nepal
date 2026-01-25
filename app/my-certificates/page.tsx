@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Award, ExternalLink, ShieldCheck, Download, Loader2, Search, CheckCircle, XCircle, ArrowRight } from "lucide-react";
+import { Award, ExternalLink, ShieldCheck, Download, Loader2, Search, CheckCircle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -88,86 +88,61 @@ export default function MyCertificatesPage() {
         </div>
       </div>
 
-      {/* Certificate Validation Section */}
-      <div className="glass-card rounded-4xl p-8 border border-border/50 bg-linear-to-br from-primary/5 to-transparent">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <ShieldCheck className="text-primary" size={20} />
+      {/* Certificate Validation Section - Compact */}
+      <div className="glass-card rounded-2xl p-4 border border-border/50 bg-linear-to-br from-primary/5 to-transparent">
+        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <ShieldCheck className="text-primary" size={16} />
+            </div>
+            <span className="text-sm font-bold text-foreground">Validate</span>
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-foreground">Validate Certificate</h2>
-            <p className="text-sm text-muted-foreground">Enter a certificate ID to verify its authenticity</p>
+          <div className="flex gap-2 flex-1 w-full">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+              <Input
+                placeholder="Enter certificate ID"
+                value={searchId}
+                onChange={(e) => {
+                  setSearchId(e.target.value);
+                  setValidationResult(null);
+                }}
+                onKeyDown={(e) => e.key === 'Enter' && handleValidate()}
+                className="pl-10 h-10 rounded-lg border bg-background/50 text-sm"
+              />
+            </div>
+            <Button 
+              onClick={handleValidate} 
+              disabled={validating || !searchId.trim()}
+              size="sm"
+              className="h-10 px-4 rounded-lg font-bold"
+            >
+              {validating ? <Loader2 className="animate-spin" size={16} /> : "Check"}
+            </Button>
           </div>
-        </div>
-        
-        <div className="flex gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-            <Input
-              placeholder="Enter certificate ID (e.g., CERT-XXXXXXXX)"
-              value={searchId}
-              onChange={(e) => {
-                setSearchId(e.target.value);
-                setValidationResult(null);
-              }}
-              onKeyDown={(e) => e.key === 'Enter' && handleValidate()}
-              className="pl-12 h-12 rounded-xl border-2 bg-background/50"
-            />
-          </div>
-          <Button 
-            onClick={handleValidate} 
-            disabled={validating || !searchId.trim()}
-            className="h-12 px-6 rounded-xl font-bold"
-          >
-            {validating ? <Loader2 className="animate-spin" size={18} /> : "Validate"}
-          </Button>
         </div>
 
-        {/* Validation Result */}
+        {/* Compact Validation Result */}
         {validationResult && (
-          <div className={`mt-6 p-6 rounded-2xl border-2 ${validationResult.valid ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
-            <div className="flex items-start gap-4">
+          <div className={`mt-3 p-3 rounded-xl border ${validationResult.valid ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
+            <div className="flex items-center gap-3">
               {validationResult.valid ? (
-                <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center shrink-0">
-                  <CheckCircle className="text-green-500" size={24} />
-                </div>
+                <CheckCircle className="text-green-500 shrink-0" size={20} />
               ) : (
-                <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center shrink-0">
-                  <XCircle className="text-red-500" size={24} />
-                </div>
+                <XCircle className="text-red-500 shrink-0" size={20} />
               )}
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 {validationResult.valid && validationResult.certificate ? (
-                  <>
-                    <h3 className="font-bold text-green-600 mb-1">✓ Valid Certificate</h3>
-                    <p className="text-foreground font-semibold text-lg mb-3">{validationResult.certificate.courseTitle}</p>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-muted-foreground block text-xs uppercase tracking-wider">Holder</span>
-                        <span className="font-medium text-foreground">{validationResult.certificate.holderName}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block text-xs uppercase tracking-wider">Score</span>
-                        <span className="font-medium text-foreground">{validationResult.certificate.score}%</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground block text-xs uppercase tracking-wider">Issued</span>
-                        <span className="font-medium text-foreground">{new Date(validationResult.certificate.issuedAt).toLocaleDateString()}</span>
-                      </div>
-                      <div>
-                        <Link href={`/certificate/${validationResult.certificate.id}`}>
-                          <Button variant="outline" size="sm" className="rounded-lg font-medium">
-                            View <ArrowRight size={14} className="ml-1" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <span className="font-bold text-green-600 text-sm">Valid</span>
+                    <span className="text-foreground font-medium text-sm truncate">{validationResult.certificate.courseTitle}</span>
+                    <span className="text-muted-foreground text-xs">{validationResult.certificate.holderName} • {validationResult.certificate.score}%</span>
+                    <Link href={`/certificate/${validationResult.certificate.id}`} className="text-primary text-xs font-bold hover:underline ml-auto">
+                      View →
+                    </Link>
+                  </div>
                 ) : (
-                  <>
-                    <h3 className="font-bold text-red-600 mb-1">✗ Invalid Certificate</h3>
-                    <p className="text-muted-foreground text-sm">This certificate ID does not exist or may have been revoked. Please check the ID and try again.</p>
-                  </>
+                  <span className="text-red-600 font-medium text-sm">Invalid certificate ID</span>
                 )}
               </div>
             </div>

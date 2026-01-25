@@ -88,7 +88,7 @@ export default function UserAvatar({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 mt-2 w-48 dropdown-glass border border-border/50 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="p-3 border-b border-border/50 bg-accent/20">
             <p className="font-bold text-foreground text-sm truncate">{userName || "User"}</p>
           </div>

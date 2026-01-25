@@ -4,6 +4,7 @@ import { Search, Briefcase, GraduationCap, Users, MapPin, ArrowRight, Zap, Shiel
 import { prisma } from "../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import Meteors from "@/components/Meteors";
 
 export const dynamic = 'force-dynamic';
 
@@ -23,19 +24,21 @@ export default async function Home() {
   });
 
   return (
-    <div className="space-y-20 pb-20">
+    <div className="space-y-20 pb-20 page-enter">
       {/* Hero Section */}
       <section className="relative pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden">
         {/* Abstract Background Shapes */}
         <div className="absolute top-0 left-0 w-full h-full -z-10 bg-background overflow-hidden">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/30 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
+          {/* Meteor particles */}
+          <Meteors number={15} />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-5 gap-16 items-center relative z-10">
-          <div className="lg:col-span-3 space-y-8 animate-in fade-in slide-in-from-left-5 duration-700">
+          <div className="lg:col-span-3 space-y-8 stagger-1">
             <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
-              <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
+              <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
               The Professional Portal of Nepal
             </div>
 

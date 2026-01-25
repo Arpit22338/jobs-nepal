@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone, ArrowUpRight, Briefcase, Users, GraduationCap, Award, Heart } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, ArrowUpRight, Briefcase, Users, GraduationCap, Heart } from "lucide-react";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -11,7 +11,6 @@ export default function Footer() {
         { href: "/jobs", label: "Find Jobs", icon: Briefcase },
         { href: "/talent", label: "Hire Talent", icon: Users },
         { href: "/courses", label: "Courses", icon: GraduationCap },
-        { href: "/my-certificates", label: "Certificates", icon: Award },
     ];
 
     const supportLinks = [

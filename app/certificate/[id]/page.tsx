@@ -47,7 +47,7 @@ export default async function CertificatePage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-accent/20 flex flex-col items-center justify-center p-4 md:p-12 relative overflow-hidden">
       {/* Background Decor */}
-      <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-primary/5 to-transparent -z-10"></div>
+      <div className="absolute top-0 left-0 w-full h-[50vh] bg-linear-to-b from-primary/5 to-transparent -z-10"></div>
 
       <CertificateTemplate
         studentName={certificate.user.name || "Student"}

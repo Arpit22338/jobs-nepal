@@ -82,8 +82,7 @@ export default function NotificationBell() {
 
       {isOpen && (
         <div 
-          className="fixed left-4 right-4 top-20 mt-2 md:absolute md:right-0 md:left-auto md:w-[360px] bg-card rounded-4xl shadow-2xl py-2 z-60 border border-border/50 animate-in fade-in zoom-in-95 duration-200"
-          style={{ WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}
+          className="fixed left-4 right-4 top-20 mt-2 md:absolute md:right-0 md:left-auto md:w-[360px] dropdown-glass rounded-4xl shadow-2xl py-2 z-60 border border-border/50 animate-in fade-in zoom-in-95 duration-200"
         >
           <div className="px-6 py-4 border-b border-border/40 flex justify-between items-center bg-accent/10">
             <h3 className="text-sm font-black text-foreground uppercase tracking-widest">Activity</h3>
@@ -100,7 +99,8 @@ export default function NotificationBell() {
             {notifications.length === 0 ? (
               <div className="px-8 py-12 text-center space-y-3">
                 <BellOff size={32} className="text-muted-foreground/20 mx-auto" />
-                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">No news is good news</p>
+                <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">No good news today</p>
+                <p className="text-xs text-muted-foreground/60">Check back later!</p>
               </div>
             ) : (
               notifications.map((notification) => (

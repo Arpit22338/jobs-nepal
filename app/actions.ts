@@ -373,6 +373,17 @@ export async function getNotifications() {
     return [];
   }
 
+  // Auto-delete notifications older than 5 days
+  const fiveDaysAgo = new Date();
+  fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+  
+  await (prisma as any).notification.deleteMany({
+    where: {
+      userId: session.user.id,
+      createdAt: { lt: fiveDaysAgo }
+    }
+  });
+
   return (prisma as any).notification.findMany({
     where: { userId: session.user.id },
     orderBy: { createdAt: "desc" },
