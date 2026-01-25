@@ -86,9 +86,9 @@ export default async function Home() {
           </div>
 
           <div className="lg:col-span-2 relative hidden lg:block animate-in fade-in slide-in-from-right-5 duration-700">
-            <div className="relative rounded-[40px] overflow-hidden shadow-2xl border-4 border-white/50 dark:border-white/10 aspect-[4/5]">
+            <div className="relative rounded-[40px] overflow-hidden shadow-2xl border-4 border-white/50 dark:border-white/10 aspect-4/5">
               <Image
-                src="https://imgs.search.brave.com/xGJjDtq3G6jABED-2yJUY7Ql2Rih7b_RcdKszqSyRic/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNjkx/NTc0NjA1L3Bob3Rv/L2VtcHR5LW9mZmlj/ZS1jb25mZXJlbmNl/LXJvb20uanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPTBsOC1t/aHBzSlNXcU1zRC1j/aE12N3M4N1Z2enJh/SVNadHZRSlBuTkQ3/Nm89"
+                src="/premium-workspace.jpg"
                 alt="Professional Workspace in Nepal"
                 fill
                 className="object-cover"
@@ -191,7 +191,7 @@ export default async function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-gradient-to-b from-transparent to-accent/30 py-20">
+      <section className="bg-linear-to-b from-transparent to-accent/30 py-20">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -204,7 +204,7 @@ export default async function Home() {
 
               <div className="space-y-6">
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
+                  <div className="shrink-0 w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
                     <Shield size={24} />
                   </div>
                   <div>
@@ -213,7 +213,7 @@ export default async function Home() {
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 shadow-sm">
+                  <div className="shrink-0 w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 shadow-sm">
                     <Target size={24} />
                   </div>
                   <div>
@@ -222,7 +222,7 @@ export default async function Home() {
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 shadow-sm">
+                  <div className="shrink-0 w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 shadow-sm">
                     <Zap size={24} />
                   </div>
                   <div>
@@ -241,7 +241,7 @@ export default async function Home() {
             </div>
 
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-purple-500/20 rounded-3xl blur-2xl transform rotate-3"></div>
+              <div className="absolute inset-0 bg-linear-to-tr from-primary/20 to-purple-500/20 rounded-3xl blur-2xl transform rotate-3"></div>
               <div className="relative h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl border border-white/20 glass-card p-2">
                 <div className="relative h-full w-full rounded-2xl overflow-hidden">
                   <Image
@@ -250,7 +250,7 @@ export default async function Home() {
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-8">
+                  <div className="absolute bottom-0 left-0 w-full bg-linear-to-t from-black/80 to-transparent p-8">
                     <p className="text-white font-medium text-lg">&quot;The best platform for connecting skills with opportunity in Nepal.&quot;</p>
                     <p className="text-white/70 text-sm mt-2">- Satisfied User</p>
                   </div>
@@ -263,7 +263,7 @@ export default async function Home() {
 
       {/* Call to Action */}
       <section className="container mx-auto px-4 mb-20">
-        <div className="relative overflow-hidden rounded-[40px] border border-border/50 bg-gradient-to-br from-card/80 via-primary/5 to-card px-6 py-16 md:px-12 md:py-24 text-center shadow-2xl backdrop-blur-3xl">
+        <div className="relative overflow-hidden rounded-[40px] border border-border/50 bg-linear-to-br from-card/80 via-primary/5 to-card px-6 py-16 md:px-12 md:py-24 text-center shadow-2xl backdrop-blur-3xl">
           <div className="absolute top-0 left-0 w-full h-full -z-10 group">
             <div className="absolute -top-24 -right-24 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] transition-transform duration-1000 group-hover:scale-110"></div>
             <div className="absolute -bottom-24 -left-24 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[150px] transition-transform duration-1000 group-hover:scale-95"></div>
@@ -271,7 +271,7 @@ export default async function Home() {
 
           <div className="relative z-10 space-y-8 max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-6xl font-black text-foreground tracking-tight leading-tight">
-              Ready to shape <br className="md:hidden" /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">your career?</span>
+              Ready to shape <br className="md:hidden" /> <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary/60">your career?</span>
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
               Join thousands of professionals and visionary companies building the future of Nepal together.

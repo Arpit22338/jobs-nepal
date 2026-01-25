@@ -17,10 +17,10 @@ function generateParticles(count: number): Particle[] {
     particles.push({
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 3 + 1,
-      speedX: (Math.random() - 0.5) * 0.1,
-      speedY: (Math.random() - 0.5) * 0.1,
-      opacity: Math.random() * 0.5 + 0.1,
+      size: Math.random() * 4 + 2,
+      speedX: (Math.random() - 0.5) * 0.08,
+      speedY: (Math.random() - 0.5) * 0.08,
+      opacity: Math.random() * 0.4 + 0.2,
     });
   }
   return particles;
@@ -75,7 +75,7 @@ export default function ParticlesBackground() {
 
     // Initialize particles
     if (particlesRef.current.length === 0) {
-      particlesRef.current = generateParticles(50);
+      particlesRef.current = generateParticles(80);
     }
 
     // Animation loop
@@ -101,7 +101,14 @@ export default function ParticlesBackground() {
 
         ctx.beginPath();
         ctx.arc(x, y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(13, 148, 136, ${particle.opacity})`;
+        
+        // Add glow effect
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, particle.size * 2);
+        gradient.addColorStop(0, `rgba(13, 148, 136, ${particle.opacity})`);
+        gradient.addColorStop(0.5, `rgba(13, 148, 136, ${particle.opacity * 0.5})`);
+        gradient.addColorStop(1, 'rgba(13, 148, 136, 0)');
+        
+        ctx.fillStyle = gradient;
         ctx.fill();
       });
 
@@ -124,7 +131,7 @@ export default function ParticlesBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
+      className="fixed inset-0 pointer-events-none z-10"
       style={{ background: "transparent" }}
     />
   );
