@@ -63,9 +63,9 @@ function dispatch(action: any) {
         toasts: memoryState.toasts.map((t) =>
           t.id === toastId || toastId === undefined
             ? {
-                ...t,
-                open: false,
-              }
+              ...t,
+              open: false,
+            }
             : t
         ),
       }

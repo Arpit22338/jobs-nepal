@@ -29,6 +29,8 @@ function VerifyEmailContent() {
 
       const data = await res.json();
 
+        console.log("Verification response:", data);
+
       if (!res.ok) {
         throw new Error(data.message || "Verification failed");
       }
@@ -54,12 +56,26 @@ function VerifyEmailContent() {
         <div className="max-w-md w-full glass-card border border-border/50 rounded-2xl shadow-2xl p-10 text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
           <div className="mb-6 text-green-500 bg-green-500/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto">
-            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+            <svg
+              className="w-10 h-10"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="3"
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-3 text-foreground">Email Verified!</h2>
-          <p className="text-muted-foreground">Thank you for joining RojgaarNepal. Redirecting you to login...</p>
+          <h2 className="text-2xl font-bold mb-3 text-foreground">
+            Email Verified!
+          </h2>
+          <p className="text-muted-foreground">
+            Thank you for joining RojgaarNepal. Redirecting you to login...
+          </p>
         </div>
       </div>
     );
@@ -72,9 +88,12 @@ function VerifyEmailContent() {
         <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl invisible dark:visible"></div>
 
         <div className="text-center mb-8 relative">
-          <h1 className="text-3xl font-bold tracking-tight mb-3 text-foreground">Verify Your Email</h1>
+          <h1 className="text-3xl font-bold tracking-tight mb-3 text-foreground">
+            Verify Your Email
+          </h1>
           <p className="text-muted-foreground text-sm">
-            We sent a 6-digit verification code to your email. Please enter it below to activate your account.
+            We sent a 6-digit verification code to your email. Please enter it
+            below to activate your account.
           </p>
         </div>
 
@@ -86,7 +105,9 @@ function VerifyEmailContent() {
 
         <form onSubmit={handleSubmit} className="space-y-5 relative">
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Email Address</label>
+            <label className="block text-sm font-medium text-foreground mb-1.5">
+              Email Address
+            </label>
             <input
               type="email"
               value={email}
@@ -97,7 +118,9 @@ function VerifyEmailContent() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Verification Code (OTP)</label>
+            <label className="block text-sm font-medium text-foreground mb-1.5">
+              Verification Code (OTP)
+            </label>
             <input
               type="text"
               value={otp}
@@ -118,9 +141,22 @@ function VerifyEmailContent() {
         </form>
 
         <p className="mt-8 text-center text-sm text-muted-foreground">
-          <Link href="/login" className="text-primary font-bold hover:underline inline-flex items-center">
-            <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          <Link
+            href="/login"
+            className="text-primary font-bold hover:underline inline-flex items-center"
+          >
+            <svg
+              className="w-4 h-4 mr-1.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             Back to Login
           </Link>
