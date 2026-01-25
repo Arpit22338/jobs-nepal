@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, BookOpen, CheckCircle, GraduationCap, AlertCircle, PenTool, Star } from "lucide-react";
+import { ArrowLeft, CheckCircle, AlertCircle, PenTool, Star } from "lucide-react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import CertificateTemplate from "@/components/CertificateTemplate";
@@ -81,7 +81,7 @@ export default function CVCoursePage() {
           <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/chalkboard.png')]"></div>
           <div className="relative z-10">
             <div className="inline-flex items-center justify-center p-3 bg-blue-600 rounded-full mb-4">
-              <GraduationCap size={32} />
+              <i className="bx bx-book text-3xl"></i>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4 font-serif">CV Writing Masterclass</h1>
             <p className="text-xl text-blue-200 max-w-2xl mx-auto font-light">
@@ -110,7 +110,7 @@ export default function CVCoursePage() {
           <div className="bg-blue-50 rounded-xl p-8 border border-blue-100">
             <div className="flex items-center mb-6">
               <div className="bg-blue-600 text-white p-2 rounded-lg mr-4">
-                <BookOpen size={24} />
+                <i className="bx bx-book text-2xl"></i>
               </div>
               <h3 className="text-2xl font-bold text-gray-900">Lesson 1: The Syntax of Structure</h3>
             </div>

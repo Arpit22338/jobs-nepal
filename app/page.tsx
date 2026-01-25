@@ -217,22 +217,30 @@ export default async function Home() {
             {/* Feature Highlights */}
             <div className="grid grid-cols-2 gap-6">
               <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-lg">
-                <div className="text-4xl mb-3">💼</div>
+                <div className="w-14 h-14 mx-auto mb-3 bg-blue-100 dark:bg-blue-500/20 rounded-2xl flex items-center justify-center">
+                  <i className="bx bx-briefcase text-3xl text-blue-600 dark:text-blue-400"></i>
+                </div>
                 <div className="text-foreground font-bold text-lg">Free Job Posting</div>
                 <p className="text-muted-foreground text-sm mt-2">Post & apply for free</p>
               </div>
               <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-lg">
-                <div className="text-4xl mb-3">🔒</div>
+                <div className="w-14 h-14 mx-auto mb-3 bg-green-100 dark:bg-green-500/20 rounded-2xl flex items-center justify-center">
+                  <i className="bx bx-shield-quarter text-3xl text-green-600 dark:text-green-400"></i>
+                </div>
                 <div className="text-foreground font-bold text-lg">Secure</div>
                 <p className="text-muted-foreground text-sm mt-2">Your data is protected</p>
               </div>
               <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-lg">
-                <div className="text-4xl mb-3">🇳🇵</div>
+                <div className="w-14 h-14 mx-auto mb-3 bg-red-100 dark:bg-red-500/20 rounded-2xl flex items-center justify-center">
+                  <i className="bx bx-map-pin text-3xl text-red-600 dark:text-red-400"></i>
+                </div>
                 <div className="text-foreground font-bold text-lg">Made for Nepal</div>
                 <p className="text-muted-foreground text-sm mt-2">Local talent focused</p>
               </div>
               <div className="bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300 shadow-lg">
-                <div className="text-4xl mb-3">📚</div>
+                <div className="w-14 h-14 mx-auto mb-3 bg-purple-100 dark:bg-purple-500/20 rounded-2xl flex items-center justify-center">
+                  <i className="bx bx-book-open text-3xl text-purple-600 dark:text-purple-400"></i>
+                </div>
                 <div className="text-foreground font-bold text-lg">Skill Courses</div>
                 <p className="text-muted-foreground text-sm mt-2">Learn & get certified</p>
               </div>

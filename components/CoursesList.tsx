@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Clock, User, Lock, Unlock, PlayCircle, Star } from "lucide-react";
+import { Clock, User, Lock, Unlock, PlayCircle, Star } from "lucide-react";
 import { useState } from "react";
 import { CourseEnrollmentModal } from "@/components/CourseEnrollmentModal";
 import { useSession } from "next-auth/react";
@@ -48,7 +48,7 @@ export default function CoursesList({ courses }: { courses: Course[] }) {
         {courses.length === 0 ? (
           <div className="col-span-full text-center py-20 glass-card rounded-3xl">
             <div className="w-20 h-20 bg-accent rounded-full flex items-center justify-center mx-auto mb-6">
-              <BookOpen size={32} className="text-muted-foreground" />
+              <i className="bx bx-book-open text-4xl text-muted-foreground"></i>
             </div>
             <h3 className="text-xl font-bold text-foreground">No courses available</h3>
             <p className="text-muted-foreground mt-2">Check back later for new skill-building content.</p>
@@ -61,7 +61,7 @@ export default function CoursesList({ courses }: { courses: Course[] }) {
                   <Image src={course.thumbnail} alt={course.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-primary/40">
-                    <BookOpen size={64} />
+                    <i className="bx bx-book-open text-6xl"></i>
                   </div>
                 )}
 
