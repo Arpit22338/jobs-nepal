@@ -15,7 +15,15 @@ export default function MobileFooter() {
     const menuRef = useRef<HTMLDivElement>(null);
 
     // Don't show footer on login/register pages and individual chat pages
-    const hiddenPaths = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
+    const hiddenPaths = [
+        "/login",
+        "/register",
+        "/forgot-password",
+        "/reset-password",
+        "/verify-email",
+        "/talent/new",
+        "/employer/jobs/new"
+    ];
     const isChatPage = pathname.startsWith("/messages/") && pathname.length > 10;
 
     // Close menu when clicking outside
@@ -138,7 +146,7 @@ export default function MobileFooter() {
                                     <button
                                         key={`post-${index}`}
                                         onClick={handlePostClick}
-                                        className="flex flex-col items-center justify-center -mt-8"
+                                        className="flex flex-col items-center justify-center -mt-[35px]"
                                     >
                                         <div className={`w-14 h-14 rounded-2xl bg-linear-to-br from-primary to-primary/80 flex items-center justify-center shadow-xl shadow-primary/40 active:scale-90 transition-all duration-200 border-4 border-background ${showPostMenu ? 'rotate-45' : ''}`}>
                                             <Icon size={24} className="text-primary-foreground" />

@@ -72,11 +72,13 @@ export default async function JobDetailsPage({ params }: Props) {
     notFound();
   }
 
-  // Increment views
-  await prisma.job.update({
-    where: { id: jobId },
-    data: { views: { increment: 1 } },
-  });
+  // Increment views (skip if owner views own post)
+  if (!session?.user?.id || session.user.id !== job.employerId) {
+    await prisma.job.update({
+      where: { id: jobId },
+      data: { views: { increment: 1 } },
+    });
+  }
 
   // Check if user has completed profile
   let hasCompletedProfile = false;

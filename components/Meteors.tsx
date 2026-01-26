@@ -15,7 +15,7 @@ export default function Meteors({ number = 20 }: MeteorProps) {
         id: idx,
         style: {
           top: `${Math.random() * 40}%`,
-          left: `${Math.random() * 60}%`,
+          left: `${Math.random() * 100}%`,
           animationDelay: `${Math.random() * 8}s`,
           animationDuration: `${Math.random() * 4 + 5}s`, // Slower: 5-9 seconds
         },

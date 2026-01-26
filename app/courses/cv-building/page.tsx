@@ -106,6 +106,22 @@ export default function CVCoursePage() {
             </p>
           </div>
 
+          {/* Course Outcomes */}
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="bg-blue-50 rounded-xl p-6 border border-blue-100">
+              <h3 className="font-bold text-blue-800 mb-2">Outcome 1</h3>
+              <p className="text-sm text-gray-700">Write a clean, ATS‑friendly CV that recruiters can scan in 30 seconds.</p>
+            </div>
+            <div className="bg-green-50 rounded-xl p-6 border border-green-100">
+              <h3 className="font-bold text-green-800 mb-2">Outcome 2</h3>
+              <p className="text-sm text-gray-700">Turn experience into quantified, impact‑driven bullet points.</p>
+            </div>
+            <div className="bg-purple-50 rounded-xl p-6 border border-purple-100">
+              <h3 className="font-bold text-purple-800 mb-2">Outcome 3</h3>
+              <p className="text-sm text-gray-700">Build a portfolio‑ready CV with links and proof of work.</p>
+            </div>
+          </div>
+
           {/* Lesson 1: Structure */}
           <div className="bg-blue-50 rounded-xl p-8 border border-blue-100">
             <div className="flex items-center mb-6">
@@ -225,6 +241,58 @@ export default function CVCoursePage() {
               <p className="text-gray-600 italic">
                 &quot;Identified a bottleneck in supply chain (Situation), aimed to reduce delivery times (Task), implemented a new tracking software (Action), resulting in a 20% faster turnaround (Result).&quot;
               </p>
+            </div>
+          </div>
+
+          {/* Lesson 4: ATS Optimization */}
+          <div className="bg-orange-50 rounded-xl p-8 border border-orange-100">
+            <div className="flex items-center mb-6">
+              <div className="bg-orange-600 text-white p-2 rounded-lg mr-4">
+                <i className="bx bx-scan text-2xl"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900">Lesson 4: ATS Optimization</h3>
+            </div>
+            <p className="text-gray-700 mb-6">
+              Applicant Tracking Systems (ATS) scan your CV before humans do. Your goal is to be <strong>machine‑readable</strong> and <strong>keyword‑relevant</strong>.
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <h4 className="font-bold text-orange-800 mb-3">ATS Do&apos;s</h4>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start"><CheckCircle size={18} className="text-green-500 mr-2 mt-1" /> Use standard headings: <em>Experience, Skills, Education</em>.</li>
+                  <li className="flex items-start"><CheckCircle size={18} className="text-green-500 mr-2 mt-1" /> Mirror job keywords naturally in skills & bullet points.</li>
+                  <li className="flex items-start"><CheckCircle size={18} className="text-green-500 mr-2 mt-1" /> Save as <code>.pdf</code> or <code>.docx</code> unless told otherwise.</li>
+                </ul>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <h4 className="font-bold text-red-800 mb-3">ATS Don&apos;ts</h4>
+                <ul className="space-y-3 text-gray-600">
+                  <li className="flex items-start"><AlertCircle size={18} className="text-red-500 mr-2 mt-1" /> Don&apos;t use tables or text boxes for key sections.</li>
+                  <li className="flex items-start"><AlertCircle size={18} className="text-red-500 mr-2 mt-1" /> Avoid icons to label headings (ATS may ignore them).</li>
+                  <li className="flex items-start"><AlertCircle size={18} className="text-red-500 mr-2 mt-1" /> Don&apos;t hide keywords in white text or footers.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Lesson 5: Proof of Work */}
+          <div className="bg-indigo-50 rounded-xl p-8 border border-indigo-100">
+            <div className="flex items-center mb-6">
+              <div className="bg-indigo-600 text-white p-2 rounded-lg mr-4">
+                <i className="bx bx-link text-2xl"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900">Lesson 5: Proof of Work</h3>
+            </div>
+            <p className="text-gray-700 mb-6">
+              Employers trust <strong>evidence</strong>. Add links to GitHub, portfolios, or published work to boost credibility.
+            </p>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h4 className="font-bold text-indigo-800 mb-3">What to Include</h4>
+              <ul className="space-y-3 text-gray-600">
+                <li className="flex items-start"><CheckCircle size={18} className="text-green-500 mr-2 mt-1" /> Portfolio or GitHub with 2–3 best projects.</li>
+                <li className="flex items-start"><CheckCircle size={18} className="text-green-500 mr-2 mt-1" /> Live demos or case studies with outcomes.</li>
+                <li className="flex items-start"><CheckCircle size={18} className="text-green-500 mr-2 mt-1" /> Certifications or badges relevant to the role.</li>
+              </ul>
             </div>
           </div>
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Search, Briefcase, GraduationCap, Users, MapPin, ArrowRight, Zap, Shield, Target, Sparkles, FileText, MessageCircle, TrendingUp } from "lucide-react";
+import { Search, Briefcase, MapPin, ArrowRight, Zap, Shield, Target, Sparkles, FileText, MessageCircle, TrendingUp } from "lucide-react";
 import { prisma } from "../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -24,7 +24,7 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="relative pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden">
         {/* Abstract Background Shapes */}
-        <div className="absolute top-0 left-0 w-full h-full -z-10 bg-background overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-full -z-10 bg-background overflow-hidden">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/30 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
           {/* Meteor particles */}
@@ -165,7 +165,7 @@ export default async function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-linear-to-b from-transparent to-accent/30 py-20">
+      <section className="bg-background dark:bg-linear-to-b dark:from-transparent dark:to-accent/30 py-20">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -352,7 +352,7 @@ export default async function Home() {
 
       {/* Call to Action */}
       <section className="container mx-auto px-4 mb-20">
-        <div className="relative overflow-hidden rounded-[40px] border border-border/50 bg-linear-to-br from-card/80 via-primary/5 to-card px-6 py-16 md:px-12 md:py-24 text-center shadow-2xl backdrop-blur-3xl">
+        <div className="relative overflow-hidden rounded-[40px] border border-border/50 bg-card dark:bg-linear-to-br dark:from-card/80 dark:via-primary/5 dark:to-card px-6 py-16 md:px-12 md:py-24 text-center shadow-2xl backdrop-blur-3xl">
           <div className="absolute top-0 left-0 w-full h-full -z-10 group">
             <div className="absolute -top-24 -right-24 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] transition-transform duration-1000 group-hover:scale-110"></div>
             <div className="absolute -bottom-24 -left-24 w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[150px] transition-transform duration-1000 group-hover:scale-95"></div>

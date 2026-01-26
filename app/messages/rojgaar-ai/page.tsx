@@ -24,7 +24,7 @@ const quickActions = [
   { text: "Help me find a job", icon: "bx-briefcase" },
   { text: "Show me AI tools", icon: "bx-bot" },
   { text: "Improve my profile", icon: "bx-user" },
-  { text: "Resume tips", icon: "bx-file" },
+  { text: "Use RojgaarAI CV generator — click here", icon: "bx-file" },
   { text: "Interview prep", icon: "bx-conversation" },
 ];
 

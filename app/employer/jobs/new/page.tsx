@@ -319,9 +319,13 @@ export default function NewJobPage() {
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Employment Mode <span className="text-red-500">*</span></label>
                 <div className="flex flex-wrap gap-3">
-                  {[{ value: "remote", label: "Remote", icon: "🏠" }, { value: "hybrid", label: "Hybrid", icon: "🔄" }, { value: "onsite", label: "On-site", icon: "🏢" }].map(mode => (
+                  {[
+                    { value: "remote", label: "Remote", icon: "bx-home-alt" },
+                    { value: "hybrid", label: "Hybrid", icon: "bx-transfer" },
+                    { value: "onsite", label: "On-site", icon: "bx-buildings" }
+                  ].map(mode => (
                     <button key={mode.value} type="button" onClick={() => updateField("employmentMode", mode.value as "remote" | "hybrid" | "onsite")} className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${formData.employmentMode === mode.value ? "bg-primary text-primary-foreground border-primary" : "border-border hover:border-primary/50"}`}>
-                      <span>{mode.icon}</span><span className="font-medium">{mode.label}</span>
+                      <i className={`bx ${mode.icon} text-lg`}></i><span className="font-medium">{mode.label}</span>
                     </button>
                   ))}
                 </div>
@@ -549,7 +553,15 @@ export default function NewJobPage() {
               <div className="flex flex-wrap gap-2">
                 <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">{formData.type || "Full-time"}</span>
                 <span className="px-3 py-1 bg-accent text-foreground rounded-full text-sm flex items-center gap-1"><MapPin size={14} /> {formData.location || "Location"}</span>
-                <span className="px-3 py-1 bg-accent text-foreground rounded-full text-sm">{formData.employmentMode === "remote" ? "🏠 Remote" : formData.employmentMode === "hybrid" ? "🔄 Hybrid" : "🏢 On-site"}</span>
+                <span className="px-3 py-1 bg-accent text-foreground rounded-full text-sm flex items-center gap-1">
+                  {formData.employmentMode === "remote" ? (
+                    <><i className="bx bx-home-alt" /> Remote</>
+                  ) : formData.employmentMode === "hybrid" ? (
+                    <><i className="bx bx-transfer" /> Hybrid</>
+                  ) : (
+                    <><i className="bx bx-buildings" /> On-site</>
+                  )}
+                </span>
                 {!formData.hideSalary && formData.salaryMin && formData.salaryMax && (<span className="px-3 py-1 bg-green-500/10 text-green-500 rounded-full text-sm">NPR {formData.salaryMin} - {formData.salaryMax}</span>)}
               </div>
               {formData.requiredSkills.length > 0 && (<div><h3 className="font-bold text-foreground mb-2">Required Skills</h3><div className="flex flex-wrap gap-2">{formData.requiredSkills.map(skill => (<span key={skill} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">{skill}</span>))}</div></div>)}

@@ -429,9 +429,11 @@ export default function EditProfilePage() {
     const newErrors: Record<string, string> = {};
     
     if (role === "JOBSEEKER") {
+      if (!formData.image) newErrors.image = "Profile picture is required (max 1MB).";
       if (!formData.location.trim()) newErrors.location = "Location is required";
       if (formData.skills.length < 2) newErrors.skills = "At least 2 skills required";
     } else {
+      if (!employerData.image) newErrors.image = "Profile picture is required (max 1MB).";
       if (!employerData.companyName.trim()) newErrors.companyName = "Company name is required";
       if (!employerData.location.trim()) newErrors.location = "Location is required";
     }
@@ -543,11 +545,14 @@ export default function EditProfilePage() {
             <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
               <i className="bx bx-building text-primary text-xl"></i> Company Logo
             </h2>
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center">
               <AvatarUpload
                 currentImage={employerData.image || undefined}
                 onImageChange={(base64) => updateEmployerField("image", base64)}
               />
+              {errors.image && (
+                <p className="mt-2 text-sm text-red-500">{errors.image}</p>
+              )}
             </div>
           </section>
 
@@ -619,8 +624,11 @@ export default function EditProfilePage() {
           {expandedSections.personal && (
             <div className="p-6 pt-0 space-y-4">
               {/* Avatar */}
-              <div className="flex justify-center mb-4">
+              <div className="flex flex-col items-center mb-4">
                 <AvatarUpload currentImage={formData.image || undefined} onImageChange={(base64) => updateField("image", base64)} />
+                {errors.image && (
+                  <p className="mt-2 text-sm text-red-500">{errors.image}</p>
+                )}
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>

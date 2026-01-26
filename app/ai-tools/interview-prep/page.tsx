@@ -92,6 +92,8 @@ export default function InterviewPrepPage() {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isMuted, setIsMuted] = useState(false);
+  const [showMicPrompt, setShowMicPrompt] = useState(false);
+  const [micStatus, setMicStatus] = useState<"prompt" | "granted" | "denied">("prompt");
   
   // Video recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -368,9 +370,11 @@ export default function InterviewPrepPage() {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       // Stop all tracks immediately after getting permission
       stream.getTracks().forEach(track => track.stop());
+      setMicStatus("granted");
       return true;
     } catch (error) {
       console.error("Microphone permission denied:", error);
+      setMicStatus("denied");
       return false;
     }
   };
@@ -518,10 +522,12 @@ export default function InterviewPrepPage() {
   const startPractice = async () => {
     // Request microphone permission first if voice mode is enabled
     if (interviewMode === "voice") {
+      setShowMicPrompt(true);
       const hasPermission = await requestMicrophonePermission();
       if (!hasPermission) {
         return; // Don't start practice if permission denied
       }
+      setShowMicPrompt(false);
     }
 
     setCurrentQuestionIndex(0);
@@ -709,7 +715,7 @@ export default function InterviewPrepPage() {
       {/* STEP 1: Setup */}
       {/* =================== */}
       {step === "setup" && (
-        <div className="glass-card rounded-2xl p-6 md:p-8 border border-border/50">
+            <div className="glass-card rounded-2xl p-6 md:p-8 border border-border/50">
           <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
             <Settings className="text-primary" size={24} /> Interview Configuration
           </h2>
@@ -787,12 +793,10 @@ export default function InterviewPrepPage() {
                 </button>
                 
                 <button
-                  onClick={async () => {
-                    // Request microphone permission when selecting voice mode
-                    const hasPermission = await requestMicrophonePermission();
-                    if (hasPermission) {
-                      setInterviewMode("voice");
-                    }
+                  onClick={() => {
+                    setMicStatus("prompt");
+                    setShowMicPrompt(true);
+                    setInterviewMode("voice");
                   }}
                   className={`p-4 rounded-xl border text-left transition-all ${
                     interviewMode === "voice"
@@ -1267,9 +1271,10 @@ export default function InterviewPrepPage() {
                   <PieChartIcon size={20} className="text-primary" /> Performance by Category
                 </h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="h-72">
+                  <div className="h-64 md:h-72 w-full min-w-0">
                     <ResponsiveContainer width="100%" height="100%">
                       <RadarChart
+                        margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
                         data={[
                           { subject: "Technical", value: analysis.categoryScores.technical, fullMark: 100 },
                           { subject: "Behavioral", value: analysis.categoryScores.behavioral, fullMark: 100 },
@@ -1279,8 +1284,8 @@ export default function InterviewPrepPage() {
                         ]}
                       >
                         <PolarGrid stroke="#334155" />
-                        <PolarAngleAxis dataKey="subject" tick={{ fill: "#94a3b8", fontSize: 12 }} />
-                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: "#64748b" }} />
+                        <PolarAngleAxis dataKey="subject" tick={{ fill: "#94a3b8", fontSize: 10 }} />
+                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 10 }} />
                         <Radar
                           name="Score"
                           dataKey="value"
@@ -1292,7 +1297,7 @@ export default function InterviewPrepPage() {
                     </ResponsiveContainer>
                   </div>
 
-                  <div className="h-72">
+                  <div className="h-64 md:h-72 w-full min-w-0">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
@@ -1305,11 +1310,12 @@ export default function InterviewPrepPage() {
                           ]}
                           cx="50%"
                           cy="50%"
-                          innerRadius={40}
-                          outerRadius={80}
+                          innerRadius={35}
+                          outerRadius={70}
                           paddingAngle={5}
                           dataKey="value"
-                          label={({ name, value }) => `${name || ''}: ${value || 0}`}
+                          label={false}
+                          labelLine={false}
                         >
                           {CHART_COLORS.map((color, index) => (
                             <Cell key={`cell-${index}`} fill={color} />
@@ -1327,7 +1333,7 @@ export default function InterviewPrepPage() {
                 <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                   <BarChart3 size={20} className="text-primary" /> Question-by-Question Performance
                 </h3>
-                <div className="h-64">
+                <div className="h-56 md:h-64 w-full min-w-0">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={analysis.questionScores.map((q, i) => ({
@@ -1336,8 +1342,8 @@ export default function InterviewPrepPage() {
                       }))}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="name" tick={{ fill: "#94a3b8" }} />
-                      <YAxis domain={[0, 100]} tick={{ fill: "#94a3b8" }} />
+                      <XAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 10 }} />
+                      <YAxis domain={[0, 100]} tick={{ fill: "#94a3b8", fontSize: 10 }} />
                       <Tooltip
                         contentStyle={{
                           backgroundColor: "#1e293b",

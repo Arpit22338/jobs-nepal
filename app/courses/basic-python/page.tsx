@@ -114,8 +114,34 @@ export default function PythonCoursePage() {
           </div>
 
           <div className="p-6 md:p-12 space-y-12">
-            {/* Introduction / Overview (Optional, could be added to data) */}
-            
+            {/* Course Overview */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="bg-blue-50 border border-blue-100 rounded-xl p-6">
+                <h3 className="font-bold text-blue-800 mb-2">You will learn</h3>
+                <ul className="text-sm text-gray-700 space-y-2">
+                  <li className="flex items-start gap-2"><CheckCircle size={16} className="text-blue-600 mt-0.5" /> Variables, data types, and control flow</li>
+                  <li className="flex items-start gap-2"><CheckCircle size={16} className="text-blue-600 mt-0.5" /> Functions, lists, and dictionaries</li>
+                  <li className="flex items-start gap-2"><CheckCircle size={16} className="text-blue-600 mt-0.5" /> Real‑world Python problem solving</li>
+                </ul>
+              </div>
+              <div className="bg-green-50 border border-green-100 rounded-xl p-6">
+                <h3 className="font-bold text-green-800 mb-2">Mini Projects</h3>
+                <ul className="text-sm text-gray-700 space-y-2">
+                  <li className="flex items-start gap-2"><Code size={16} className="text-green-600 mt-0.5" /> Number Guessing Game</li>
+                  <li className="flex items-start gap-2"><Code size={16} className="text-green-600 mt-0.5" /> Expense Tracker (CLI)</li>
+                  <li className="flex items-start gap-2"><Code size={16} className="text-green-600 mt-0.5" /> Simple To‑Do Manager</li>
+                </ul>
+              </div>
+              <div className="bg-purple-50 border border-purple-100 rounded-xl p-6">
+                <h3 className="font-bold text-purple-800 mb-2">Study Plan</h3>
+                <ul className="text-sm text-gray-700 space-y-2">
+                  <li className="flex items-start gap-2"><Clock size={16} className="text-purple-600 mt-0.5" /> 2–4 hours per week</li>
+                  <li className="flex items-start gap-2"><Clock size={16} className="text-purple-600 mt-0.5" /> 2 weeks per module</li>
+                  <li className="flex items-start gap-2"><Clock size={16} className="text-purple-600 mt-0.5" /> Practice in Playground</li>
+                </ul>
+              </div>
+            </div>
+
             {/* Lessons Stack */}
             {activeModule.lessons.map((lesson, index) => {
               // Alternate colors like CV course: Blue, Green, Purple

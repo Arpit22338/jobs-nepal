@@ -7,11 +7,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Plus } from "lucide-react";
 
-interface Skill {
-  name: string;
-  level: number;
-}
-
 interface Profile {
   id: string;
   bio?: string;
@@ -26,11 +21,21 @@ interface Profile {
   image?: string;
 }
 
+interface AdminJob {
+  id: string;
+  title: string;
+  location: string;
+  createdAt: string;
+  views: number;
+}
+
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [adminJobs, setAdminJobs] = useState<AdminJob[]>([]);
+  const [adminJobsLoading, setAdminJobsLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -51,6 +56,39 @@ export default function ProfilePage() {
       fetchProfile();
     }
   }, [status, session, router]);
+
+  useEffect(() => {
+    const fetchAdminJobs = async () => {
+      if (session?.user?.role !== "ADMIN") return;
+      setAdminJobsLoading(true);
+      try {
+        const res = await fetch("/api/admin/jobs");
+        const data = await res.json();
+        setAdminJobs(data.jobs || []);
+      } catch (error) {
+        console.error("Failed to fetch admin jobs", error);
+      } finally {
+        setAdminJobsLoading(false);
+      }
+    };
+
+    if (status === "authenticated") {
+      fetchAdminJobs();
+    }
+  }, [status, session]);
+
+  const deleteAdminJob = async (jobId: string) => {
+    if (!confirm("Delete this job post?")) return;
+    try {
+      const res = await fetch(`/api/admin/jobs?jobId=${jobId}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to delete job");
+      setAdminJobs((prev) => prev.filter((job) => job.id !== jobId));
+    } catch (error) {
+      console.error("Failed to delete job", error);
+      alert("Failed to delete job. Please try again.");
+    }
+  };
 
   if (loading) return <div className="p-8 text-center">Loading...</div>;
 
@@ -73,7 +111,7 @@ export default function ProfilePage() {
     <div className="max-w-2xl mx-auto p-6 bg-card rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
-          {profile.image && (
+          {profile.image ? (
             <Image
               src={profile.image}
               alt="Profile"
@@ -81,6 +119,12 @@ export default function ProfilePage() {
               height={64}
               className="rounded-full object-cover border"
             />
+          ) : (
+            <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center border">
+              <span className="text-lg font-bold">
+                {session?.user?.name?.[0]?.toUpperCase() || "U"}
+              </span>
+            </div>
           )}
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -195,6 +239,47 @@ export default function ProfilePage() {
           </>
         )}
       </div>
+
+      {session?.user?.role === "ADMIN" && (
+        <div className="mt-8 border-t border-border pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold">Admin Job Posts</h2>
+            <Link href="/employer/jobs/new" className="text-sm text-primary hover:underline">
+              Post New Job
+            </Link>
+          </div>
+
+          {adminJobsLoading ? (
+            <p className="text-muted-foreground text-sm">Loading job posts...</p>
+          ) : adminJobs.length === 0 ? (
+            <p className="text-muted-foreground text-sm">No admin job posts found.</p>
+          ) : (
+            <div className="space-y-3">
+              {adminJobs.map((job) => (
+                <div key={job.id} className="flex items-center justify-between border border-border rounded-lg p-3">
+                  <div>
+                    <p className="font-medium text-foreground">{job.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {job.location} • {new Date(job.createdAt).toLocaleDateString()} • {job.views} views
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Link href={`/jobs/${job.id}`} className="text-sm text-primary hover:underline">
+                      View
+                    </Link>
+                    <button
+                      onClick={() => deleteAdminJob(job.id)}
+                      className="text-sm text-destructive hover:underline"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

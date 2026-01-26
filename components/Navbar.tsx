@@ -524,6 +524,8 @@ function DesktopBottomNav() {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
+  const [showPostMenu, setShowPostMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   
   // Hide on certain pages
   const hiddenPaths = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
@@ -543,6 +545,18 @@ function DesktopBottomNav() {
     { href: "/messages/rojgaar-ai", icon: "bx-bot", label: "RojgaarAI", highlight: true },
   ];
 
+  useEffect(() => {
+    if (!showPostMenu) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!menuRef.current) return;
+      if (!menuRef.current.contains(event.target as Node)) {
+        setShowPostMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showPostMenu]);
+
   const getPostHref = () => {
     if (!session) return "/login";
     const role = session.user?.role;
@@ -551,13 +565,83 @@ function DesktopBottomNav() {
   };
 
   const handlePlusClick = () => {
-    router.push(getPostHref());
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+    setShowPostMenu((prev) => !prev);
+  };
+
+  const handlePostOption = (path: string) => {
+    setShowPostMenu(false);
+    router.push(path);
   };
   
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 hidden lg:block">
       <div className="max-w-4xl mx-auto px-4 pb-4">
-        <div className="bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl px-3 py-3 relative">
+        <div className="bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl px-3 pt-8 pb-3 relative">
+          {showPostMenu && (
+            <div
+              ref={menuRef}
+              className="absolute left-1/2 -translate-x-1/2 -top-60 w-[360px] bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-300"
+            >
+              <div className="p-4 border-b border-border flex items-center justify-between">
+                <h3 className="font-semibold text-foreground">Create New</h3>
+                <button
+                  onClick={() => setShowPostMenu(false)}
+                  className="p-2 rounded-full hover:bg-accent transition-colors"
+                >
+                  <i className="bx bx-x text-lg"></i>
+                </button>
+              </div>
+              <div className="p-2">
+                {(session?.user?.role === "EMPLOYER" || session?.user?.role === "ADMIN") && (
+                  <button
+                    onClick={() => handlePostOption("/employer/jobs/new")}
+                    className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-accent transition-colors text-left"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <i className="bx bx-briefcase text-2xl text-primary"></i>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">Post a Job</p>
+                      <p className="text-sm text-muted-foreground">Hire talented candidates</p>
+                    </div>
+                  </button>
+                )}
+                {(session?.user?.role === "ADMIN" || session?.user?.role === "USER" || session?.user?.role === "JOB_SEEKER" || session?.user?.role === "JOBSEEKER" || !session?.user?.role) && (
+                  <button
+                    onClick={() => handlePostOption("/talent/new")}
+                    className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-accent transition-colors text-left"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                      <i className="bx bx-user-voice text-2xl text-cyan-500"></i>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">Post My Talent</p>
+                      <p className="text-sm text-muted-foreground">Showcase your skills to employers</p>
+                    </div>
+                  </button>
+                )}
+                <Link
+                  href="/messages/rojgaar-ai"
+                  onClick={() => setShowPostMenu(false)}
+                  className="w-full flex items-center gap-4 p-4 rounded-xl bg-linear-to-r from-primary/5 to-primary/10 border border-primary/20 hover:from-primary/10 hover:to-primary/20 transition-all text-left"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-linear-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg shadow-primary/30">
+                    <i className="bx bx-bot text-2xl text-white"></i>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground flex items-center gap-2">
+                      RojgaarAI <span className="px-1.5 py-0.5 bg-primary/20 text-primary text-[10px] font-bold rounded">AI</span>
+                    </p>
+                    <p className="text-sm text-muted-foreground">Your AI career assistant</p>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          )}
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               {navLeft.map((item) => {
@@ -566,7 +650,7 @@ function DesktopBottomNav() {
                   <Link
                     key={item.href}
                     href={session ? item.href : "/login"}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-200 ${
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all duration-200 ${
                       active ? "bg-accent text-primary" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     }`}
                   >
@@ -580,7 +664,7 @@ function DesktopBottomNav() {
             {/* Center Plus Button */}
             <button
               onClick={handlePlusClick}
-              className="absolute left-1/2 -translate-x-1/2 -top-6 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 border-4 border-card flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200"
+              className="absolute left-1/2 -translate-x-1/2 -top-7 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 border-4 border-card flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200"
               aria-label="Create"
             >
               <i className="bx bx-plus text-3xl"></i>
@@ -639,8 +723,12 @@ function FloatingAIButton() {
     };
   }, [isExpanded]);
 
-  // Hide on AI tools pages
-  if (pathname.startsWith('/ai-tools')) return null;
+  // Hide on AI tools pages and post forms
+  if (
+    pathname.startsWith('/ai-tools') ||
+    pathname.startsWith('/talent/new') ||
+    pathname.startsWith('/employer/jobs/new')
+  ) return null;
 
   const isMessages = pathname.startsWith("/messages");
 
