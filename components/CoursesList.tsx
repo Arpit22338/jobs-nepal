@@ -163,11 +163,3 @@ export default function CoursesList({ courses }: { courses: Course[] }) {
     </>
   );
 }
-          courseId={selectedCourse.id}
-          courseTitle={selectedCourse.title}
-          price={selectedCourse.price}
-        />
-      )}
-    </>
-  );
-}
