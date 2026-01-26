@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import SaveJobButton from "@/components/SaveJobButton";
 import RecommendedJobs from "@/components/RecommendedJobs";
+import { deleteJob } from "@/app/actions";
 
 interface Job {
   id: string;
@@ -89,6 +90,17 @@ function JobsContent() {
   };
 
   const hasActiveFilters = query || location || type;
+
+  const handleDeleteJob = async (jobId: string) => {
+    if (!confirm("Delete this job post?")) return;
+    try {
+      await deleteJob(jobId);
+      setJobs((prev) => prev.filter((job) => job.id !== jobId));
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete job");
+    }
+  };
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto px-4">
@@ -313,6 +325,15 @@ function JobsContent() {
                   <div className="flex md:flex-col items-center md:items-end gap-3 w-full md:w-auto pt-4 md:pt-0 border-t md:border-0 border-border/40">
                     <div className="flex items-center gap-2 mb-2">
                       <SaveJobButton jobId={job.id} initialSaved={savedJobIds.includes(job.id)} />
+                      {session?.user?.id === job.employerId && (
+                        <button
+                          onClick={() => handleDeleteJob(job.id)}
+                          className="p-3 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all"
+                          title="Delete post"
+                        >
+                          <i className="bx bx-trash text-lg"></i>
+                        </button>
+                      )}
                       <Link href={`/messages/${job.employerId}`} className="p-3 rounded-2xl bg-accent hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all">
                         <MessageCircle size={20} />
                       </Link>

@@ -216,8 +216,8 @@ export default function SkillsGapPage() {
                 type="text"
                 value={formData.currentRole}
                 onChange={(e) => setFormData({ ...formData, currentRole: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 transition-all"
-                placeholder="e.g., Junior Developer, QA Analyst, Student"
+                className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-sm"
+                placeholder="Student, Junior Dev, QA"
               />
             </div>
 
@@ -227,8 +227,8 @@ export default function SkillsGapPage() {
                 value={formData.currentSkills}
                 onChange={(e) => setFormData({ ...formData, currentSkills: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 transition-all resize-none"
-                placeholder="HTML, CSS, JavaScript, React basics, Git, Python fundamentals..."
+                className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 transition-all resize-none placeholder:text-sm"
+                placeholder="HTML, CSS, JS, React, Git, Python"
               />
               <p className="text-sm text-muted-foreground mt-1">
                 Separate skills with commas. Be honest about your current level!
@@ -283,8 +283,8 @@ export default function SkillsGapPage() {
                   type="text"
                   value={formData.targetRole}
                   onChange={(e) => setFormData({ ...formData, targetRole: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 transition-all"
-                  placeholder="e.g., Full Stack Developer, Data Scientist"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-sm"
+                  placeholder="Full Stack Dev, Data Scientist"
                 />
               </div>
               <div>
