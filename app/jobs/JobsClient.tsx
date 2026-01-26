@@ -146,7 +146,7 @@ function JobsContent() {
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
-                  className="text-xs font-bold text-red-500 hover:text-red-600 flex items-center gap-1"
+                  className="text-xs font-bold text-destructive hover:text-destructive/80 flex items-center gap-1"
                 >
                   <X size={14} />
                   Clear All
@@ -236,7 +236,7 @@ function JobsContent() {
               </span>
             )}
             {location && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 text-blue-600 text-xs font-bold rounded-lg">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 text-blue-500 dark:text-blue-400 text-xs font-bold rounded-lg">
                 <MapPin size={12} />
                 {location}
                 <button onClick={() => setLocation("")} className="hover:bg-blue-500/20 rounded p-0.5">
@@ -245,7 +245,7 @@ function JobsContent() {
               </span>
             )}
             {type && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-500/10 text-green-600 text-xs font-bold rounded-lg">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-500/10 text-green-500 dark:text-green-400 text-xs font-bold rounded-lg">
                 <Briefcase size={12} />
                 {type}
                 <button onClick={() => setType("")} className="hover:bg-green-500/20 rounded p-0.5">
@@ -298,12 +298,12 @@ function JobsContent() {
                         <MapPin size={14} className="text-primary" />
                         {job.location}
                       </span>
-                      <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-100/50 text-blue-700 text-xs font-bold border border-blue-200/50">
+                      <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-500 dark:text-blue-400 text-xs font-bold border border-blue-500/20">
                         <Briefcase size={14} />
                         {job.type}
                       </span>
                       {job.salary && (
-                        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-100/50 text-green-700 text-xs font-bold border border-green-200/50">
+                        <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-500 dark:text-green-400 text-xs font-bold border border-green-500/20">
                           <span className="font-black text-[10px]">NPR</span> {job.salary}
                         </span>
                       )}

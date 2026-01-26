@@ -3,17 +3,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-import { applyForJob, deleteQuestion, createAnswer, deleteAnswer } from "@/app/actions";
-import { Trash2, MessageCircle, MapPin, Briefcase, Zap, Star, ShieldCheck, Send } from "lucide-react";
+import { applyForJob } from "@/app/actions";
+import { MessageCircle, MapPin, Briefcase, Zap, Star, ShieldCheck } from "lucide-react";
 import ReportButton from "@/components/ReportButton";
 import SaveJobButton from "@/components/SaveJobButton";
 import QnaSection from "@/components/QnaSection";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 
 export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
+  { params }: Props
 ): Promise<Metadata> {
   const { jobId } = await params;
   const job = await prisma.job.findUnique({
@@ -300,7 +298,7 @@ export default async function JobDetailsPage({ params }: Props) {
             </div>
           </section>
 
-          <section className="glass-card p-8 rounded-[38px] bg-gradient-to-br from-primary/5 to-transparent border-primary/20">
+          <section className="glass-card p-8 rounded-[38px] bg-linear-to-br from-primary/5 to-transparent border-primary/20">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                 <ShieldCheck size={24} />

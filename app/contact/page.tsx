@@ -17,7 +17,7 @@ export default function ContactPage() {
             <div className="max-w-5xl mx-auto">
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-black text-foreground mb-4">Get in Touch</h1>
-                    <p className="text-xl text-muted-foreground">Have questions? We'd love to hear from you.</p>
+                    <p className="text-xl text-muted-foreground">Have questions? We&apos;d love to hear from you.</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-12">
@@ -25,7 +25,7 @@ export default function ContactPage() {
                     <div className="space-y-8">
                         <div className="glass-card p-8 rounded-3xl space-y-8">
                             <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary flex-shrink-0">
+                                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
                                     <Mail size={24} />
                                 </div>
                                 <div>
@@ -36,7 +36,7 @@ export default function ContactPage() {
                             </div>
 
                             <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 flex-shrink-0">
+                                <div className="w-12 h-12 bg-purple-500/10 dark:bg-purple-500/20 rounded-2xl flex items-center justify-center text-purple-500 shrink-0">
                                     <MapPin size={24} />
                                 </div>
                                 <div>
@@ -47,7 +47,7 @@ export default function ContactPage() {
                             </div>
 
                             <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 flex-shrink-0">
+                                <div className="w-12 h-12 bg-blue-500/10 dark:bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-500 shrink-0">
                                     <Phone size={24} />
                                 </div>
                                 <div>
@@ -70,7 +70,7 @@ export default function ContactPage() {
                                         className="w-full px-4 py-3 rounded-xl border border-input bg-background/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                         placeholder="Aakash"
                                     />
-                                    {errors.firstName && <span className="text-xs text-red-500">Required</span>}
+                                    {errors.firstName && <span className="text-xs text-destructive">Required</span>}
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-foreground">Last Name</label>
@@ -79,7 +79,7 @@ export default function ContactPage() {
                                         className="w-full px-4 py-3 rounded-xl border border-input bg-background/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                         placeholder="Rijal"
                                     />
-                                    {errors.lastName && <span className="text-xs text-red-500">Required</span>}
+                                    {errors.lastName && <span className="text-xs text-destructive">Required</span>}
                                 </div>
                             </div>
 
@@ -91,7 +91,7 @@ export default function ContactPage() {
                                     className="w-full px-4 py-3 rounded-xl border border-input bg-background/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                     placeholder="example@gmail.com"
                                 />
-                                {errors.email && <span className="text-xs text-red-500">Required</span>}
+                                {errors.email && <span className="text-xs text-destructive">Required</span>}
                             </div>
 
                             <div className="space-y-2">
@@ -102,7 +102,7 @@ export default function ContactPage() {
                                     className="w-full px-4 py-3 rounded-xl border border-input bg-background/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none"
                                     placeholder="Tell us how we can help you..."
                                 />
-                                {errors.message && <span className="text-xs text-red-500">Required</span>}
+                                {errors.message && <span className="text-xs text-destructive">Required</span>}
                             </div>
 
                             <button type="submit" className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">

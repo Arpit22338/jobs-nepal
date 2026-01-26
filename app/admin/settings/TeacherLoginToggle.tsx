@@ -19,9 +19,9 @@ export default function TeacherLoginToggle({ initialValue }: { initialValue: boo
   return (
     <div className="flex flex-col gap-2 py-4">
       <div className="flex items-center gap-4">
-        <label className="font-semibold text-gray-700">Enable Teacher Login</label>
+        <label className="font-semibold text-foreground">Enable Teacher Login</label>
         <button
-          className={`px-4 py-2 rounded transition-colors duration-200 ${enabled ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-700"}`}
+          className={`px-4 py-2 rounded-lg transition-colors duration-200 font-medium ${enabled ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
           onClick={handleToggle}
           disabled={loading}
         >
@@ -29,7 +29,7 @@ export default function TeacherLoginToggle({ initialValue }: { initialValue: boo
         </button>
       </div>
       {message && (
-        <div className="text-sm text-green-600 font-semibold">{message}</div>
+        <div className="text-sm text-green-500 dark:text-green-400 font-semibold">{message}</div>
       )}
     </div>
   );

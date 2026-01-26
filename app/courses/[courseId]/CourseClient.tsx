@@ -123,10 +123,10 @@ export default function DynamicCoursePage() {
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-12">
       {zoomedImage && (
         <div
-          className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4 cursor-zoom-out"
+          className="fixed inset-0 bg-black/95 z-100 flex items-center justify-center p-4 cursor-zoom-out"
           onClick={() => setZoomedImage(null)}
         >
-          <div className="relative w-full max-w-2xl aspect-[3/4]">
+          <div className="relative w-full max-w-2xl aspect-3/4">
             <Image src={zoomedImage} alt="Zoomed" fill className="object-contain" />
           </div>
           <button className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors">
@@ -179,7 +179,7 @@ export default function DynamicCoursePage() {
                       <BookOpen size={120} />
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-center justify-center">
+                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent flex items-center justify-center">
                     <div className="text-white text-center p-8 max-w-sm space-y-6">
                       <div className="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-3xl flex items-center justify-center mx-auto shadow-2xl border border-white/20">
                         <Lock size={32} className="text-white" />
@@ -306,7 +306,7 @@ export default function DynamicCoursePage() {
                   className={`w-full p-6 text-left flex items-start gap-4 hover:bg-primary/5 transition-all group ${activeLessonId === lesson.id ? "bg-primary/10" : ""
                     }`}
                 >
-                  <div className={`mt-1 font-black text-xs min-w-[24px] tracking-tighter ${activeLessonId === lesson.id ? "text-primary" : "text-muted-foreground/40"}`}>
+                  <div className={`mt-1 font-black text-xs min-w-6 tracking-tighter ${activeLessonId === lesson.id ? "text-primary" : "text-muted-foreground/40"}`}>
                     {(idx + 1).toString().padStart(2, '0')}
                   </div>
                   <div className="flex-1 space-y-1">
@@ -331,7 +331,7 @@ export default function DynamicCoursePage() {
 
       {/* Modern Enrollment Modal */}
       {showEnrollModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-110 flex items-center justify-center p-4">
           <div className="glass-card rounded-[40px] max-w-xl w-full relative overflow-hidden shadow-2xl border-white/40 ring-1 ring-primary/20">
             {/* Modal Header */}
             <div className="p-8 border-b border-border/40 flex items-center justify-between bg-accent/10">
@@ -378,9 +378,9 @@ export default function DynamicCoursePage() {
                   <div className="flex justify-center">
                     {course.qrCodeUrl ? (
                       <button onClick={() => setZoomedImage(course.qrCodeUrl)} className="group outline-none inline-block">
-                        <div className="p-6 bg-accent rounded-[32px] border-4 border-transparent hover:border-primary/20 transition-all shadow-inner relative">
+                        <div className="p-6 bg-accent rounded-4xl border-4 border-transparent hover:border-primary/20 transition-all shadow-inner relative">
                           <Image src={course.qrCodeUrl} alt="Teacher QR" width={220} height={220} className="rounded-2xl" />
-                          <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-[32px] flex items-center justify-center text-primary font-black text-xs uppercase tracking-widest">Zoom to Pay</div>
+                          <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-4xl flex items-center justify-center text-primary font-black text-xs uppercase tracking-widest">Zoom to Pay</div>
                         </div>
                         <p className="mt-4 font-black text-xs uppercase tracking-[0.2em] text-muted-foreground">Teacher Receipt QR</p>
                       </button>

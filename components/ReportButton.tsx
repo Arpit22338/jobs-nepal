@@ -40,7 +40,7 @@ export default function ReportButton({ targetJobId, targetUserId }: ReportButton
     <button
       onClick={handleReport}
       disabled={loading}
-      className="text-gray-400 hover:text-red-600 transition-colors flex items-center gap-1 text-sm"
+      className="text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1 text-sm"
       title="Report"
     >
       <Flag size={16} />

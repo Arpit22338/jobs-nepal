@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, MessageSquare, Zap, MoreVertical, Trash2, Flag, UserX } from "lucide-react";
+import { Search, MessageSquare, Zap, MoreVertical, Trash2, Flag, UserX, Sparkles, Pin } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -174,6 +174,47 @@ export default function ConversationList() {
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-2 custom-scrollbar">
+        {/* RojgaarAI - Pinned at top */}
+        <Link
+          href="/messages/rojgaar-ai"
+          className={`relative p-4 rounded-3xl transition-all duration-300 group flex items-center gap-4 ${
+            pathname === "/messages/rojgaar-ai"
+              ? 'bg-linear-to-r from-primary to-primary/80 text-white shadow-xl shadow-primary/20 scale-[1.02]'
+              : 'bg-linear-to-r from-primary/5 to-primary/10 hover:from-primary/10 hover:to-primary/20 border border-primary/20'
+          }`}
+        >
+          <div className="relative shrink-0">
+            <div className={`w-[52px] h-[52px] rounded-2xl flex items-center justify-center ring-4 transition-all ${
+              pathname === "/messages/rojgaar-ai" ? 'bg-white/20 ring-white/20' : 'bg-primary/10 ring-primary/10'
+            }`}>
+              <i className={`bx bx-bot text-2xl ${pathname === "/messages/rojgaar-ai" ? 'text-white' : 'text-primary'}`}></i>
+            </div>
+            <span className="absolute -top-1 -right-1 p-1 bg-yellow-500 rounded-lg">
+              <Pin size={10} className="text-white" />
+            </span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex justify-between items-center mb-0.5">
+              <div className="flex items-center gap-2">
+                <p className={`text-sm font-black truncate tracking-tight ${
+                  pathname === "/messages/rojgaar-ai" ? 'text-white' : 'text-foreground'
+                }`}>
+                  RojgaarAI
+                </p>
+                <span className="px-1.5 py-0.5 bg-primary/20 text-primary text-[9px] font-bold rounded-md uppercase">AI</span>
+              </div>
+              <Sparkles size={14} className={pathname === "/messages/rojgaar-ai" ? 'text-white/60' : 'text-primary/60'} />
+            </div>
+            <p className={`text-xs truncate font-medium ${
+              pathname === "/messages/rojgaar-ai" ? 'text-white/70' : 'text-muted-foreground'
+            }`}>
+              Your career assistant • Always here to help
+            </p>
+          </div>
+        </Link>
+
+        <div className="h-px bg-border/50 my-2" />
+
         {filteredConversations.length === 0 ? (
           <div className="text-center py-12 space-y-2">
             <Zap size={24} className="text-muted-foreground/20 mx-auto" />

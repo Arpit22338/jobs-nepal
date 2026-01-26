@@ -160,7 +160,7 @@ export function CourseEnrollmentModal({
               />
               <Label
                 htmlFor="screenshot"
-                className="flex items-center justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
+                className="flex items-center justify-center w-full h-32 px-4 transition bg-card border-2 border-border border-dashed rounded-md appearance-none cursor-pointer hover:border-primary/50 focus:outline-none"
               >
                 {paymentScreenshot ? (
                   <div className="relative w-full h-full">
@@ -173,8 +173,8 @@ export function CourseEnrollmentModal({
                   </div>
                 ) : (
                   <span className="flex items-center space-x-2">
-                    <Upload className="w-6 h-6 text-gray-600" />
-                    <span className="font-medium text-gray-600">
+                    <Upload className="w-6 h-6 text-muted-foreground" />
+                    <span className="font-medium text-muted-foreground">
                       Click to upload screenshot
                     </span>
                   </span>
@@ -194,7 +194,7 @@ export function CourseEnrollmentModal({
       {/* Zoom Modal */}
       {zoomedImage && createPortal(
         <div 
-          className="fixed inset-0 z-[9999] bg-black/90 flex flex-col items-center justify-center p-4 cursor-pointer pointer-events-auto"
+          className="fixed inset-0 z-9999 bg-black/90 flex flex-col items-center justify-center p-4 cursor-pointer pointer-events-auto"
           onClick={(e) => {
             e.stopPropagation();
             setZoomedImage(null);

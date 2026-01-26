@@ -76,7 +76,7 @@ export default async function CoursesPage() {
     <div className="space-y-12 max-w-6xl mx-auto px-4 pb-20">
       <div className="text-center md:text-left space-y-4 pt-8">
         <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight">
-          Level Up Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">Career</span>
+          Level Up Your <span className="text-transparent bg-clip-text bg-linear-to-r from-violet-600 to-indigo-600">Career</span>
         </h1>
         <p className="text-lg text-muted-foreground font-medium max-w-2xl">
           Master in-demand skills with our curated selection of professional courses. Get certified and boost your chances of getting hired.

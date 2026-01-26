@@ -8,12 +8,13 @@ import * as z from "zod";
 const jobSeekerProfileSchema = z.object({
   image: z.string().max(100000).optional(),
   bio: z.string().max(2000).optional(),
-  skills: z.string().max(1000).optional(),
+  skills: z.string().max(5000).optional(),
   location: z.string().max(200).optional(),
   experience: z.string().max(5000).optional(),
   education: z.string().max(2000).optional(),
   resumeUrl: z.string().url().max(500).optional().or(z.literal("")),
   portfolioUrl: z.string().url().max(500).optional().or(z.literal("")),
+  metadata: z.string().max(50000).optional(), // Extended profile data as JSON
 });
 
 const employerProfileSchema = z.object({
@@ -80,7 +81,7 @@ export async function PUT(req: Request) {
 
     if (role === "JOBSEEKER") {
       const validatedData = jobSeekerProfileSchema.parse(body);
-      const { image, bio, skills, location, experience, education, resumeUrl, portfolioUrl } = validatedData;
+      const { image, bio, skills, location, experience, education, resumeUrl, portfolioUrl, metadata } = validatedData;
 
       if (image) {
         await prisma.user.update({
@@ -98,7 +99,8 @@ export async function PUT(req: Request) {
           experience: experience || undefined, 
           education: education || undefined, 
           resumeUrl: resumeUrl || undefined, 
-          portfolioUrl: portfolioUrl || undefined 
+          portfolioUrl: portfolioUrl || undefined,
+          metadata: metadata || undefined,
         } as any,
         create: {
           userId,
@@ -109,6 +111,7 @@ export async function PUT(req: Request) {
           education,
           resumeUrl,
           portfolioUrl,
+          metadata,
         } as any,
       });
     } else if (role === "EMPLOYER") {

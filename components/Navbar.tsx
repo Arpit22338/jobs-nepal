@@ -4,11 +4,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Settings, HelpCircle, LayoutDashboard, UserMinus } from "lucide-react";
+import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Settings, HelpCircle, LayoutDashboard, UserMinus, Sparkles, FileText, MessageCircle, Target, TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
 import { ThemeToggle } from "./ui/theme-toggle";
 import { getCurrentUserImage } from "@/app/actions";
+
+// AI Tools menu items
+const aiToolsItems = [
+  { name: "RojgaarAI Chat", href: "/messages/rojgaar-ai", icon: MessageCircle, description: "Your AI career assistant" },
+  { name: "Resume Builder", href: "/ai-tools/resume-builder", icon: FileText, description: "Create ATS-optimized resumes" },
+  { name: "Interview Prep", href: "/ai-tools/interview-prep", icon: MessageCircle, description: "Practice with AI feedback" },
+  { name: "Job Matcher", href: "/ai-tools/job-matcher", icon: Target, description: "Find jobs matching your skills" },
+  { name: "Skills Gap Analysis", href: "/ai-tools/skills-gap", icon: TrendingUp, description: "Plan your career growth" },
+];
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -16,6 +25,8 @@ export default function Navbar() {
   const user = session?.user as { name?: string | null; email?: string | null; role?: string } | undefined;
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isAIToolsOpen, setIsAIToolsOpen] = useState(false);
+  const [isAIToolsMobileOpen, setIsAIToolsMobileOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [userImage, setUserImage] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -41,6 +52,8 @@ export default function Navbar() {
   const closeMenus = () => {
     setIsOpen(false);
     setIsProfileOpen(false);
+    setIsAIToolsOpen(false);
+    setIsAIToolsMobileOpen(false);
   };
 
   // Handle scroll effect
@@ -142,6 +155,53 @@ export default function Navbar() {
               <Link href="/my-certificates" className={getLinkClass("/my-certificates")}>Certificates</Link>
               <Link href="/talent" className={getLinkClass("/talent")}>Find Talent</Link>
 
+              {/* AI Tools Dropdown */}
+              <div 
+                className="relative"
+                onMouseEnter={() => setIsAIToolsOpen(true)}
+                onMouseLeave={() => setIsAIToolsOpen(false)}
+              >
+                <button
+                  className={`flex items-center gap-1.5 text-sm font-medium transition-all duration-200 tracking-wide ${
+                    pathname.startsWith('/ai-tools') 
+                      ? "text-primary font-bold" 
+                      : "text-foreground/80 hover:text-primary"
+                  }`}
+                >
+                  <Sparkles size={16} className="text-primary" />
+                  AI Tools
+                  <ChevronDown size={14} className={`transition-transform duration-200 ${isAIToolsOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {isAIToolsOpen && (
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
+                    <div className="bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl py-2 px-2 min-w-[280px] shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+                      <div className="px-3 py-2 border-b border-border/40 mb-2">
+                        <p className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                          <Sparkles size={12} /> AI-Powered Tools
+                        </p>
+                      </div>
+                      {aiToolsItems.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={closeMenus}
+                          className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-accent transition-colors group"
+                        >
+                          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                            <item.icon size={18} className="text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{item.name}</p>
+                            <p className="text-xs text-muted-foreground">{item.description}</p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {user?.role === "ADMIN" && (
                 <Link
                   href="/admin/dashboard"
@@ -203,6 +263,10 @@ export default function Navbar() {
                           </span>
                         </div>
                         <div className="px-2 space-y-0.5 mt-2">
+                          {/* RojgaarAI Quick Access */}
+                          <Link href="/messages/rojgaar-ai" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium bg-primary/5 border border-primary/20 hover:bg-primary/10 text-primary rounded-xl transition-colors mb-2" onClick={closeMenus}>
+                            <i className="bx bx-bot text-lg"></i> Chat with RojgaarAI
+                          </Link>
                           <Link href="/profile" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
                             <User size={16} className="text-muted-foreground" /> Profile
                           </Link>
@@ -341,6 +405,35 @@ export default function Navbar() {
                 Skill Courses
               </Link>
 
+              {/* AI Tools Section in Mobile */}
+              <div className="my-2 border-t border-border/50 mx-4"></div>
+              <button
+                onClick={() => setIsAIToolsMobileOpen(!isAIToolsMobileOpen)}
+                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-bold text-primary hover:bg-primary/10 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <Sparkles size={18} />
+                  AI Tools
+                </span>
+                <ChevronDown size={16} className={`transition-transform duration-200 ${isAIToolsMobileOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {isAIToolsMobileOpen && (
+                <div className="space-y-1 pl-4">
+                  {aiToolsItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={closeMenus}
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors"
+                    >
+                      <item.icon size={16} className="text-primary" />
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+
               {session && (
                 <Link href="/my-certificates" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
                   Certificates
@@ -417,6 +510,57 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* Floating AI Tools Button for Mobile */}
+      <FloatingAIButton />
     </>
+  );
+}
+
+// Floating AI Tools Button Component
+function FloatingAIButton() {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const pathname = usePathname();
+
+  // Hide on AI tools pages
+  if (pathname.startsWith('/ai-tools')) return null;
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50 lg:hidden">
+      {/* Expanded Menu */}
+      {isExpanded && (
+        <div className="absolute bottom-16 right-0 mb-2 bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl py-2 px-2 min-w-[220px] shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-200">
+          <div className="px-3 py-2 border-b border-border/40 mb-2">
+            <p className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+              <Sparkles size={12} /> AI Tools
+            </p>
+          </div>
+          {aiToolsItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsExpanded(false)}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-accent transition-colors group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                <item.icon size={16} className="text-primary" />
+              </div>
+              <p className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">{item.name}</p>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* Floating Button */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="relative w-14 h-14 bg-linear-to-br from-primary to-primary/80 text-primary-foreground rounded-full shadow-lg shadow-primary/30 flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200"
+        aria-label="AI Tools"
+      >
+        <Sparkles size={24} className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'animate-pulse'}`} />
+        {/* Pulse effect */}
+        <span className="absolute inset-0 rounded-full bg-primary/50 animate-ping opacity-30" />
+      </button>
+    </div>
   );
 }

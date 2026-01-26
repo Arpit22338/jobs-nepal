@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Search, Briefcase, GraduationCap, Users, MapPin, ArrowRight, Zap, Shield, Target } from "lucide-react";
+import { Search, Briefcase, GraduationCap, Users, MapPin, ArrowRight, Zap, Shield, Target, Sparkles, FileText, MessageCircle, TrendingUp } from "lucide-react";
 import { prisma } from "../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -249,6 +249,107 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* AI-Powered Features Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-6">
+            <Sparkles size={14} className="mr-2" />
+            AI-Powered Career Tools
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">
+            Supercharge Your <span className="text-primary">Career</span>
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Leverage cutting-edge AI to build your resume, prepare for interviews, and find your perfect job match.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Resume Builder */}
+          <Link href="/ai-tools/resume-builder" className="group">
+            <div className="glass-card rounded-2xl p-6 h-full border border-border/50 hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/5">
+              <div className="w-14 h-14 mb-4 bg-linear-to-br from-blue-500/20 to-blue-600/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <FileText size={28} className="text-blue-500" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                AI Resume Builder
+              </h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                Create an ATS-optimized, professional resume in minutes with AI assistance.
+              </p>
+              <span className="text-sm font-medium text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
+                Build Now <ArrowRight size={16} />
+              </span>
+            </div>
+          </Link>
+
+          {/* Interview Prep */}
+          <Link href="/ai-tools/interview-prep" className="group">
+            <div className="glass-card rounded-2xl p-6 h-full border border-border/50 hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/5">
+              <div className="w-14 h-14 mb-4 bg-linear-to-br from-purple-500/20 to-purple-600/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <MessageCircle size={28} className="text-purple-500" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                Interview Prep
+              </h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                Practice with AI-generated questions and get instant feedback on your answers.
+              </p>
+              <span className="text-sm font-medium text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
+                Practice Now <ArrowRight size={16} />
+              </span>
+            </div>
+          </Link>
+
+          {/* Job Matcher */}
+          <Link href="/ai-tools/job-matcher" className="group">
+            <div className="glass-card rounded-2xl p-6 h-full border border-border/50 hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/5">
+              <div className="w-14 h-14 mb-4 bg-linear-to-br from-green-500/20 to-green-600/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Target size={28} className="text-green-500" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                Job Matcher
+              </h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                Find jobs that perfectly match your skills with AI-powered compatibility scoring.
+              </p>
+              <span className="text-sm font-medium text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
+                Find Matches <ArrowRight size={16} />
+              </span>
+            </div>
+          </Link>
+
+          {/* Skills Gap Analysis */}
+          <Link href="/ai-tools/skills-gap" className="group">
+            <div className="glass-card rounded-2xl p-6 h-full border border-border/50 hover:border-primary/30 transition-all hover:shadow-lg hover:shadow-primary/5">
+              <div className="w-14 h-14 mb-4 bg-linear-to-br from-orange-500/20 to-orange-600/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <TrendingUp size={28} className="text-orange-500" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                Skills Gap Analysis
+              </h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                Get a personalized learning roadmap to reach your career goals faster.
+              </p>
+              <span className="text-sm font-medium text-primary flex items-center gap-1 group-hover:gap-2 transition-all">
+                Analyze Skills <ArrowRight size={16} />
+              </span>
+            </div>
+          </Link>
+        </div>
+
+        {/* CTA for AI Tools */}
+        <div className="mt-12 text-center">
+          <div className="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-linear-to-r from-primary/5 via-primary/10 to-primary/5 border border-primary/20">
+            <Sparkles size={32} className="text-primary" />
+            <div className="text-left">
+              <p className="font-bold text-foreground">All AI tools are completely free!</p>
+              <p className="text-sm text-muted-foreground">No hidden charges, no premium tiers. Just powerful AI at your fingertips.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section className="container mx-auto px-4 mb-20">
         <div className="relative overflow-hidden rounded-[40px] border border-border/50 bg-linear-to-br from-card/80 via-primary/5 to-card px-6 py-16 md:px-12 md:py-24 text-center shadow-2xl backdrop-blur-3xl">
@@ -284,7 +385,7 @@ export default async function Home() {
               ) : (
                 <Link
                   href="/jobs"
-                  className="premium-button text-lg group inline-flex items-center justify-center"
+                  className="inline-flex h-12 md:h-14 items-center justify-center px-10 text-lg font-bold text-primary-foreground bg-primary/80 hover:bg-primary border border-primary/20 rounded-full transition-all backdrop-blur-sm shadow-lg shadow-primary/10 group"
                 >
                   Browse Opportunities
                   <ArrowRight className="ml-2 size-5 group-hover:translate-x-1 transition-transform" />

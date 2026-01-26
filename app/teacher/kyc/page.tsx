@@ -123,11 +123,11 @@ export default function TeacherKycPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
         <Shield className="text-green-500 w-20 h-20 mb-4" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">KYC Verified!</h1>
-        <p className="text-gray-600 mb-8">Your identity has been verified. You can now create courses.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">KYC Verified!</h1>
+        <p className="text-muted-foreground mb-8">Your identity has been verified. You can now create courses.</p>
         <button 
           onClick={() => router.push("/teacher/dashboard")}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+          className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 font-medium"
         >
           Go to Dashboard
         </button>
@@ -139,12 +139,12 @@ export default function TeacherKycPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
         <Clock className="text-yellow-500 w-20 h-20 mb-4" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">KYC Verification Pending</h1>
-        <p className="text-gray-600 mb-8 max-w-md">
+        <h1 className="text-3xl font-bold text-foreground mb-2">KYC Verification Pending</h1>
+        <p className="text-muted-foreground mb-8 max-w-md">
           We have received your documents. Our team will verify your identity shortly.
           Usually approved within 24 hours.
         </p>
-        <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-sm text-yellow-800">
+        <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg text-sm text-yellow-600 dark:text-yellow-400">
           Please check back later.
         </div>
       </div>
@@ -154,20 +154,20 @@ export default function TeacherKycPage() {
   return (
     <div className="max-w-3xl mx-auto py-12 px-4">
       <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Identity Verification (KYC)</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-foreground mb-4">Identity Verification (KYC)</h1>
+        <p className="text-muted-foreground">
           Please complete the form below to verify your identity as a teacher.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 p-6 md:p-8">
+      <div className="bg-card rounded-2xl shadow-lg overflow-hidden border border-border p-6 md:p-8">
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Document Type</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Document Type</label>
             <select 
               value={documentType}
               onChange={(e) => setDocumentType(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary"
             >
               <option value="citizenship">Citizenship</option>
               <option value="passport">Passport</option>
@@ -177,21 +177,21 @@ export default function TeacherKycPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Contact Number</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Contact Number</label>
             <input
               type="text"
               placeholder="e.g. 98XXXXXXXX"
               value={contactNumber}
               onChange={(e) => setContactNumber(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary"
             />
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Front Side (Required)</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 transition-colors relative h-48 flex items-center justify-center">
+            <label className="block text-sm font-medium text-foreground mb-2">Front Side (Required)</label>
+            <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:bg-muted/50 transition-colors relative h-48 flex items-center justify-center">
               <input
                 type="file"
                 accept="image/*"
@@ -201,7 +201,7 @@ export default function TeacherKycPage() {
               {frontImage ? (
                 <Image src={frontImage} alt="Front" fill className="object-contain p-2" />
               ) : (
-                <div className="text-gray-400">
+                <div className="text-muted-foreground">
                   <Upload className="mx-auto mb-2" />
                   <span className="text-sm">Upload Front</span>
                 </div>
@@ -210,8 +210,8 @@ export default function TeacherKycPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Back Side (Required)</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 transition-colors relative h-48 flex items-center justify-center">
+            <label className="block text-sm font-medium text-foreground mb-2">Back Side (Required)</label>
+            <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:bg-muted/50 transition-colors relative h-48 flex items-center justify-center">
               <input
                 type="file"
                 accept="image/*"
@@ -221,7 +221,7 @@ export default function TeacherKycPage() {
               {backImage ? (
                 <Image src={backImage} alt="Back" fill className="object-contain p-2" />
               ) : (
-                <div className="text-gray-400">
+                <div className="text-muted-foreground">
                   <Upload className="mx-auto mb-2" />
                   <span className="text-sm">Upload Back</span>
                 </div>
@@ -231,9 +231,9 @@ export default function TeacherKycPage() {
         </div>
 
         <div className="mb-8">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Full Face Image (Required)</label>
-          <p className="text-xs text-gray-600 mb-3">Upload a clear photo of your face to verify your authenticity as a teacher. This helps us maintain quality and build trust in our community.</p>
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 transition-colors relative h-48 flex items-center justify-center max-w-md mx-auto">
+          <label className="block text-sm font-medium text-foreground mb-2">Full Face Image (Required)</label>
+          <p className="text-xs text-muted-foreground mb-3">Upload a clear photo of your face to verify your authenticity as a teacher. This helps us maintain quality and build trust in our community.</p>
+          <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:bg-muted/50 transition-colors relative h-48 flex items-center justify-center max-w-md mx-auto">
             <input
               type="file"
               accept="image/*"
@@ -243,17 +243,17 @@ export default function TeacherKycPage() {
             {faceImage ? (
               <Image src={faceImage} alt="Face" fill className="object-contain p-2" />
             ) : (
-              <div className="text-gray-400">
+              <div className="text-muted-foreground">
                 <Upload className="mx-auto mb-2" />
                 <span className="text-sm">Upload Your Face</span>
               </div>
             )}
           </div>
-          <p className="text-xs text-gray-500 mt-2 text-center">Max 1.5 MB. Use an image compressor if needed.</p>
+          <p className="text-xs text-muted-foreground mt-2 text-center">Max 1.5 MB. Use an image compressor if needed.</p>
         </div>
 
         {error && (
-          <div className="mt-4 flex items-center text-red-600 text-sm bg-red-50 p-3 rounded-lg mb-4">
+          <div className="mt-4 flex items-center text-destructive text-sm bg-destructive/10 p-3 rounded-lg mb-4">
             <AlertCircle size={16} className="mr-2" />
             {error}
           </div>
@@ -262,7 +262,7 @@ export default function TeacherKycPage() {
         <button
           onClick={handleSubmit}
           disabled={loading || !frontImage || !backImage || !faceImage || !contactNumber}
-          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {loading ? "Submitting..." : "Submit KYC for Approval"}
         </button>

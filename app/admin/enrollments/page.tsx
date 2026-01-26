@@ -99,9 +99,12 @@ export default function AdminEnrollmentsPage() {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Course Enrollments</h1>
-      <div className="bg-white rounded-md border">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Course Enrollments</h1>
+        <p className="text-muted-foreground text-sm">{enrollments.length} enrollments</p>
+      </div>
+      <div className="bg-card rounded-2xl border border-border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -117,21 +120,21 @@ export default function AdminEnrollmentsPage() {
             {enrollments.map((enrollment) => (
               <TableRow key={enrollment.id}>
                 <TableCell>
-                  <div className="font-medium">{enrollment.user.name || "Unknown"}</div>
-                  <div className="text-sm text-gray-500">{enrollment.user.email}</div>
+                  <div className="font-medium text-foreground">{enrollment.user.name || "Unknown"}</div>
+                  <div className="text-sm text-muted-foreground">{enrollment.user.email}</div>
                 </TableCell>
                 <TableCell>
-                  <div className="font-medium">{enrollment.course.title}</div>
-                  <div className="text-sm text-gray-500">
+                  <div className="font-medium text-foreground">{enrollment.course.title}</div>
+                  <div className="text-sm text-muted-foreground">
                     NPR {enrollment.course.price || enrollment.course.priceNpr || 0}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="text-sm">Phone: {enrollment.paymentPhone || "N/A"}</div>
+                  <div className="text-sm text-foreground">Phone: {enrollment.paymentPhone || "N/A"}</div>
                   {enrollment.paymentScreenshotUrl && (
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button variant="link" size="sm" className="p-0 h-auto">
+                        <Button variant="link" size="sm" className="p-0 h-auto text-primary">
                           <Eye className="w-3 h-3 mr-1" /> View Screenshot
                         </Button>
                       </DialogTrigger>
@@ -194,7 +197,7 @@ export default function AdminEnrollmentsPage() {
             ))}
             {enrollments.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No enrollment requests found.
                 </TableCell>
               </TableRow>

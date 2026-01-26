@@ -7,6 +7,7 @@ import MobileFooter from "../components/MobileFooter";
 import Footer from "../components/Footer";
 import CursorGlow from "../components/CursorGlow";
 import ParticlesBackground from "../components/ParticlesBackground";
+import RojgaarAIPopup from "../components/RojgaarAIPopup";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -102,6 +103,9 @@ export default function RootLayout({
 
             {/* Mobile Footer Navigation */}
             <MobileFooter />
+
+            {/* RojgaarAI Floating Chat - Desktop */}
+            <RojgaarAIPopup />
           </div>
         </Providers>
       </body>

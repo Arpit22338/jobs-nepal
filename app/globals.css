@@ -39,35 +39,36 @@
 
 /* ========================
    DARK MODE
+   New Theme: #0A0E27 background, #1E293B cards, #00D9FF cyan
    ======================== */
 .dark {
-  --background: 222 47% 8%;     /* Deep dark blue */
-  --foreground: 210 40% 98%;
+  --background: 228 60% 10%;    /* #0A0E27 - very dark navy */
+  --foreground: 0 0% 100%;      /* #FFFFFF - white text */
   
-  --card: 222 47% 11%;          /* Slightly lighter card */
-  --card-foreground: 210 40% 98%;
+  --card: 215 28% 17%;          /* #1E293B - dark gray cards */
+  --card-foreground: 0 0% 100%;
   
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
+  --popover: 215 28% 17%;
+  --popover-foreground: 0 0% 100%;
   
-  --primary: 168 76% 52%;      /* Brighter teal for dark mode */
-  --primary-foreground: 222 47% 6%;
+  --primary: 187 100% 50%;      /* #00D9FF - cyan */
+  --primary-foreground: 228 60% 10%;
   
-  --secondary: 215 28% 17%;
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 215 28% 23%;
+  --secondary-foreground: 0 0% 100%;
   
-  --muted: 215 28% 17%;
-  --muted-foreground: 215 20% 65%;
+  --muted: 215 28% 20%;
+  --muted-foreground: 215 25% 65%;  /* #94A3B8 - light gray */
   
-  --accent: 215 28% 17%;
-  --accent-foreground: 168 76% 60%;
+  --accent: 215 28% 20%;
+  --accent-foreground: 187 100% 60%;
   
   --destructive: 0 62% 50%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive-foreground: 0 0% 100%;
   
-  --border: 215 28% 20%;
-  --input: 215 28% 20%;
-  --ring: 168 76% 52%;
+  --border: 215 28% 25%;
+  --input: 215 28% 25%;
+  --ring: 187 100% 50%;
 }
 
 /* ========================

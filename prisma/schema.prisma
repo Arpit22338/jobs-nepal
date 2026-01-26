@@ -68,6 +68,9 @@ model User {
   // Blocked Users
   blockedUsers              BlockedUser[] @relation("BlockedByUsers")
   blockedByUsers            BlockedUser[] @relation("BlockedUsers")
+  
+  // Exam System
+  examAttempts              ExamAttempt[]
 }
 
 model TempRegistration {
@@ -140,6 +143,7 @@ model TalentPost {
   title       String
   bio         String
   skills      String
+  metadata    String?  // JSON for extended data
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -155,6 +159,7 @@ model JobSeekerProfile {
   location    String?
   experience  String?
   education   String?
+  metadata    String?  // JSON string for extended profile data
 }
 
 model EmployerProfile {
@@ -284,6 +289,7 @@ model Course {
   lessons              Lesson[]
   enrollments          Enrollment[]
   certificates         Certificate[]
+  exams                Exam[]
 }
 
 model Lesson {
@@ -423,4 +429,125 @@ model BlockedUser {
   createdAt DateTime @default(now())
 
   @@unique([blockerId, blockedId])
+}
+
+// ==========================================
+// AI-POWERED COURSE EXAM SYSTEM
+// ==========================================
+
+model Exam {
+  id                 String         @id @default(cuid())
+  courseId           String
+  course             Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title              String
+  description        String?
+  
+  // Exam Configuration
+  passingScore       Float          @default(70) // Percentage required to pass
+  timeLimit          Int            @default(60) // Time limit in minutes
+  maxAttempts        Int            @default(3)  // Max retakes allowed
+  shuffleQuestions   Boolean        @default(true)
+  shuffleOptions     Boolean        @default(true)
+  showResults        Boolean        @default(true) // Show correct answers after completion
+  
+  // Status
+  isPublished        Boolean        @default(false)
+  isActive           Boolean        @default(true)
+  
+  // Timing
+  availableFrom      DateTime?
+  availableUntil     DateTime?
+  
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  
+  questions          ExamQuestion[]
+  attempts           ExamAttempt[]
+}
+
+model ExamQuestion {
+  id              String   @id @default(cuid())
+  examId          String
+  exam            Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  
+  questionText    String
+  questionType    String   @default("MULTIPLE_CHOICE") // MULTIPLE_CHOICE, TRUE_FALSE, SHORT_ANSWER
+  
+  // Options for multiple choice (stored as JSON array)
+  options         String?  // JSON array: ["Option A", "Option B", "Option C", "Option D"]
+  correctAnswer   String   // For MCQ: index or text, For TRUE_FALSE: "true"/"false", For SHORT_ANSWER: expected answer
+  
+  // AI-generated explanation for the correct answer
+  explanation     String?
+  
+  // Points for this question
+  points          Float    @default(1)
+  
+  // Ordering
+  orderIndex      Int      @default(0)
+  
+  // Metadata (difficulty, tags, etc.)
+  difficulty      String   @default("MEDIUM") // EASY, MEDIUM, HARD
+  tags            String?  // JSON array of tags
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  answers         ExamAnswer[]
+}
+
+model ExamAttempt {
+  id              String       @id @default(cuid())
+  examId          String
+  exam            Exam         @relation(fields: [examId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Attempt tracking
+  attemptNumber   Int          @default(1)
+  
+  // Timing
+  startedAt       DateTime     @default(now())
+  submittedAt     DateTime?
+  
+  // Results
+  score           Float?       // Percentage score
+  totalPoints     Float?       // Points earned
+  maxPoints       Float?       // Maximum possible points
+  passed          Boolean?
+  
+  // Status
+  status          String       @default("IN_PROGRESS") // IN_PROGRESS, SUBMITTED, GRADED, EXPIRED
+  
+  // Time spent in seconds
+  timeSpent       Int?
+  
+  // Certificate generated?
+  certificateId   String?
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  answers         ExamAnswer[]
+}
+
+model ExamAnswer {
+  id              String       @id @default(cuid())
+  attemptId       String
+  attempt         ExamAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId      String
+  question        ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  
+  // The user's answer
+  answer          String?
+  
+  // Grading
+  isCorrect       Boolean?
+  pointsEarned    Float?
+  
+  // AI feedback for short answer questions
+  aiFeedback      String?
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 }

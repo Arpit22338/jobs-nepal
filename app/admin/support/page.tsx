@@ -59,47 +59,60 @@ export default function AdminSupportPage() {
     }
   };
 
-  if (loading) return <div className="p-8 text-center">Loading tickets...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center py-20">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Premium Customer Support</h1>
-      <div className="space-y-6">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Premium Customer Support</h1>
+        <p className="text-muted-foreground text-sm">{tickets.length} tickets</p>
+      </div>
+      
+      <div className="space-y-4">
         {tickets.length === 0 ? (
-          <p className="text-gray-500">No support tickets found.</p>
+          <div className="text-center py-20 bg-card rounded-2xl border border-border">
+            <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
+              <i className="bx bx-support text-3xl text-muted-foreground"></i>
+            </div>
+            <p className="text-muted-foreground">No support tickets found.</p>
+          </div>
         ) : (
           tickets.map((ticket) => (
-            <div key={ticket.id} className="bg-white p-6 rounded-lg shadow border">
+            <div key={ticket.id} className="bg-card p-6 rounded-2xl border border-border">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="font-bold text-lg">{ticket.subject}</h3>
-                  <p className="text-sm text-gray-500">
+                  <h3 className="font-bold text-lg text-foreground">{ticket.subject}</h3>
+                  <p className="text-sm text-muted-foreground">
                     From: {ticket.user.name} ({ticket.user.email})
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-muted-foreground">
                     {new Date(ticket.createdAt).toLocaleString()}
                   </p>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                  ticket.status === "OPEN" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
+                  ticket.status === "OPEN" ? "bg-green-500/20 text-green-400" : "bg-muted text-muted-foreground"
                 }`}>
                   {ticket.status}
                 </span>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded mb-4">
-                <p className="text-gray-800 whitespace-pre-wrap">{ticket.message}</p>
+              <div className="bg-accent/50 p-4 rounded-xl mb-4">
+                <p className="text-foreground whitespace-pre-wrap">{ticket.message}</p>
               </div>
 
               {ticket.reply ? (
-                <div className="bg-blue-50 p-4 rounded border border-blue-100">
-                  <p className="text-sm font-bold text-blue-800 mb-1">Admin Reply:</p>
-                  <p className="text-gray-800">{ticket.reply}</p>
+                <div className="bg-primary/10 p-4 rounded-xl border border-primary/20">
+                  <p className="text-sm font-bold text-primary mb-1">Admin Reply:</p>
+                  <p className="text-foreground">{ticket.reply}</p>
                 </div>
               ) : (
                 <div className="mt-4">
                   <textarea
-                    className="w-full border rounded p-2 mb-2 text-sm"
+                    className="w-full border border-border rounded-xl p-3 mb-2 text-sm bg-background text-foreground focus:ring-2 focus:ring-primary/50"
                     placeholder="Write a reply..."
                     rows={3}
                     value={replyText[ticket.id] || ""}
@@ -107,7 +120,7 @@ export default function AdminSupportPage() {
                   />
                   <button
                     onClick={() => handleReply(ticket.id)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700"
+                    className="bg-primary text-primary-foreground px-4 py-2 rounded-xl text-sm font-bold hover:bg-primary/90 transition-colors"
                   >
                     Send Reply & Close
                   </button>

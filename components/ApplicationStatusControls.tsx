@@ -26,11 +26,11 @@ export default function ApplicationStatusControls({ applicationId, currentStatus
 
   const getStatusColor = (s: string) => {
     switch (s) {
-      case "ACCEPTED": return "bg-green-100 text-green-800 border-green-200";
-      case "REJECTED": return "bg-red-100 text-red-800 border-red-200";
-      case "SHORTLISTED": return "bg-purple-100 text-purple-800 border-purple-200";
-      case "REVIEWING": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      default: return "bg-gray-100 text-gray-800 border-gray-200";
+      case "ACCEPTED": return "bg-green-500/10 text-green-500 border-green-500/20 dark:bg-green-500/20 dark:text-green-400";
+      case "REJECTED": return "bg-red-500/10 text-red-500 border-red-500/20 dark:bg-red-500/20 dark:text-red-400";
+      case "SHORTLISTED": return "bg-purple-500/10 text-purple-500 border-purple-500/20 dark:bg-purple-500/20 dark:text-purple-400";
+      case "REVIEWING": return "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 dark:bg-yellow-500/20 dark:text-yellow-400";
+      default: return "bg-muted text-muted-foreground border-border";
     }
   };
 
@@ -40,7 +40,7 @@ export default function ApplicationStatusControls({ applicationId, currentStatus
         value={status}
         onChange={(e) => handleUpdate(e.target.value)}
         disabled={loading}
-        className={`text-sm font-medium rounded-md border shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 py-1 pl-2 pr-8 cursor-pointer ${getStatusColor(status)}`}
+        className={`text-sm font-medium rounded-lg border shadow-sm focus:outline-none focus:ring-2 focus:ring-primary py-1.5 pl-3 pr-8 cursor-pointer ${getStatusColor(status)}`}
       >
         <option value="PENDING">Pending</option>
         <option value="REVIEWING">Reviewing</option>
@@ -48,7 +48,7 @@ export default function ApplicationStatusControls({ applicationId, currentStatus
         <option value="ACCEPTED">Accepted</option>
         <option value="REJECTED">Rejected</option>
       </select>
-      {loading && <span className="text-xs text-gray-500 animate-pulse">Updating...</span>}
+      {loading && <span className="text-xs text-muted-foreground animate-pulse">Updating...</span>}
     </div>
   );
 }

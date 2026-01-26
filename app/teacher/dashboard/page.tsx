@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { BookOpen, Users, DollarSign, Edit, PlusCircle, ArrowRight, CheckCircle } from "lucide-react";
+import { BookOpen, Users, DollarSign, Edit, PlusCircle, ArrowRight, CheckCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -66,12 +66,20 @@ export default function TeacherDashboard() {
           <p className="text-muted-foreground font-medium">Manage your knowledge and track your success.</p>
         </div>
         {course && (
-          <Link
-            href="/teacher/course/edit"
-            className="flex items-center gap-2 bg-accent hover:bg-primary/20 text-primary font-black px-6 py-3 rounded-2xl transition-all shadow-sm"
-          >
-            <Edit size={18} /> Edit Course
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href="/teacher/course/exam-generator"
+              className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary font-bold px-5 py-3 rounded-2xl transition-all"
+            >
+              <Sparkles size={18} /> AI Exam Generator
+            </Link>
+            <Link
+              href="/teacher/course/edit"
+              className="flex items-center gap-2 bg-accent hover:bg-primary/20 text-primary font-black px-6 py-3 rounded-2xl transition-all shadow-sm"
+            >
+              <Edit size={18} /> Edit Course
+            </Link>
+          </div>
         )}
       </div>
 
@@ -79,7 +87,7 @@ export default function TeacherDashboard() {
         <div className="glass-card p-6 rounded-3xl border-l-4 border-l-blue-500 hover:scale-[1.02] transition-transform">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-muted-foreground text-xs font-black uppercase tracking-widest">Enrollments</h3>
-            <div className="p-2 bg-blue-100 rounded-xl text-blue-600 outline outline-4 outline-blue-50">
+            <div className="p-2 bg-blue-100 rounded-xl text-blue-600 outline-4 outline-blue-50">
               <Users size={20} />
             </div>
           </div>
@@ -90,7 +98,7 @@ export default function TeacherDashboard() {
         <div className="glass-card p-6 rounded-3xl border-l-4 border-l-green-500 hover:scale-[1.02] transition-transform">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-muted-foreground text-xs font-black uppercase tracking-widest">Earnings</h3>
-            <div className="p-2 bg-green-100 rounded-xl text-green-600 outline outline-4 outline-green-50">
+            <div className="p-2 bg-green-100 rounded-xl text-green-600 outline-4 outline-green-50">
               <DollarSign size={20} />
             </div>
           </div>
@@ -103,7 +111,7 @@ export default function TeacherDashboard() {
         <div className="glass-card p-6 rounded-3xl border-l-4 border-l-purple-500 hover:scale-[1.02] transition-transform">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-muted-foreground text-xs font-black uppercase tracking-widest">Status</h3>
-            <div className="p-2 bg-purple-100 rounded-xl text-purple-600 outline outline-4 outline-purple-50">
+            <div className="p-2 bg-purple-100 rounded-xl text-purple-600 outline-4 outline-purple-50">
               <BookOpen size={20} />
             </div>
           </div>

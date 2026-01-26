@@ -98,9 +98,12 @@ export default function AdminKycPage() {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Teacher KYC Requests</h1>
-      <div className="bg-white rounded-md border">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Teacher KYC Requests</h1>
+        <p className="text-muted-foreground text-sm">{records.length} requests</p>
+      </div>
+      <div className="bg-card rounded-2xl border border-border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -118,13 +121,13 @@ export default function AdminKycPage() {
             {records.map((record) => (
               <TableRow key={record.id}>
                 <TableCell>
-                  <div className="font-medium">{record.teacher.name || "Unknown"}</div>
-                  <div className="text-sm text-gray-500">{record.teacher.email}</div>
+                  <div className="font-medium text-foreground">{record.teacher.name || "Unknown"}</div>
+                  <div className="text-sm text-muted-foreground">{record.teacher.email}</div>
                 </TableCell>
                 <TableCell>
-                  <div className="text-sm">{record.teacher.phoneNumber || "N/A"}</div>
+                  <div className="text-sm text-foreground">{record.teacher.phoneNumber || "N/A"}</div>
                 </TableCell>
-                <TableCell className="capitalize">
+                <TableCell className="capitalize text-foreground">
                   {record.documentType.replace("_", " ")}
                 </TableCell>
                 <TableCell>
@@ -195,7 +198,7 @@ export default function AdminKycPage() {
                       </DialogContent>
                     </Dialog>
                   ) : (
-                    <span className="text-gray-400 text-sm">Not uploaded</span>
+                    <span className="text-muted-foreground text-sm">Not uploaded</span>
                   )}
                 </TableCell>
                 <TableCell>
@@ -241,7 +244,7 @@ export default function AdminKycPage() {
             ))}
             {records.length === 0 && (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                   No KYC requests found.
                 </TableCell>
               </TableRow>

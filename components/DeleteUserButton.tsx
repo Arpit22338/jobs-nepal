@@ -24,7 +24,7 @@ export default function DeleteUserButton({ userId }: { userId: string }) {
     <button
       onClick={handleDelete}
       disabled={isDeleting}
-      className="text-red-600 hover:text-red-900 disabled:opacity-50 ml-4"
+      className="text-destructive hover:text-destructive/80 disabled:opacity-50 ml-4"
     >
       {isDeleting ? "Deleting..." : "Delete"}
     </button>

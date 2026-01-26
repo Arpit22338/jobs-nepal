@@ -101,7 +101,7 @@ export default function PeoplePage() {
           users.map((user) => (
             <div key={user.id} className="glass-card p-6 rounded-2xl border border-border/50 hover:border-primary/50 transition-all duration-300 group flex flex-col">
               <div className="flex items-center gap-4 mb-4">
-                <div className="relative w-16 h-16 flex-shrink-0">
+                <div className="relative w-16 h-16 shrink-0">
                   {user.image ? (
                     <Image
                       src={user.image}

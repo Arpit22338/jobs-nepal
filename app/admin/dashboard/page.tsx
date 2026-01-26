@@ -124,9 +124,9 @@ export default async function AdminDashboard() {
                   <td className="px-6 py-4 whitespace-nowrap font-medium text-foreground">{user.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-muted-foreground">{user.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${user.role === 'ADMIN' ? 'bg-red-100 text-red-800' :
-                        user.role === 'EMPLOYER' ? 'bg-blue-100 text-blue-800' :
-                          'bg-green-100 text-green-800'
+                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${user.role === 'ADMIN' ? 'bg-red-500/10 text-red-500 dark:text-red-400' :
+                        user.role === 'EMPLOYER' ? 'bg-blue-500/10 text-blue-500 dark:text-blue-400' :
+                          'bg-green-500/10 text-green-500 dark:text-green-400'
                       }`}>
                       {user.role}
                     </span>

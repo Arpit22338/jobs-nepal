@@ -64,7 +64,7 @@ export default function AvatarUpload({ currentImage, onImageChange }: AvatarUplo
   return (
     <div className="flex flex-col items-center space-y-4">
       <div className="relative group">
-        <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-100 shadow-md bg-gray-50 flex items-center justify-center">
+        <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-border shadow-md bg-muted flex items-center justify-center">
           {preview ? (
             <Image 
               src={preview} 
@@ -81,7 +81,7 @@ export default function AvatarUpload({ currentImage, onImageChange }: AvatarUplo
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-all transform hover:scale-105"
+          className="absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105"
           title="Upload Profile Picture"
         >
           <Camera size={18} />
@@ -97,12 +97,12 @@ export default function AvatarUpload({ currentImage, onImageChange }: AvatarUplo
       />
 
       {error && (
-        <p className="text-red-500 text-sm text-center bg-red-50 px-3 py-1 rounded-full">
+        <p className="text-destructive text-sm text-center bg-destructive/10 px-3 py-1 rounded-full">
           {error}
         </p>
       )}
       
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-muted-foreground">
         Max 1MB. JPG, PNG or WebP.
       </p>
     </div>
@@ -112,7 +112,7 @@ export default function AvatarUpload({ currentImage, onImageChange }: AvatarUplo
 function UserPlaceholder() {
   return (
     <svg 
-      className="w-16 h-16 text-gray-300" 
+      className="w-16 h-16 text-muted-foreground" 
       fill="currentColor" 
       viewBox="0 0 24 24"
     >

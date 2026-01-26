@@ -65,7 +65,7 @@ export default function CoursesList({ courses }: { courses: Course[] }) {
                   </div>
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                 {course.price > 0 && (
                   <div className={`absolute top-4 right-4 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center z-10 backdrop-blur-md border shadow-lg ${course.isUnlocked

@@ -74,7 +74,7 @@ export function PaymentModal({ isOpen, onClose, planName, amount, onSuccess }: P
     };
 
     return (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[110] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-110 flex items-center justify-center p-4">
             <div className="glass-card rounded-[40px] max-w-xl w-full relative overflow-hidden shadow-2xl border-white/40 ring-1 ring-primary/20 bg-card">
                 {/* Header */}
                 <div className="p-8 border-b border-border/40 flex items-center justify-between bg-accent/10">

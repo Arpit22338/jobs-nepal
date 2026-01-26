@@ -25,7 +25,7 @@ export default function DeleteTalentButton({ postId }: { postId: string }) {
     <button
       onClick={handleDelete}
       disabled={isDeleting}
-      className="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors"
+      className="text-destructive hover:text-destructive/80 p-1 rounded hover:bg-destructive/10 transition-colors"
       title="Delete Post"
     >
       {isDeleting ? (

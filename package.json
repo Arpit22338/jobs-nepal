@@ -34,6 +34,7 @@
     "react-dom": "^19.2.1",
     "react-hook-form": "^7.67.0",
     "react-markdown": "^10.1.0",
+    "recharts": "^3.7.0",
     "stripe": "^20.0.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",

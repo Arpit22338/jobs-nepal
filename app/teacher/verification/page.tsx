@@ -128,18 +128,18 @@ export default function TeacherVerificationPage() {
   return (
     <div className="max-w-2xl mx-auto py-12 px-4">
       <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Teacher Verification</h1>
-        <p className="text-gray-600">
-          To maintain quality, we require a one-time verification fee of <span className="font-bold text-gray-900">Rs. 499</span>.
+        <h1 className="text-3xl font-bold text-foreground mb-4">Teacher Verification</h1>
+        <p className="text-muted-foreground">
+          To maintain quality, we require a one-time verification fee of <span className="font-bold text-foreground">Rs. 499</span>.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-        <div className="p-6 bg-gray-50 border-b border-gray-200">
-          <h2 className="font-semibold text-lg mb-2">Step 1: Make Payment</h2>
-          <p className="text-sm text-gray-600 mb-4">Scan the QR code or use the details below to pay.</p>
+      <div className="bg-card rounded-2xl shadow-lg overflow-hidden border border-border">
+        <div className="p-6 bg-muted border-b border-border">
+          <h2 className="font-semibold text-lg mb-2 text-foreground">Step 1: Make Payment</h2>
+          <p className="text-sm text-muted-foreground mb-4">Scan the QR code or use the details below to pay.</p>
           
-          <div className="flex flex-col md:flex-row gap-8 items-center justify-center bg-white p-6 rounded-lg border border-gray-200">
+          <div className="flex flex-col md:flex-row gap-8 items-center justify-center bg-card p-6 rounded-lg border border-border">
             <div className="flex gap-4">
                 <button 
                   type="button"
@@ -149,7 +149,7 @@ export default function TeacherVerificationPage() {
                     <div className="relative w-32 h-32 mb-2 transition-transform group-hover:scale-105">
                         <Image src="/esewa-qr.jpg" alt="eSewa QR" fill className="object-contain" />
                     </div>
-                    <span className="text-xs font-medium text-gray-500 group-hover:text-blue-600 transition-colors">eSewa (Tap to zoom)</span>
+                    <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors">eSewa (Tap to zoom)</span>
                 </button>
                 <button 
                   type="button"
@@ -159,28 +159,28 @@ export default function TeacherVerificationPage() {
                     <div className="relative w-32 h-32 mb-2 transition-transform group-hover:scale-105">
                         <Image src="/khalti-qr.jpg" alt="Khalti QR" fill className="object-contain" />
                     </div>
-                    <span className="text-xs font-medium text-gray-500 group-hover:text-blue-600 transition-colors">Khalti (Tap to zoom)</span>
+                    <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors">Khalti (Tap to zoom)</span>
                 </button>
             </div>
             
             <div className="text-left space-y-3">
               <div>
-                  <p className="font-semibold text-gray-900">E-Wallet Payment</p>
-                  <p className="text-sm text-gray-600">Send Rs. 499 to:</p>
+                  <p className="font-semibold text-foreground">E-Wallet Payment</p>
+                  <p className="text-sm text-muted-foreground">Send Rs. 499 to:</p>
               </div>
-              <div className="bg-gray-50 p-3 rounded border border-gray-200">
-                  <p className="text-lg font-mono font-bold text-blue-600">9808467028</p>
-                  <p className="text-xs text-gray-500">(eSewa / Khalti)</p>
+              <div className="bg-muted p-3 rounded border border-border">
+                  <p className="text-lg font-mono font-bold text-primary">9808467028</p>
+                  <p className="text-xs text-muted-foreground">(eSewa / Khalti)</p>
               </div>
             </div>
           </div>
         </div>
 
         <div className="p-6">
-          <h2 className="font-semibold text-lg mb-4">Step 2: Verify Payment</h2>
+          <h2 className="font-semibold text-lg mb-4 text-foreground">Step 2: Verify Payment</h2>
           
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-foreground mb-2">
               Payment Phone Number
             </label>
             <input
@@ -188,12 +188,12 @@ export default function TeacherVerificationPage() {
               placeholder="e.g. 98XXXXXXXX"
               value={paymentPhone}
               onChange={(e) => setPaymentPhone(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary"
             />
-            <p className="text-xs text-gray-500 mt-1">Enter the phone number used to make the payment.</p>
+            <p className="text-xs text-muted-foreground mt-1">Enter the phone number used to make the payment.</p>
           </div>
 
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:bg-gray-50 transition-colors relative">
+          <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-muted/50 transition-colors relative">
             <input
               type="file"
               accept="image/*"
@@ -213,8 +213,8 @@ export default function TeacherVerificationPage() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center text-gray-500">
-                <Upload size={48} className="mb-4 text-gray-400" />
+              <div className="flex flex-col items-center text-muted-foreground">
+                <Upload size={48} className="mb-4" />
                 <p className="font-medium">Click to upload payment screenshot</p>
                 <p className="text-xs mt-2">Supports JPG, PNG (Max 5MB)</p>
               </div>
@@ -222,7 +222,7 @@ export default function TeacherVerificationPage() {
           </div>
 
           {error && (
-            <div className="mt-4 flex items-center text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+            <div className="mt-4 flex items-center text-destructive text-sm bg-destructive/10 p-3 rounded-lg">
               <AlertCircle size={16} className="mr-2" />
               {error}
             </div>
@@ -231,7 +231,7 @@ export default function TeacherVerificationPage() {
           <button
             onClick={handleSubmit}
             disabled={loading || !screenshot}
-            className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full mt-6 bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? "Submitting..." : "Submit for Verification"}
           </button>
@@ -241,7 +241,7 @@ export default function TeacherVerificationPage() {
       {/* Zoom Modal */}
       {zoomedImage && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-90 p-4 cursor-pointer"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black bg-opacity-90 p-4 cursor-pointer"
           onClick={() => setZoomedImage(null)}
         >
           <div className="relative max-w-full max-h-full flex flex-col items-center" onClick={(e) => e.stopPropagation()}>

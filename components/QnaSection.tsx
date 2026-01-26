@@ -44,6 +44,7 @@ export default function QnaSection({
     employerId,
     isAdmin
 }: QnaSectionProps) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [questions, setQuestions] = useState(initialQuestions);
     const [newQuestionContent, setNewQuestionContent] = useState("");
     const [replyContents, setReplyContents] = useState<{ [key: string]: string }>({});
@@ -125,9 +126,9 @@ export default function QnaSection({
                 ) : (
                     questions.map((q) => (
                         <div key={q.id} className="space-y-4">
-                            <div className="glass-card p-6 rounded-[32px] border-primary/10">
+                            <div className="glass-card p-6 rounded-4xl border-primary/10">
                                 <div className="flex items-start gap-4 mb-4">
-                                    <Link href={`/profile/${q.userId}`} className="flex-shrink-0 group">
+                                    <Link href={`/profile/${q.userId}`} className="shrink-0 group">
                                         {q.user.image ? (
                                             <Image
                                                 src={q.user.image}
@@ -157,7 +158,7 @@ export default function QnaSection({
                                                             await deleteQuestion(q.id);
                                                             window.location.reload();
                                                         }}
-                                                        className="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-xl transition-all"
+                                                        className="text-destructive/70 hover:text-destructive p-2 hover:bg-destructive/10 rounded-xl transition-all"
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -213,7 +214,7 @@ export default function QnaSection({
                                                                     await deleteAnswer(answer.id);
                                                                     window.location.reload();
                                                                 }}
-                                                                className="text-red-400 hover:text-red-600 p-1.5 transition-colors"
+                                                                className="text-destructive/70 hover:text-destructive p-1.5 transition-colors"
                                                             >
                                                                 <Trash2 size={14} />
                                                             </button>

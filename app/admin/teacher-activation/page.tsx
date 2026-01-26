@@ -94,9 +94,12 @@ export default function TeacherActivationPage() {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Teacher Activation Requests</h1>
-      <div className="bg-white rounded-md border">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Teacher Activation Requests</h1>
+        <p className="text-muted-foreground text-sm">{requests.length} requests</p>
+      </div>
+      <div className="bg-card rounded-2xl border border-border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -111,14 +114,14 @@ export default function TeacherActivationPage() {
             {requests.map((req) => (
               <TableRow key={req.id}>
                 <TableCell>
-                  <div className="font-medium">{req.teacher.name || "Unknown"}</div>
-                  <div className="text-sm text-gray-500">{req.teacher.email}</div>
+                  <div className="font-medium text-foreground">{req.teacher.name || "Unknown"}</div>
+                  <div className="text-sm text-muted-foreground">{req.teacher.email}</div>
                 </TableCell>
                 <TableCell>
-                  <div className="text-sm">Phone: {req.paymentPhone}</div>
+                  <div className="text-sm text-foreground">Phone: {req.paymentPhone}</div>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="link" size="sm" className="p-0 h-auto">
+                      <Button variant="link" size="sm" className="p-0 h-auto text-primary">
                         <Eye className="w-3 h-3 mr-1" /> View Screenshot
                       </Button>
                     </DialogTrigger>
@@ -153,7 +156,7 @@ export default function TeacherActivationPage() {
                     {req.status}
                   </Badge>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-foreground">
                   {new Date(req.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell>
@@ -180,7 +183,7 @@ export default function TeacherActivationPage() {
             ))}
             {requests.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                   No activation requests found.
                 </TableCell>
               </TableRow>

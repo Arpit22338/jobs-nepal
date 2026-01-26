@@ -39,7 +39,7 @@ export default function DeleteSavedJobButton({ jobId }: DeleteSavedJobButtonProp
     <button
       onClick={handleUnsave}
       disabled={loading}
-      className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
+      className="text-destructive hover:text-destructive/80 text-sm font-medium flex items-center"
     >
       {loading ? "Removing..." : "Remove from Saved"}
     </button>

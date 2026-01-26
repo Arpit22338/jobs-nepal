@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { Target, Heart, Globe, Award, Users } from "lucide-react";
 
 export default function AboutPage() {
@@ -9,10 +8,10 @@ export default function AboutPage() {
             <section className="relative py-20 bg-accent/30 overflow-hidden">
                 <div className="container mx-auto px-4 text-center relative z-10">
                     <h1 className="text-5xl md:text-6xl font-black text-foreground mb-6">
-                        Building Nepal's <span className="text-primary">Future</span>
+                        Building Nepal&apos;s <span className="text-primary">Future</span>
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                        We are on a mission to bridge the gap between talent and opportunity. RojgaarNepal is more than just a job board; it's a movement to empower the workforce of tomorrow.
+                        We are on a mission to bridge the gap between talent and opportunity. RojgaarNepal is more than just a job board; it&apos;s a movement to empower the workforce of tomorrow.
                     </p>
                 </div>
             </section>
@@ -46,7 +45,7 @@ export default function AboutPage() {
                     <div className="relative h-[400px] w-full rounded-3xl overflow-hidden glass-card p-2">
                         <div className="relative h-full w-full rounded-2xl overflow-hidden bg-accent">
                             {/* Placeholder for About Image if we had one, or a nice gradient/pattern */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-blue-600/20 flex items-center justify-center">
+                            <div className="absolute inset-0 bg-linear-to-br from-primary/20 to-blue-600/20 flex items-center justify-center">
                                 <span className="text-primary font-black text-2xl">RojgaarNepal</span>
                             </div>
                         </div>
@@ -58,22 +57,22 @@ export default function AboutPage() {
             <section className="container mx-auto px-4">
                 <h2 className="text-3xl font-bold text-center text-foreground mb-12">Our Core Values</h2>
                 <div className="grid md:grid-cols-3 gap-8">
-                    <div className="p-8 rounded-3xl bg-card border hover:shadow-lg transition-all text-center space-y-4">
-                        <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto text-red-600">
+                    <div className="p-8 rounded-3xl bg-card border border-border hover:shadow-lg transition-all text-center space-y-4">
+                        <div className="w-14 h-14 bg-red-500/10 dark:bg-red-500/20 rounded-full flex items-center justify-center mx-auto text-red-500">
                             <Heart size={28} />
                         </div>
                         <h3 className="text-xl font-bold text-foreground">Integrity</h3>
                         <p className="text-muted-foreground">We operate with total transparency and honesty in every interaction.</p>
                     </div>
-                    <div className="p-8 rounded-3xl bg-card border hover:shadow-lg transition-all text-center space-y-4">
-                        <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mx-auto text-blue-600">
+                    <div className="p-8 rounded-3xl bg-card border border-border hover:shadow-lg transition-all text-center space-y-4">
+                        <div className="w-14 h-14 bg-blue-500/10 dark:bg-blue-500/20 rounded-full flex items-center justify-center mx-auto text-blue-500">
                             <Award size={28} />
                         </div>
                         <h3 className="text-xl font-bold text-foreground">Excellence</h3>
                         <p className="text-muted-foreground">We strive for the highest quality in our platform and support.</p>
                     </div>
-                    <div className="p-8 rounded-3xl bg-card border hover:shadow-lg transition-all text-center space-y-4">
-                        <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600">
+                    <div className="p-8 rounded-3xl bg-card border border-border hover:shadow-lg transition-all text-center space-y-4">
+                        <div className="w-14 h-14 bg-green-500/10 dark:bg-green-500/20 rounded-full flex items-center justify-center mx-auto text-green-500">
                             <Users size={28} />
                         </div>
                         <h3 className="text-xl font-bold text-foreground">Community</h3>
