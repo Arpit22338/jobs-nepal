@@ -57,6 +57,22 @@ export default function UsersPage() {
     }
   };
 
+  const deleteUser = async (id: string) => {
+    if (!confirm("Delete this user permanently? This action cannot be undone.")) return;
+    try {
+      const res = await fetch(`/api/admin/users/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setUsers((prev) => prev.filter((u) => u.id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.error || "Delete failed");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error performing action");
+    }
+  };
+
   const filteredUsers = users.filter(user => {
     const matchesSearch = !searchQuery || 
       user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -149,16 +165,28 @@ export default function UsersPage() {
                 </td>
                 <td className="p-4 text-sm text-muted-foreground">{new Date(user.createdAt).toLocaleDateString()}</td>
                 <td className="p-4">
-                  <button
-                    onClick={() => toggleBan(user.id, user.isBanned)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                      user.isBanned 
-                        ? "bg-green-500/20 text-green-400 hover:bg-green-500/30" 
-                        : "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-                    }`}
-                  >
-                    {user.isBanned ? "Unban" : "Ban"}
-                  </button>
+                  {user.role === "ADMIN" ? (
+                    <span className="text-xs text-muted-foreground">Protected</span>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => toggleBan(user.id, user.isBanned)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                          user.isBanned 
+                            ? "bg-green-500/20 text-green-400 hover:bg-green-500/30" 
+                            : "bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                        }`}
+                      >
+                        {user.isBanned ? "Unban" : "Ban"}
+                      </button>
+                      <button
+                        onClick={() => deleteUser(user.id)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium bg-destructive/20 text-destructive hover:bg-destructive/30"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

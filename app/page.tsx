@@ -25,8 +25,9 @@ export default async function Home() {
       <section className="relative pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden">
         {/* Abstract Background Shapes */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-screen h-full -z-10 bg-background overflow-hidden">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/30 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
+          <div className="absolute inset-0 hidden dark:block bg-linear-to-br from-primary/10 via-transparent to-secondary/20"></div>
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 hidden dark:block"></div>
+          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-secondary/30 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2 hidden dark:block"></div>
           {/* Meteor particles */}
           <Meteors number={15} />
         </div>

@@ -67,7 +67,7 @@ export default async function JobApplicationsPage({ params }: Props) {
               <li key={application.id} className="p-6 hover:bg-accent/50 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <div className="shrink-0">
+                    <div className="flex-none">
                       {application.user.image ? (
                         <Image
                           src={application.user.image}

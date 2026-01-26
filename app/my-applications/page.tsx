@@ -98,7 +98,7 @@ export default function MyApplicationsPage() {
                       <p className="text-sm font-bold text-primary truncate">
                         {app.job.title}
                       </p>
-                      <div className="ml-2 shrink-0 flex">
+                      <div className="ml-2 flex-none flex">
                         <p className={`px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(app.status)}`}>
                           {app.status}
                         </p>

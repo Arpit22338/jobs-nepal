@@ -6,7 +6,7 @@ import {
   CheckCircle, XCircle, Star, RefreshCw, ArrowRight, Loader2,
   Target, Mic, MicOff, Video,
   Volume2, VolumeX, Play, Download, Trash2,
-  BarChart3, PieChart as PieChartIcon, Settings, Camera, StopCircle
+  BarChart3, PieChart as PieChartIcon, Settings, Camera, StopCircle, X
 } from "lucide-react";
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -519,17 +519,7 @@ export default function InterviewPrepPage() {
   // =====================
   // Practice Flow
   // =====================
-  const startPractice = async () => {
-    // Request microphone permission first if voice mode is enabled
-    if (interviewMode === "voice") {
-      setShowMicPrompt(true);
-      const hasPermission = await requestMicrophonePermission();
-      if (!hasPermission) {
-        return; // Don't start practice if permission denied
-      }
-      setShowMicPrompt(false);
-    }
-
+  const beginPractice = async () => {
     setCurrentQuestionIndex(0);
     setUserAnswer("");
     setTranscript("");
@@ -546,6 +536,16 @@ export default function InterviewPrepPage() {
         speakText(questions[0].question);
       }, 1000);
     }
+  };
+
+  const startPractice = async () => {
+    // Show mic prompt for voice mode and wait for user to allow
+    if (interviewMode === "voice") {
+      setShowMicPrompt(true);
+      return;
+    }
+
+    await beginPractice();
   };
 
   const getFeedback = async () => {
@@ -679,6 +679,58 @@ export default function InterviewPrepPage() {
   // =====================
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-6 pb-24">
+      {showMicPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-card rounded-2xl shadow-2xl border border-border max-w-md w-full overflow-hidden">
+            <div className="p-4 border-b border-border flex items-center justify-between">
+              <h3 className="font-semibold text-foreground">Allow Microphone Access</h3>
+              <button
+                onClick={() => setShowMicPrompt(false)}
+                className="p-2 rounded-full hover:bg-accent transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div className="flex items-start gap-3">
+                <Mic size={20} className="text-primary mt-0.5" />
+                <div>
+                  <p className="text-sm text-foreground font-medium">RojgaarAI needs your microphone</p>
+                  <p className="text-sm text-muted-foreground">Click “Allow” to enable voice interview. You can change this anytime in your browser site settings.</p>
+                </div>
+              </div>
+
+              {micStatus === "denied" && (
+                <div className="text-sm text-red-500">
+                  Permission blocked. Please allow the microphone in your browser settings and try again.
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  onClick={() => setShowMicPrompt(false)}
+                  className="px-4 py-2 rounded-lg border border-border text-foreground hover:bg-accent transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    setMicStatus("prompt");
+                    const ok = await requestMicrophonePermission();
+                    if (ok) {
+                      setShowMicPrompt(false);
+                      await beginPractice();
+                    }
+                  }}
+                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  Allow
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-black text-foreground mb-2">
@@ -795,7 +847,7 @@ export default function InterviewPrepPage() {
                 <button
                   onClick={() => {
                     setMicStatus("prompt");
-                    setShowMicPrompt(true);
+                    setShowMicPrompt(false);
                     setInterviewMode("voice");
                   }}
                   className={`p-4 rounded-xl border text-left transition-all ${
