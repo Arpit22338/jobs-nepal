@@ -325,7 +325,7 @@ function JobsContent() {
                   <div className="flex md:flex-col items-center md:items-end gap-3 w-full md:w-auto pt-4 md:pt-0 border-t md:border-0 border-border/40">
                     <div className="flex items-center gap-2 mb-2">
                       <SaveJobButton jobId={job.id} initialSaved={savedJobIds.includes(job.id)} />
-                      {session?.user?.id === job.employerId && (
+                      {(session?.user?.id === job.employerId || session?.user?.role === "ADMIN") && (
                         <button
                           onClick={() => handleDeleteJob(job.id)}
                           className="p-3 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all"

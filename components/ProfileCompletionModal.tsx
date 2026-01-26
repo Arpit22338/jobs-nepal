@@ -26,6 +26,7 @@ export default function ProfileCompletionModal({ userName, userEmail }: ProfileC
     const [customSkill, setCustomSkill] = useState("");
     const [location, setLocation] = useState("");
     const [experience, setExperience] = useState("");
+    const [gender, setGender] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
 
@@ -55,13 +56,17 @@ export default function ProfileCompletionModal({ userName, userEmail }: ProfileC
             setError("Please enter your location");
             return;
         }
+        if (!gender) {
+            setError("Please select your gender");
+            return;
+        }
 
         setIsSubmitting(true);
         try {
             const res = await fetch("/api/profile/complete", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ skills, location, experience }),
+                body: JSON.stringify({ skills, location, experience, gender }),
             });
 
             if (!res.ok) {
@@ -169,6 +174,33 @@ export default function ProfileCompletionModal({ userName, userEmail }: ProfileC
                             placeholder="e.g., Kathmandu, Nepal"
                             className="mt-2 w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                         />
+                    </div>
+
+                    {/* Gender */}
+                    <div>
+                        <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-1">
+                            Gender <span className="text-destructive">*</span>
+                        </label>
+                        <div className="mt-2 flex gap-2">
+                            {[
+                                { value: "M", label: "Male" },
+                                { value: "F", label: "Female" },
+                                { value: "O", label: "Other" }
+                            ].map((g) => (
+                                <button
+                                    key={g.value}
+                                    type="button"
+                                    onClick={() => setGender(g.value)}
+                                    className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                        gender === g.value
+                                            ? "bg-primary text-primary-foreground"
+                                            : "bg-secondary text-secondary-foreground hover:bg-accent border border-input"
+                                    }`}
+                                >
+                                    {g.label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Experience (optional) */}

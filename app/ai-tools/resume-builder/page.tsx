@@ -705,7 +705,7 @@ export default function ResumeBuilderPage() {
                   value={personalInfo.fullName}
                   onChange={(e) => setPersonalInfo({ ...personalInfo, fullName: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-                  placeholder="John Doe"
+                  placeholder="Arpit Kafle"
                 />
               </div>
               <div>
@@ -715,7 +715,7 @@ export default function ResumeBuilderPage() {
                   value={personalInfo.email}
                   onChange={(e) => setPersonalInfo({ ...personalInfo, email: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-                  placeholder="john@example.com"
+                  placeholder="example@gmail.com"
                 />
               </div>
               <div>
@@ -746,7 +746,7 @@ export default function ResumeBuilderPage() {
                   onChange={(e) => setPersonalInfo({ ...personalInfo, linkedin: e.target.value })}
                   disabled={personalInfo.noLinkedin}
                   className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all disabled:opacity-50"
-                  placeholder="linkedin.com/in/johndoe"
+                  placeholder="linkedin.com/in/arpitkafle"
                 />
                 <label className="flex items-center gap-2 mt-2 text-sm text-muted-foreground cursor-pointer">
                   <input
@@ -1210,7 +1210,7 @@ export default function ResumeBuilderPage() {
                             value={proj.link}
                             onChange={(e) => setProjects(projects.map(x => x.id === proj.id ? { ...x, link: e.target.value } : x))}
                             className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/50 transition-all"
-                            placeholder="github.com/username/project"
+                            placeholder="github.com/arpitkafle/project"
                           />
                         </div>
                         <div>

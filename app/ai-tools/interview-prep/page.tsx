@@ -132,7 +132,11 @@ export default function InterviewPrepPage() {
   const [micStatus, setMicStatus] = useState<
     "prompt" | "granted" | "denied" | "checking"
   >("prompt");
-  const [voiceReady, setVoiceReady] = useState(false);
+
+  // Timer state
+  const [, setTimeLimit] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   // Video recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -159,7 +163,6 @@ export default function InterviewPrepPage() {
         const voices = synthRef.current?.getVoices();
         if (voices && voices.length > 0) {
           console.log("Voices loaded:", voices.length);
-          setVoiceReady(true);
         }
       };
 
@@ -194,6 +197,50 @@ export default function InterviewPrepPage() {
       }
     }
   }, []);
+
+  // Timer countdown effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (isTimerRunning && timeRemaining > 0) {
+      interval = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) {
+            setIsTimerRunning(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isTimerRunning, timeRemaining]);
+
+  // Helper to get time limit based on question category
+  const getQuestionTimeLimit = (category?: string): number => {
+    switch (category) {
+      case "Technical":
+        return 180; // 3 minutes
+      case "Behavioral":
+        return 150; // 2.5 minutes
+      case "Situational":
+        return 150; // 2.5 minutes
+      case "Culture Fit":
+        return 120; // 2 minutes
+      case "Career Goals":
+        return 120; // 2 minutes
+      default:
+        return 120; // 2 minutes default
+    }
+  };
+
+  // Format seconds to MM:SS
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
   // Load saved videos from IndexedDB
   useEffect(() => {
@@ -366,6 +413,7 @@ export default function InterviewPrepPage() {
         synthRef.current.speak(utterance);
       }, 150);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isMuted, interviewMode, micStatus],
   );
 
@@ -701,6 +749,12 @@ export default function InterviewPrepPage() {
     setFeedback(null);
     setStep("practice");
 
+    // Start timer for first question
+    const firstQuestionTime = getQuestionTimeLimit(questions[0]?.category);
+    setTimeLimit(firstQuestionTime);
+    setTimeRemaining(firstQuestionTime);
+    setIsTimerRunning(true);
+
     if (interviewMode === "voice" && enableVideoRecording) {
       await startVideoRecording();
     }
@@ -772,6 +826,12 @@ export default function InterviewPrepPage() {
       setFeedback(null);
       setStep("practice");
 
+      // Reset timer for next question
+      const nextQuestionTime = getQuestionTimeLimit(questions[nextIdx]?.category);
+      setTimeLimit(nextQuestionTime);
+      setTimeRemaining(nextQuestionTime);
+      setIsTimerRunning(true);
+
       // Speak next question
       if (interviewMode === "voice" && enableAIVoice) {
         setTimeout(() => {
@@ -780,6 +840,7 @@ export default function InterviewPrepPage() {
       }
     } else {
       // End of interview
+      setIsTimerRunning(false);
       finishInterview();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1296,9 +1357,22 @@ export default function InterviewPrepPage() {
               <span className="text-sm font-medium text-muted-foreground">
                 Question {currentQuestionIndex + 1} of {questions.length}
               </span>
-              <span className="text-sm font-medium px-3 py-1 rounded-full bg-primary/10 text-primary">
-                {questions[currentQuestionIndex].category}
-              </span>
+              <div className="flex items-center gap-3">
+                {/* Timer Display */}
+                <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-mono text-sm font-bold ${
+                  timeRemaining <= 30 
+                    ? "bg-red-500/10 text-red-500 animate-pulse" 
+                    : timeRemaining <= 60 
+                    ? "bg-yellow-500/10 text-yellow-500" 
+                    : "bg-green-500/10 text-green-500"
+                }`}>
+                  <i className="bx bx-time-five"></i>
+                  {formatTime(timeRemaining)}
+                </div>
+                <span className="text-sm font-medium px-3 py-1 rounded-full bg-primary/10 text-primary">
+                  {questions[currentQuestionIndex].category}
+                </span>
+              </div>
             </div>
 
             {/* Progress Bar */}

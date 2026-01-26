@@ -877,12 +877,12 @@ export default function EditProfilePage() {
             <div className="p-6 pt-0 space-y-4">
               <div>
                 <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2"><i className="bx bxl-linkedin text-blue-600"></i> LinkedIn</label>
-                <input type="url" value={formData.linkedinUrl} onChange={(e) => updateField("linkedinUrl", e.target.value)} disabled={formData.noLinkedin} className={`w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 ${formData.noLinkedin ? "opacity-50" : ""}`} placeholder="https://linkedin.com/in/yourname" />
+                <input type="url" value={formData.linkedinUrl} onChange={(e) => updateField("linkedinUrl", e.target.value)} disabled={formData.noLinkedin} className={`w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 ${formData.noLinkedin ? "opacity-50" : ""}`} placeholder="https://linkedin.com/in/arpitkafle" />
                 <label className="flex items-center gap-2 mt-1 cursor-pointer"><input type="checkbox" checked={formData.noLinkedin} onChange={(e) => updateField("noLinkedin", e.target.checked)} className="w-4 h-4" /><span className="text-sm text-muted-foreground">I don&apos;t have LinkedIn</span></label>
               </div>
               <div>
                 <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2"><i className="bx bxl-github"></i> GitHub</label>
-                <input type="url" value={formData.githubUrl} onChange={(e) => updateField("githubUrl", e.target.value)} disabled={formData.noGithub} className={`w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 ${formData.noGithub ? "opacity-50" : ""}`} placeholder="https://github.com/yourname" />
+                <input type="url" value={formData.githubUrl} onChange={(e) => updateField("githubUrl", e.target.value)} disabled={formData.noGithub} className={`w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 ${formData.noGithub ? "opacity-50" : ""}`} placeholder="https://github.com/arpitkafle" />
                 <label className="flex items-center gap-2 mt-1 cursor-pointer"><input type="checkbox" checked={formData.noGithub} onChange={(e) => updateField("noGithub", e.target.checked)} className="w-4 h-4" /><span className="text-sm text-muted-foreground">I don&apos;t have GitHub</span></label>
               </div>
               <div>
@@ -892,7 +892,7 @@ export default function EditProfilePage() {
               </div>
               <div>
                 <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2"><i className="bx bxl-twitter text-blue-400"></i> Twitter/X</label>
-                <input type="url" value={formData.twitterUrl} onChange={(e) => updateField("twitterUrl", e.target.value)} disabled={formData.noTwitter} className={`w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 ${formData.noTwitter ? "opacity-50" : ""}`} placeholder="https://twitter.com/yourname" />
+                <input type="url" value={formData.twitterUrl} onChange={(e) => updateField("twitterUrl", e.target.value)} disabled={formData.noTwitter} className={`w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 ${formData.noTwitter ? "opacity-50" : ""}`} placeholder="https://twitter.com/arpitkafle" />
                 <label className="flex items-center gap-2 mt-1 cursor-pointer"><input type="checkbox" checked={formData.noTwitter} onChange={(e) => updateField("noTwitter", e.target.checked)} className="w-4 h-4" /><span className="text-sm text-muted-foreground">I don&apos;t have Twitter</span></label>
               </div>
               <div>

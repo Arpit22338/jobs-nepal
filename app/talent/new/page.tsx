@@ -655,17 +655,17 @@ export default function ShareTalentPage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2"><Linkedin size={16} /> LinkedIn</label>
-                  <input type="url" value={formData.linkedinUrl} onChange={(e) => updateField("linkedinUrl", e.target.value)} className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 transition-all" placeholder="https://linkedin.com/in/yourname" />
+                  <input type="url" value={formData.linkedinUrl} onChange={(e) => updateField("linkedinUrl", e.target.value)} className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 transition-all" placeholder="https://linkedin.com/in/arpitkafle" />
                 </div>
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2"><Github size={16} /> GitHub</label>
-                  <input type="url" value={formData.githubUrl} onChange={(e) => updateField("githubUrl", e.target.value)} className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 transition-all" placeholder="https://github.com/yourname" />
+                  <input type="url" value={formData.githubUrl} onChange={(e) => updateField("githubUrl", e.target.value)} className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 transition-all" placeholder="https://github.com/arpitkafle" />
                 </div>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2"><Palette size={16} /> Behance/Dribbble</label>
-                  <input type="url" value={formData.behanceUrl} onChange={(e) => updateField("behanceUrl", e.target.value)} className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 transition-all" placeholder="https://behance.net/yourname" />
+                  <input type="url" value={formData.behanceUrl} onChange={(e) => updateField("behanceUrl", e.target.value)} className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50 transition-all" placeholder="https://behance.net/arpitkafle" />
                 </div>
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2"><Link2 size={16} /> Other Links</label>
@@ -792,7 +792,7 @@ export default function ShareTalentPage() {
                       <div className="grid md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-foreground mb-1">Your Name *</label>
-                          <input type="text" value={customAiData.name} onChange={(e) => setCustomAiData({ ...customAiData, name: e.target.value })} className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50" placeholder="Your full name" />
+                          <input type="text" value={customAiData.name} onChange={(e) => setCustomAiData({ ...customAiData, name: e.target.value })} className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/50" placeholder="Arpit Kafle" />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-foreground mb-1">Job Title *</label>

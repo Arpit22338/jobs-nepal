@@ -45,13 +45,14 @@ export async function DELETE(req: Request) {
 
     const job = await prisma.job.findUnique({
       where: { id: jobId },
-      select: { employerId: true }
+      select: { id: true }
     });
 
-    if (!job || job.employerId !== session.user.id) {
+    if (!job) {
       return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }
 
+    // Admin can delete any job
     await prisma.job.delete({ where: { id: jobId } });
 
     return NextResponse.json({ success: true });

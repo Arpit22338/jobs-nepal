@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     }
 
     try {
-        const { skills, location, experience } = await req.json();
+        const { skills, location, experience, gender } = await req.json();
 
         // Validate required fields
         if (!skills || skills.length === 0) {
@@ -20,6 +20,12 @@ export async function POST(req: Request) {
         if (!location || location.trim() === "") {
             return NextResponse.json({ error: "Location is required" }, { status: 400 });
         }
+        if (!gender) {
+            return NextResponse.json({ error: "Gender is required" }, { status: 400 });
+        }
+
+        // Prepare metadata with gender
+        const metadata = JSON.stringify({ gender });
 
         // Upsert JobSeekerProfile
         await prisma.jobSeekerProfile.upsert({
@@ -28,12 +34,14 @@ export async function POST(req: Request) {
                 skills: Array.isArray(skills) ? skills.join(", ") : skills,
                 location: location.trim(),
                 experience: experience?.trim() || null,
+                metadata,
             },
             create: {
                 userId: session.user.id,
                 skills: Array.isArray(skills) ? skills.join(", ") : skills,
                 location: location.trim(),
                 experience: experience?.trim() || null,
+                metadata,
             },
         });
 

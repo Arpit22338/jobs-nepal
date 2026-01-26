@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
-import { Home, Briefcase, PlusCircle, User, X, Building2, Sparkles, Bookmark, FileText, MoreHorizontal } from "lucide-react";
+import { Home, Briefcase, PlusCircle, User, X, Building2, Sparkles, Bookmark, FileText, MoreHorizontal, MessageCircle, Award } from "lucide-react";
 
 export default function MobileFooter() {
     const pathname = usePathname();
@@ -62,10 +62,10 @@ export default function MobileFooter() {
     };
 
     const navItems = [
-        { href: "/", icon: Home, label: "Home" },
-        { href: "/jobs", icon: Briefcase, label: "Jobs" },
-        { icon: PlusCircle, label: "Post", isPrimary: true },
+        { href: "/my-certificates", icon: Award, label: "Certs" },
         { href: "/saved-jobs", icon: Bookmark, label: "Saved" },
+        { icon: PlusCircle, label: "Post", isPrimary: true },
+        { href: "/messages", icon: MessageCircle, label: "Chat" },
         { icon: MoreHorizontal, label: "More", isMore: true },
     ];
 
@@ -151,9 +151,9 @@ export default function MobileFooter() {
                 <div className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm md:hidden animate-in fade-in duration-200">
                     <div 
                         ref={moreMenuRef}
-                        className="absolute bottom-24 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 duration-300"
+                        className="absolute bottom-24 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 duration-300 max-h-[70vh] overflow-y-auto"
                     >
-                        <div className="p-4 border-b border-border flex items-center justify-between">
+                        <div className="p-4 border-b border-border flex items-center justify-between sticky top-0 bg-card z-10">
                             <h3 className="font-semibold text-foreground">Quick Access</h3>
                             <button 
                                 onClick={() => setShowMoreMenu(false)}
@@ -163,73 +163,92 @@ export default function MobileFooter() {
                             </button>
                         </div>
                         <div className="p-2 space-y-1">
+                            {/* Navigation Links */}
+                            <Link
+                                href="/"
+                                onClick={() => setShowMoreMenu(false)}
+                                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-accent transition-colors text-left"
+                            >
+                                <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
+                                    <Home size={20} className="text-foreground" />
+                                </div>
+                                <span className="font-medium text-foreground">Home</span>
+                            </Link>
+                            <Link
+                                href="/jobs"
+                                onClick={() => setShowMoreMenu(false)}
+                                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-accent transition-colors text-left"
+                            >
+                                <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center">
+                                    <Briefcase size={20} className="text-foreground" />
+                                </div>
+                                <span className="font-medium text-foreground">Find Jobs</span>
+                            </Link>
+                            
+                            <div className="border-t border-border my-2"></div>
+                            
+                            {/* User Features */}
                             <Link
                                 href="/my-applications"
                                 onClick={() => setShowMoreMenu(false)}
-                                className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-accent transition-colors text-left"
+                                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-accent transition-colors text-left"
                             >
-                                <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                                    <FileText size={24} className="text-blue-500" />
+                                <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                                    <FileText size={20} className="text-blue-500" />
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-foreground">My Applications</p>
-                                    <p className="text-sm text-muted-foreground">Track your job applications</p>
-                                </div>
-                            </Link>
-                            <Link
-                                href="/my-certificates"
-                                onClick={() => setShowMoreMenu(false)}
-                                className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-accent transition-colors text-left"
-                            >
-                                <div className="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center">
-                                    <i className="bx bx-award text-2xl text-yellow-500"></i>
-                                </div>
-                                <div>
-                                    <p className="font-semibold text-foreground">My Certificates</p>
-                                    <p className="text-sm text-muted-foreground">View earned certificates</p>
-                                </div>
+                                <span className="font-medium text-foreground">My Applications</span>
                             </Link>
                             <Link
                                 href="/profile"
                                 onClick={() => setShowMoreMenu(false)}
-                                className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-accent transition-colors text-left"
+                                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-accent transition-colors text-left"
                             >
-                                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                                    <User size={24} className="text-primary" />
+                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <User size={20} className="text-primary" />
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-foreground">Profile</p>
-                                    <p className="text-sm text-muted-foreground">View and edit your profile</p>
+                                <span className="font-medium text-foreground">Profile</span>
+                            </Link>
+                            
+                            {/* RojgaarAI - Featured */}
+                            <Link
+                                href="/messages/rojgaar-ai"
+                                onClick={() => setShowMoreMenu(false)}
+                                className="w-full flex items-center gap-3 p-3 rounded-xl bg-linear-to-r from-primary/5 to-primary/10 border border-primary/20 hover:from-primary/10 hover:to-primary/20 transition-all text-left"
+                            >
+                                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg shadow-primary/30">
+                                    <i className="bx bx-bot text-xl text-white"></i>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-foreground">RojgaarAI</span>
+                                    <span className="px-1.5 py-0.5 bg-primary/20 text-primary text-[10px] font-bold rounded">AI</span>
                                 </div>
                             </Link>
+                            
                             {(user?.role === "EMPLOYER" || user?.role === "ADMIN") && (
-                                <Link
-                                    href="/employer/dashboard"
-                                    onClick={() => setShowMoreMenu(false)}
-                                    className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-accent transition-colors text-left"
-                                >
-                                    <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center">
-                                        <i className="bx bx-briefcase text-2xl text-green-500"></i>
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold text-foreground">Manage Posts</p>
-                                        <p className="text-sm text-muted-foreground">View and delete your job posts</p>
-                                    </div>
-                                </Link>
+                                <>
+                                    <div className="border-t border-border my-2"></div>
+                                    <Link
+                                        href="/employer/dashboard"
+                                        onClick={() => setShowMoreMenu(false)}
+                                        className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-accent transition-colors text-left"
+                                    >
+                                        <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                                            <i className="bx bx-briefcase text-xl text-green-500"></i>
+                                        </div>
+                                        <span className="font-medium text-foreground">Manage Posts</span>
+                                    </Link>
+                                </>
                             )}
                             {user?.role === "ADMIN" && (
                                 <Link
                                     href="/admin/dashboard"
                                     onClick={() => setShowMoreMenu(false)}
-                                    className="w-full flex items-center gap-4 p-4 rounded-xl bg-red-500/5 border border-red-500/20 hover:bg-red-500/10 transition-colors text-left"
+                                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/20 hover:bg-red-500/10 transition-colors text-left"
                                 >
-                                    <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center">
-                                        <i className="bx bx-shield text-2xl text-red-500"></i>
+                                    <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+                                        <i className="bx bx-shield text-xl text-red-500"></i>
                                     </div>
-                                    <div>
-                                        <p className="font-semibold text-red-500">Admin Panel</p>
-                                        <p className="text-sm text-muted-foreground">Manage users and platform</p>
-                                    </div>
+                                    <span className="font-semibold text-red-500">Admin Panel</span>
                                 </Link>
                             )}
                         </div>
