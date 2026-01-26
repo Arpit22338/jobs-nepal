@@ -274,8 +274,8 @@ print(message.lower())   # hello, python!`}
               <tr className="border-t border-border"><td className="p-4">+</td><td className="p-4">Addition</td><td className="p-4">5 + 3 = 8</td></tr>
               <tr className="border-t border-border"><td className="p-4">-</td><td className="p-4">Subtraction</td><td className="p-4">5 - 3 = 2</td></tr>
               <tr className="border-t border-border"><td className="p-4">*</td><td className="p-4">Multiplication</td><td className="p-4">5 * 3 = 15</td></tr>
-              <tr className="border-t border-border"><td className="p-4">/</td><td className="p-4">Division</td><td className="p-4">5 / 2 = 2.5</td></tr>
-              <tr className="border-t border-border"><td className="p-4">//</td><td className="p-4">Floor Division</td><td className="p-4">5 // 2 = 2</td></tr>
+              <tr className="border-t border-border"><td className="p-4">{"/"}</td><td className="p-4">Division</td><td className="p-4">5 / 2 = 2.5</td></tr>
+              <tr className="border-t border-border"><td className="p-4">{"//"}</td><td className="p-4">Floor Division</td><td className="p-4">5 // 2 = 2</td></tr>
               <tr className="border-t border-border"><td className="p-4">%</td><td className="p-4">Modulus</td><td className="p-4">5 % 2 = 1</td></tr>
               <tr className="border-t border-border"><td className="p-4">**</td><td className="p-4">Exponent</td><td className="p-4">2 ** 3 = 8</td></tr>
             </tbody>
