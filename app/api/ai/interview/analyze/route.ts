@@ -1,5 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { callGroqAI } from "@/lib/groq";
+import * as z from "zod";
+
+// OWASP A03: Input validation schema
+const analyzeSchema = z.object({
+  questions: z.array(z.object({
+    question: z.string().max(1000),
+    category: z.string().max(50).optional(),
+  })).min(1).max(20),
+  answers: z.array(z.string().max(5000)).min(1).max(20),
+  jobTitle: z.string().max(100).optional(),
+  experienceLevel: z.string().max(50).optional(),
+});
+
+// Rate limiting
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const limit = rateLimitMap.get(userId);
+  if (!limit || now > limit.resetTime) {
+    rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
+    return true;
+  }
+  if (limit.count >= 10) return false;
+  limit.count++;
+  return true;
+}
 
 // Helper function to safely parse JSON from AI response
 function parseAIResponse(result: string) {
@@ -20,10 +48,24 @@ function parseAIResponse(result: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { questions, answers, jobTitle, experienceLevel } = body;
+    // OWASP A01: Authentication check
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    if (!questions || !answers || questions.length === 0) {
+    // OWASP A04: Rate limiting
+    if (!checkRateLimit(session.user.id)) {
+      return NextResponse.json({ error: "Too many requests. Please wait." }, { status: 429 });
+    }
+
+    const body = await req.json();
+    // OWASP A03: Input validation
+    const validatedData = analyzeSchema.parse(body);
+    
+    const { questions, answers, jobTitle, experienceLevel } = validatedData;
+
+    if (questions.length === 0) {
       return NextResponse.json(
         { success: false, error: "Questions and answers are required" },
         { status: 400 }

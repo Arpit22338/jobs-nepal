@@ -1,5 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { callGroqAI, AI_PROMPTS } from "@/lib/groq";
+import * as z from "zod";
+
+// OWASP A03: Input validation schema
+const interviewGenerateSchema = z.object({
+  jobTitle: z.string().min(2).max(100),
+  experienceLevel: z.string().max(50),
+  industry: z.string().max(100).optional(),
+  companyName: z.string().max(100).optional(),
+  focusTopics: z.array(z.string().max(100)).max(10).optional(),
+});
+
+// Rate limiting
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const limit = rateLimitMap.get(userId);
+  if (!limit || now > limit.resetTime) {
+    rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
+    return true;
+  }
+  if (limit.count >= 10) return false;
+  limit.count++;
+  return true;
+}
 
 // Helper function to safely parse JSON from AI response
 function parseAIResponse(result: string) {
@@ -20,8 +46,22 @@ function parseAIResponse(result: string) {
 
 export async function POST(req: NextRequest) {
   try {
+    // OWASP A01: Authentication check
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // OWASP A04: Rate limiting
+    if (!checkRateLimit(session.user.id)) {
+      return NextResponse.json({ error: "Too many requests. Please wait." }, { status: 429 });
+    }
+
     const body = await req.json();
-    const { jobTitle, experienceLevel, industry, companyName, focusTopics } = body;
+    // OWASP A03: Input validation
+    const validatedData = interviewGenerateSchema.parse(body);
+    
+    const { jobTitle, experienceLevel, industry, companyName, focusTopics } = validatedData;
 
     const prompt = `
 Generate comprehensive interview questions for the following role:

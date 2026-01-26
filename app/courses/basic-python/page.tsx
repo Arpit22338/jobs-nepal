@@ -1,7 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Code, CheckCircle, Award, HelpCircle, Clock } from "lucide-react";
+import { 
+  ArrowLeft, BookOpen, Code, CheckCircle, Award, HelpCircle, Clock,
+  Play, Zap, Terminal, Trophy, ChevronRight, Sparkles, Target,
+  Brain, Rocket, GraduationCap
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
@@ -22,7 +26,9 @@ export default function PythonCoursePage() {
   
   // Lesson State
   const [activeModuleId, setActiveModuleId] = useState<string>(COURSE_MODULES[0].id);
+  const [activeLessonIndex, setActiveLessonIndex] = useState(0);
   const [lessonQuizAnswers, setLessonQuizAnswers] = useState<Record<string, number>>({});
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
 
   // Exam State
   const [answers, setAnswers] = useState<number[]>(new Array(FINAL_EXAM_DATA.length).fill(-1));
@@ -43,6 +49,15 @@ export default function PythonCoursePage() {
     }
   }, [session]);
 
+  const markLessonComplete = (lessonId: string) => {
+    if (!completedLessons.includes(lessonId)) {
+      setCompletedLessons(prev => [...prev, lessonId]);
+    }
+  };
+
+  const totalLessons = COURSE_MODULES.reduce((sum, m) => sum + m.lessons.length, 0);
+  const progress = Math.round((completedLessons.length / totalLessons) * 100);
+
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const handleQuizSubmit = (answers: number[]) => {
     let score = 0;
@@ -50,218 +65,271 @@ export default function PythonCoursePage() {
       if (ans === FINAL_EXAM_DATA[idx].answer) score++;
     });
     setQuizScore(score);
-    if (score >= FINAL_EXAM_DATA.length * 0.7) { // 70% passing score
+    if (score >= FINAL_EXAM_DATA.length * 0.7) {
       setExamPassed(true);
     }
   };
 
-  // --- Render Components ---
-
   const renderLessons = () => {
     const activeModule = COURSE_MODULES.find(m => m.id === activeModuleId) || COURSE_MODULES[0];
     const activeModuleIndex = COURSE_MODULES.findIndex(m => m.id === activeModuleId);
+    const activeLesson = activeModule.lessons[activeLessonIndex] || activeModule.lessons[0];
     const nextModule = COURSE_MODULES[activeModuleIndex + 1];
     const prevModule = COURSE_MODULES[activeModuleIndex - 1];
+    const isLastLessonInModule = activeLessonIndex === activeModule.lessons.length - 1;
+    const isFirstLessonInModule = activeLessonIndex === 0;
 
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <Link href="/courses" className="inline-flex items-center text-gray-600 hover:text-blue-600 mb-8 transition-colors">
-          <ArrowLeft size={20} className="mr-2" />
-          Back to Classroom
-        </Link>
-
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-          {/* Header / Blackboard */}
-          <div className="bg-slate-900 text-white p-10 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/chalkboard.png')]"></div>
-            <div className="relative z-10">
-              <div className="inline-flex items-center justify-center p-3 bg-blue-600 rounded-full mb-4">
-                <Code size={32} />
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+        {/* Hero Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 py-12">
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-40" />
+          <div className="relative max-w-7xl mx-auto px-4">
+            <Link href="/courses" className="inline-flex items-center text-white/80 hover:text-white mb-4 transition-colors">
+              <ArrowLeft size={20} className="mr-2" /> Back to Classroom
+            </Link>
+            <div className="flex items-center gap-4 mb-3">
+              <div className="p-3 bg-white/10 backdrop-blur-sm rounded-xl">
+                <Code size={32} className="text-white" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-4 font-serif">{activeModule.title}</h1>
-              <p className="text-lg text-blue-200 max-w-2xl mx-auto font-light">
-                Module {activeModuleIndex + 1} of {COURSE_MODULES.length} • {activeModule.duration}
-              </p>
-              
-              {/* Module Navigation Pills */}
-              <div className="mt-8 flex flex-wrap justify-center gap-2">
-                {COURSE_MODULES.map((m, idx) => (
-                  <button
-                    key={m.id}
-                    onClick={() => {
-                      setActiveModuleId(m.id);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      activeModuleId === m.id
-                        ? "bg-white text-slate-900 font-bold"
-                        : "bg-slate-800 text-slate-400 hover:bg-slate-700"
-                    }`}
-                  >
-                    Module {idx + 1}
-                  </button>
-                ))}
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-white">Basic Python Programming</h1>
+                <p className="text-white/80 text-lg">Master the fundamentals of Python</p>
               </div>
             </div>
             
             {/* Progress Bar */}
-            <div className="w-full bg-gray-200 h-1.5">
-              <div 
-                className="bg-blue-600 h-1.5 transition-all duration-500"
-                style={{ width: `${((activeModuleIndex + 1) / COURSE_MODULES.length) * 100}%` }}
-              />
+            <div className="mt-6 max-w-2xl">
+              <div className="flex justify-between text-sm text-white/80 mb-2">
+                <span>{completedLessons.length} of {totalLessons} lessons completed</span>
+                <span className="font-bold">{progress}%</span>
+              </div>
+              <div className="h-3 bg-black/30 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-white rounded-full transition-all duration-500" 
+                  style={{ width: `${progress}%` }} 
+                />
+              </div>
             </div>
           </div>
+        </div>
 
-          <div className="p-6 md:p-12 space-y-12">
-            {/* Course Overview */}
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-blue-50 border border-blue-100 rounded-xl p-6">
-                <h3 className="font-bold text-blue-800 mb-2">You will learn</h3>
-                <ul className="text-sm text-gray-700 space-y-2">
-                  <li className="flex items-start gap-2"><CheckCircle size={16} className="text-blue-600 mt-0.5" /> Variables, data types, and control flow</li>
-                  <li className="flex items-start gap-2"><CheckCircle size={16} className="text-blue-600 mt-0.5" /> Functions, lists, and dictionaries</li>
-                  <li className="flex items-start gap-2"><CheckCircle size={16} className="text-blue-600 mt-0.5" /> Real‑world Python problem solving</li>
-                </ul>
-              </div>
-              <div className="bg-green-50 border border-green-100 rounded-xl p-6">
-                <h3 className="font-bold text-green-800 mb-2">Mini Projects</h3>
-                <ul className="text-sm text-gray-700 space-y-2">
-                  <li className="flex items-start gap-2"><Code size={16} className="text-green-600 mt-0.5" /> Number Guessing Game</li>
-                  <li className="flex items-start gap-2"><Code size={16} className="text-green-600 mt-0.5" /> Expense Tracker (CLI)</li>
-                  <li className="flex items-start gap-2"><Code size={16} className="text-green-600 mt-0.5" /> Simple To‑Do Manager</li>
-                </ul>
-              </div>
-              <div className="bg-purple-50 border border-purple-100 rounded-xl p-6">
-                <h3 className="font-bold text-purple-800 mb-2">Study Plan</h3>
-                <ul className="text-sm text-gray-700 space-y-2">
-                  <li className="flex items-start gap-2"><Clock size={16} className="text-purple-600 mt-0.5" /> 2–4 hours per week</li>
-                  <li className="flex items-start gap-2"><Clock size={16} className="text-purple-600 mt-0.5" /> 2 weeks per module</li>
-                  <li className="flex items-start gap-2"><Clock size={16} className="text-purple-600 mt-0.5" /> Practice in Playground</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Lessons Stack */}
-            {activeModule.lessons.map((lesson, index) => {
-              // Alternate colors like CV course: Blue, Green, Purple
-              const colorTheme = index % 3 === 0 ? 'blue' : index % 3 === 1 ? 'green' : 'purple';
-              
-              const bgClass = colorTheme === 'blue' ? 'bg-blue-50 border-blue-100' : 
-                              colorTheme === 'green' ? 'bg-green-50 border-green-100' : 
-                              'bg-purple-50 border-purple-100';
-              
-              const iconBgClass = colorTheme === 'blue' ? 'bg-blue-600' : 
-                                  colorTheme === 'green' ? 'bg-green-600' : 
-                                  'bg-purple-600';
-
-              return (
-                <div key={lesson.id} className={`${bgClass} rounded-xl p-6 md:p-8 border`}>
-                  <div className="flex items-center mb-6">
-                    <div className={`${iconBgClass} text-white p-2 rounded-lg mr-4`}>
-                      <BookOpen size={24} />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex gap-8">
+            {/* Sidebar */}
+            <aside className="w-80 shrink-0 transition-all hidden lg:block">
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 p-4 sticky top-4">
+                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <BookOpen size={20} className="text-yellow-400" />
+                  Course Modules
+                </h3>
+                <div className="space-y-2">
+                  {COURSE_MODULES.map((module, mIdx) => (
+                    <div key={module.id}>
+                      <button
+                        onClick={() => {
+                          setActiveModuleId(module.id);
+                          setActiveLessonIndex(0);
+                        }}
+                        className={`w-full text-left p-3 rounded-lg transition-all ${
+                          activeModuleId === module.id
+                            ? 'bg-yellow-500/20 border border-yellow-500/50'
+                            : 'hover:bg-slate-700/50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
+                            activeModuleId === module.id ? 'bg-yellow-500 text-slate-900' : 'bg-slate-700 text-slate-300'
+                          }`}>
+                            {mIdx + 1}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className={`font-medium truncate ${activeModuleId === module.id ? 'text-yellow-400' : 'text-slate-300'}`}>
+                              {module.title.split(':')[1]?.trim() || module.title}
+                            </p>
+                            <p className="text-xs text-slate-500">{module.lessons.length} lessons • {module.duration}</p>
+                          </div>
+                        </div>
+                      </button>
+                      {/* Lessons in module */}
+                      {activeModuleId === module.id && (
+                        <div className="ml-11 mt-2 space-y-1 border-l-2 border-slate-700 pl-3">
+                          {module.lessons.map((lesson, lIdx) => (
+                            <button
+                              key={lesson.id}
+                              onClick={() => setActiveLessonIndex(lIdx)}
+                              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-all flex items-center gap-2 ${
+                                activeLessonIndex === lIdx
+                                  ? 'bg-yellow-500/20 text-yellow-400'
+                                  : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                              }`}
+                            >
+                              {completedLessons.includes(lesson.id) ? (
+                                <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
+                              ) : (
+                                <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-600 flex-shrink-0" />
+                              )}
+                              <span className="truncate">{lesson.title}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900">{lesson.title}</h3>
+                  ))}
+                </div>
+                
+                {/* Take Exam Button */}
+                <div className="mt-6 pt-4 border-t border-slate-700">
+                  <button
+                    onClick={() => {
+                      setActiveTab("exam");
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-4 rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Trophy size={20} />
+                    Take Final Exam
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            {/* Main Content */}
+            <main className="flex-1 min-w-0">
+              {/* Current Lesson Card */}
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 overflow-hidden">
+                {/* Lesson Header */}
+                <div className="bg-gradient-to-r from-slate-800 to-slate-700 p-6 border-b border-slate-600">
+                  <div className="flex items-center gap-2 text-yellow-400 text-sm font-medium mb-2">
+                    <Zap size={16} />
+                    Module {activeModuleIndex + 1} • Lesson {activeLessonIndex + 1}
                   </div>
-                  
-                  <div className="mb-8 text-gray-700">
+                  <h2 className="text-2xl font-bold text-white">{activeLesson.title}</h2>
+                </div>
+                
+                {/* Lesson Content */}
+                <div className="p-6 md:p-8">
+                  <div className="prose prose-invert prose-lg max-w-none">
                     <ReactMarkdown
                       components={{
                         code({node, inline, className, children, ...props}: any) {
-                          const match = /language-(\w+)/.exec(className || '')
+                          const match = /language-(\w+)/.exec(className || '');
                           return !inline && match ? (
-                            <div className="relative rounded-lg overflow-hidden my-6 shadow-lg border border-slate-700">
-                              <div className="bg-slate-800 px-4 py-2 flex items-center justify-between border-b border-slate-700">
-                                 <div className="flex gap-1.5">
-                                   <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                                   <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                                   <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                                 </div>
-                                 <span className="text-xs text-slate-400 font-mono">python</span>
+                            <div className="relative rounded-xl overflow-hidden my-6 border border-slate-600">
+                              <div className="bg-slate-700 px-4 py-2 flex items-center justify-between border-b border-slate-600">
+                                <div className="flex gap-1.5">
+                                  <div className="w-3 h-3 rounded-full bg-red-500/70" />
+                                  <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
+                                  <div className="w-3 h-3 rounded-full bg-green-500/70" />
+                                </div>
+                                <span className="text-xs text-slate-400 font-mono flex items-center gap-1">
+                                  <Terminal size={12} /> python
+                                </span>
                               </div>
                               <pre className="bg-slate-900 p-4 overflow-x-auto m-0">
-                                <code className={`${className} text-sm font-mono text-slate-300`} {...props}>
+                                <code className="text-sm font-mono text-emerald-300" {...props}>
                                   {children}
                                 </code>
                               </pre>
                             </div>
                           ) : (
-                            <code className="bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded font-mono text-sm border border-slate-200" {...props}>
+                            <code className="bg-slate-700 text-yellow-300 px-1.5 py-0.5 rounded font-mono text-sm" {...props}>
                               {children}
                             </code>
-                          )
-                        }
+                          );
+                        },
+                        h3: ({children}) => (
+                          <h3 className="text-xl font-bold text-yellow-400 mt-8 mb-4 flex items-center gap-2">
+                            <Sparkles size={20} />
+                            {children}
+                          </h3>
+                        ),
+                        ul: ({children}) => (
+                          <ul className="space-y-2 my-4">{children}</ul>
+                        ),
+                        li: ({children}) => (
+                          <li className="text-slate-300 flex items-start gap-2">
+                            <ChevronRight size={16} className="text-yellow-500 mt-1 flex-shrink-0" />
+                            <span>{children}</span>
+                          </li>
+                        ),
+                        p: ({children}) => (
+                          <p className="text-slate-300 leading-relaxed mb-4">{children}</p>
+                        ),
                       }}
                     >
-                      {lesson.content}
+                      {activeLesson.content}
                     </ReactMarkdown>
                   </div>
 
-                  {/* Playground Card */}
-                  {lesson.challenge && (
-                    <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                      <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Code size={18} className="text-gray-500"/>
-                          <span className="text-sm font-bold text-gray-700">Interactive Playground</span>
+                  {/* Interactive Playground */}
+                  {activeLesson.challenge && (
+                    <div className="mt-8 bg-slate-900/50 rounded-xl border border-slate-600 overflow-hidden">
+                      <div className="bg-gradient-to-r from-emerald-600 to-green-600 px-4 py-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-white font-bold">
+                          <Play size={18} />
+                          Interactive Challenge
                         </div>
-                        <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">Python 3.10</span>
+                        <span className="text-xs text-emerald-100 bg-white/10 px-2 py-1 rounded-full">
+                          Python 3.10
+                        </span>
                       </div>
-                      <div className="w-full">
+                      <div className="p-4">
+                        <div className="bg-slate-800 rounded-lg p-4 mb-4 border border-slate-700">
+                          <h4 className="text-sm font-bold text-emerald-400 mb-2">Your Task:</h4>
+                          <p className="text-slate-300 text-sm whitespace-pre-wrap">{activeLesson.challenge.description}</p>
+                        </div>
                         <PythonPlayground 
-                          initialCode={lesson.challenge.initialCode}
-                          expectedOutput={lesson.challenge.expectedOutput}
-                          challengeTitle="Interactive Challenge"
-                          challengeDescription={lesson.challenge.description}
-                          onSuccess={() => {}}
+                          initialCode={activeLesson.challenge.initialCode}
+                          expectedOutput={activeLesson.challenge.expectedOutput}
+                          challengeTitle=""
+                          challengeDescription=""
+                          onSuccess={() => markLessonComplete(activeLesson.id)}
                         />
                       </div>
                     </div>
                   )}
 
-                  {/* Quiz Card */}
-                  {lesson.quiz && (
-                    <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                      <div className={`px-6 py-4 border-b flex items-center gap-3 ${
-                        colorTheme === 'blue' ? 'bg-blue-50/50 border-blue-100' :
-                        colorTheme === 'green' ? 'bg-green-50/50 border-green-100' :
-                        'bg-purple-50/50 border-purple-100'
-                      }`}>
-                        <HelpCircle size={20} className={
-                          colorTheme === 'blue' ? 'text-blue-600' :
-                          colorTheme === 'green' ? 'text-green-600' :
-                          'text-purple-600'
-                        } />
-                        <h4 className="font-bold text-gray-800">Quick Quiz</h4>
+                  {/* Quick Quiz */}
+                  {activeLesson.quiz && (
+                    <div className="mt-8 bg-slate-900/50 rounded-xl border border-slate-600 overflow-hidden">
+                      <div className="bg-gradient-to-r from-purple-600 to-violet-600 px-4 py-3 flex items-center gap-2">
+                        <HelpCircle size={18} className="text-white" />
+                        <span className="text-white font-bold">Quick Quiz</span>
                       </div>
-                      
                       <div className="p-6">
-                        <p className="text-xl font-bold text-gray-900 mb-6 flex gap-3">
-                          <span className="text-blue-600">•</span>
-                          {lesson.quiz.question}
+                        <p className="text-lg font-bold text-white mb-6 flex gap-3">
+                          <Brain size={24} className="text-purple-400 flex-shrink-0" />
+                          {activeLesson.quiz.question}
                         </p>
                         <div className="space-y-3">
-                          {lesson.quiz.options.map((opt, idx) => {
-                            const isSelected = lessonQuizAnswers[lesson.id] === idx;
-                            const isCorrect = idx === lesson.quiz.answer;
+                          {activeLesson.quiz.options.map((opt, idx) => {
+                            const isSelected = lessonQuizAnswers[activeLesson.id] === idx;
+                            const isCorrect = idx === activeLesson.quiz.answer;
                             
-                            let buttonStyle = "bg-white hover:bg-gray-50 border-gray-200 text-gray-700";
+                            let buttonStyle = "bg-slate-800 border-slate-600 text-slate-300 hover:border-purple-500/50 hover:bg-slate-700";
                             if (isSelected) {
                               buttonStyle = isCorrect 
-                                ? "bg-green-50 border-green-200 text-green-800 ring-1 ring-green-200" 
-                                : "bg-red-50 border-red-200 text-red-800 ring-1 ring-red-200";
+                                ? "bg-green-500/20 border-green-500 text-green-300" 
+                                : "bg-red-500/20 border-red-500 text-red-300";
                             }
 
                             return (
                               <button
                                 key={idx}
-                                onClick={() => setLessonQuizAnswers(prev => ({ ...prev, [lesson.id]: idx }))}
-                                className={`w-full text-left px-4 py-3 rounded-lg border transition-all duration-200 flex justify-between items-center group ${buttonStyle}`}
+                                onClick={() => {
+                                  setLessonQuizAnswers(prev => ({ ...prev, [activeLesson.id]: idx }));
+                                  if (idx === activeLesson.quiz.answer) {
+                                    markLessonComplete(activeLesson.id);
+                                  }
+                                }}
+                                className={`w-full text-left px-4 py-3 rounded-lg border transition-all flex justify-between items-center ${buttonStyle}`}
                               >
                                 <span className="font-medium">{opt}</span>
                                 {isSelected && (
-                                  <span className={`text-xs font-bold px-2 py-1 rounded uppercase tracking-wider ${isCorrect ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}`}>
-                                    {isCorrect ? "Correct" : "Incorrect"}
+                                  <span className={`text-xs font-bold px-2 py-1 rounded uppercase ${isCorrect ? 'bg-green-500/30 text-green-300' : 'bg-red-500/30 text-red-300'}`}>
+                                    {isCorrect ? "✓ Correct" : "✗ Try Again"}
                                   </span>
                                 )}
                               </button>
@@ -271,52 +339,51 @@ export default function PythonCoursePage() {
                       </div>
                     </div>
                   )}
+
+                  {/* Navigation Footer */}
+                  <div className="mt-8 flex justify-between items-center pt-6 border-t border-slate-700">
+                    <button
+                      onClick={() => {
+                        if (!isFirstLessonInModule) {
+                          setActiveLessonIndex(prev => prev - 1);
+                        } else if (prevModule) {
+                          setActiveModuleId(prevModule.id);
+                          setActiveLessonIndex(prevModule.lessons.length - 1);
+                        }
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      disabled={isFirstLessonInModule && !prevModule}
+                      className="flex items-center gap-2 text-slate-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <ArrowLeft size={20} />
+                      Previous
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        markLessonComplete(activeLesson.id);
+                        if (!isLastLessonInModule) {
+                          setActiveLessonIndex(prev => prev + 1);
+                        } else if (nextModule) {
+                          setActiveModuleId(nextModule.id);
+                          setActiveLessonIndex(0);
+                        } else {
+                          setActiveTab("exam");
+                        }
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="flex items-center gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 text-slate-900 px-6 py-3 rounded-xl font-bold hover:from-yellow-400 hover:to-amber-400 transition-all"
+                    >
+                      {isLastLessonInModule && !nextModule ? (
+                        <>Take Final Exam <Trophy size={20} /></>
+                      ) : (
+                        <>Next Lesson <ChevronRight size={20} /></>
+                      )}
+                    </button>
+                  </div>
                 </div>
-              );
-            })}
-
-            {/* Module Navigation Footer */}
-            <div className="flex justify-between items-center pt-8 border-t border-gray-100">
-              {prevModule ? (
-                <button
-                  onClick={() => {
-                    setActiveModuleId(prevModule.id);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="flex items-center text-gray-600 hover:text-blue-600 font-medium px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <ArrowLeft size={20} className="mr-2" />
-                  Previous: {prevModule.title.split(':')[0]}
-                </button>
-              ) : (
-                <div></div>
-              )}
-
-              {nextModule ? (
-                <button
-                  onClick={() => {
-                    setActiveModuleId(nextModule.id);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="flex items-center bg-blue-600 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-700 shadow-lg hover:shadow-blue-200 transition-all"
-                >
-                  Next: {nextModule.title.split(':')[0]}
-                  <ArrowRight size={20} className="ml-2" />
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setActiveTab("exam");
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="flex items-center bg-green-600 text-white px-6 py-3 rounded-full font-bold hover:bg-green-700 shadow-lg hover:shadow-green-200 transition-all"
-                >
-                  Take Final Exam
-                  <Award size={20} className="ml-2" />
-                </button>
-              )}
-            </div>
-
+              </div>
+            </main>
           </div>
         </div>
       </div>
@@ -343,13 +410,11 @@ export default function PythonCoursePage() {
       }
 
       if (selectedAnswer === currentQuestion.answer) {
-        // Correct
         if (isLastQuestion) {
           setSubmitted(true);
           setExamPassed(true);
-          setQuizScore(FINAL_EXAM_DATA.length); // Perfect score if they made it here
+          setQuizScore(FINAL_EXAM_DATA.length);
 
-          // Call API to mark completion
           fetch("/api/courses/complete", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -359,32 +424,26 @@ export default function PythonCoursePage() {
               if (response.ok) {
                 const data = await response.json();
                 console.log("Course completed successfully:", data);
-                console.log("Certificate should now be available in My Certificates page");
               } else {
                 const error = await response.json();
                 console.error("Failed to mark completion:", error);
-                alert("Failed to save your certificate. Please contact support.");
               }
             })
-            .catch(err => {
-              console.error("Failed to mark completion", err);
-              alert("Network error while saving certificate. Please try again later.");
-            });
+            .catch(err => console.error("Failed to mark completion", err));
         } else {
           setCurrentQuestionIndex(prev => prev + 1);
         }
       } else {
-        // Wrong
         alert("Incorrect answer. Redirecting to the relevant lesson for review.");
         
-        // Find module for the lesson
         const lessonId = currentQuestion.relatedLessonId;
         if (lessonId) {
           const targetModule = COURSE_MODULES.find(m => m.lessons.some(l => l.id === lessonId));
           if (targetModule) {
+            const lessonIndex = targetModule.lessons.findIndex(l => l.id === lessonId);
             setActiveModuleId(targetModule.id);
+            setActiveLessonIndex(lessonIndex >= 0 ? lessonIndex : 0);
             setActiveTab("lessons");
-            // Reset this question so they can try again later
             const newAnswers = [...answers];
             newAnswers[currentQuestionIndex] = -1;
             setAnswers(newAnswers);
@@ -394,101 +453,125 @@ export default function PythonCoursePage() {
     };
 
     if (submitted && examPassed) {
-       return (
-        <div className="max-w-5xl mx-auto px-4 py-8">
-          <Link href="/courses" className="inline-flex items-center text-gray-600 hover:text-blue-600 mb-8 transition-colors">
-            <ArrowLeft size={20} className="mr-2" />
-            Back to Classroom
-          </Link>
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center border border-gray-100">
-            <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto animate-bounce mb-6">
-              <Award size={48} />
+      return (
+        <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 py-8">
+          <div className="max-w-3xl mx-auto px-4">
+            <Link href="/courses" className="inline-flex items-center text-slate-400 hover:text-yellow-400 mb-8 transition-colors">
+              <ArrowLeft size={20} className="mr-2" /> Back to Classroom
+            </Link>
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 p-12 text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-yellow-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
+                <Trophy size={48} className="text-slate-900" />
+              </div>
+              <h2 className="text-4xl font-bold text-white mb-4">🎉 Congratulations!</h2>
+              <p className="text-xl text-slate-400 max-w-md mx-auto mb-8">
+                You&apos;ve passed the final exam with a perfect score!
+              </p>
+              <button 
+                onClick={() => setActiveTab("certificate")}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-10 py-4 rounded-xl font-bold hover:from-green-500 hover:to-emerald-500 shadow-xl transition-all hover:scale-105 flex items-center gap-2 mx-auto"
+              >
+                <Award size={20} />
+                Claim Your Certificate
+              </button>
             </div>
-            <h2 className="text-4xl font-bold text-green-800 mb-4">Congratulations!</h2>
-            <p className="text-xl text-gray-600 max-w-md mx-auto mb-8">You have passed the final exam with a perfect score.</p>
-            <button 
-              onClick={() => setActiveTab("certificate")}
-              className="bg-green-600 text-white px-10 py-4 rounded-xl font-bold hover:bg-green-700 shadow-xl transition-transform hover:scale-105 flex items-center gap-2 mx-auto"
-            >
-              <Award size={20} />
-              Claim Your Certificate
-            </button>
           </div>
         </div>
-       );
+      );
     }
 
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <Link href="/courses" className="inline-flex items-center text-gray-600 hover:text-blue-600 mb-8 transition-colors">
-          <ArrowLeft size={20} className="mr-2" />
-          Back to Classroom
-        </Link>
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 py-8">
+        <div className="max-w-3xl mx-auto px-4">
+          <Link href="/courses" className="inline-flex items-center text-slate-400 hover:text-yellow-400 mb-8 transition-colors">
+            <ArrowLeft size={20} className="mr-2" /> Back to Classroom
+          </Link>
 
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-          <div className="bg-slate-900 text-white p-10 text-center relative overflow-hidden">
-             <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/chalkboard.png')]"></div>
-             <div className="relative z-10">
-               <h1 className="text-3xl font-bold mb-2 font-serif">Final Exam</h1>
-               <p className="text-blue-200">Prove your skills to earn the certificate</p>
-             </div>
-          </div>
-
-          <div className="p-8 md:p-12">
-            <div className="flex justify-between items-center mb-8">
-              <span className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg font-bold text-sm">
-                Question {currentQuestionIndex + 1} / {FINAL_EXAM_DATA.length}
-              </span>
-              <div className="w-1/2 bg-gray-100 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-full rounded-full transition-all duration-500 ease-out" 
-                  style={{ width: `${((currentQuestionIndex + 1) / FINAL_EXAM_DATA.length) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-            
-            <div className="mb-10">
-              <p className="font-bold text-xl md:text-2xl mb-8 text-gray-800 leading-relaxed">{currentQuestion.question}</p>
-              <div className="space-y-4">
-                {currentQuestion.options.map((opt, oIdx) => (
-                  <label 
-                    key={oIdx} 
-                    className={`flex items-center p-5 rounded-xl border-2 cursor-pointer transition-all group ${
-                      answers[currentQuestionIndex] === oIdx 
-                        ? "bg-blue-50 border-blue-500 shadow-md" 
-                        : "hover:bg-gray-50 border-gray-100 hover:border-gray-300"
-                    }`}
-                  >
-                    <div className={`w-6 h-6 rounded-full border-2 mr-4 flex items-center justify-center transition-colors ${
-                      answers[currentQuestionIndex] === oIdx ? "border-blue-600" : "border-gray-300 group-hover:border-gray-400"
-                    }`}>
-                      {answers[currentQuestionIndex] === oIdx && <div className="w-3 h-3 rounded-full bg-blue-600" />}
-                    </div>
-                    <input 
-                      type="radio" 
-                      name={`q-${currentQuestion.id}`} 
-                      className="hidden"
-                      checked={answers[currentQuestionIndex] === oIdx}
-                      onChange={() => handleAnswerSelect(oIdx)}
-                    />
-                    <span className="text-lg text-gray-700 font-medium">{opt}</span>
-                  </label>
-                ))}
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 overflow-hidden">
+            {/* Exam Header */}
+            <div className="bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 p-8 text-center relative">
+              <div className="absolute inset-0 bg-black/20" />
+              <div className="relative">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl mb-4">
+                  <GraduationCap size={32} className="text-white" />
+                </div>
+                <h1 className="text-3xl font-bold text-white mb-2">Final Exam</h1>
+                <p className="text-purple-200">Prove your Python skills to earn the certificate</p>
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-6 border-t">
-              <div className="text-sm text-gray-400 italic">
-                Select an option to proceed
+            <div className="p-8">
+              {/* Progress */}
+              <div className="flex justify-between items-center mb-8">
+                <span className="px-4 py-2 bg-purple-500/20 text-purple-300 rounded-lg font-bold text-sm border border-purple-500/30">
+                  Question {currentQuestionIndex + 1} / {FINAL_EXAM_DATA.length}
+                </span>
+                <div className="flex-1 mx-4 bg-slate-700 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-purple-500 to-violet-500 h-full rounded-full transition-all duration-500" 
+                    style={{ width: `${((currentQuestionIndex + 1) / FINAL_EXAM_DATA.length) * 100}%` }}
+                  />
+                </div>
+                <span className="text-sm text-slate-400 font-bold">
+                  {Math.round(((currentQuestionIndex + 1) / FINAL_EXAM_DATA.length) * 100)}%
+                </span>
               </div>
-              <button 
-                onClick={handleNextQuestion}
-                disabled={answers[currentQuestionIndex] === -1}
-                className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-blue-200 transition-all hover:translate-x-1"
-              >
-                {isLastQuestion ? "Finish Exam" : "Next Question"}
-                {!isLastQuestion && <ArrowLeft className="rotate-180" size={20} />}
-              </button>
+              
+              {/* Question */}
+              <div className="mb-10">
+                <p className="font-bold text-xl md:text-2xl mb-8 text-white leading-relaxed flex gap-3">
+                  <Target size={28} className="text-purple-400 flex-shrink-0 mt-1" />
+                  {currentQuestion.question}
+                </p>
+                <div className="space-y-4">
+                  {currentQuestion.options.map((opt, oIdx) => (
+                    <label 
+                      key={oIdx} 
+                      className={`flex items-center p-5 rounded-xl border-2 cursor-pointer transition-all group ${
+                        answers[currentQuestionIndex] === oIdx 
+                          ? "bg-purple-500/20 border-purple-500" 
+                          : "bg-slate-700/50 border-slate-600 hover:border-purple-500/50 hover:bg-slate-700"
+                      }`}
+                    >
+                      <div className={`w-6 h-6 rounded-full border-2 mr-4 flex items-center justify-center transition-colors ${
+                        answers[currentQuestionIndex] === oIdx ? "border-purple-400" : "border-slate-500 group-hover:border-purple-400"
+                      }`}>
+                        {answers[currentQuestionIndex] === oIdx && <div className="w-3 h-3 rounded-full bg-purple-400" />}
+                      </div>
+                      <input 
+                        type="radio" 
+                        name={`q-${currentQuestion.id}`} 
+                        className="hidden"
+                        checked={answers[currentQuestionIndex] === oIdx}
+                        onChange={() => handleAnswerSelect(oIdx)}
+                      />
+                      <span className="text-lg text-slate-200 font-medium">{opt}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex justify-between items-center pt-6 border-t border-slate-700">
+                <button
+                  onClick={() => {
+                    setActiveTab("lessons");
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="text-slate-400 hover:text-white transition-colors flex items-center gap-2"
+                >
+                  <ArrowLeft size={20} />
+                  Back to Lessons
+                </button>
+                <button 
+                  onClick={handleNextQuestion}
+                  disabled={answers[currentQuestionIndex] === -1}
+                  className="bg-gradient-to-r from-purple-600 to-violet-600 text-white px-8 py-4 rounded-xl font-bold hover:from-purple-500 hover:to-violet-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
+                >
+                  {isLastQuestion ? "Finish Exam" : "Next Question"}
+                  <ChevronRight size={20} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -497,102 +580,128 @@ export default function PythonCoursePage() {
   };
 
   const renderCertificate = () => (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <Link href="/courses" className="inline-flex items-center text-gray-600 hover:text-blue-600 mb-8 transition-colors">
-        <ArrowLeft size={20} className="mr-2" />
-        Back to Classroom
-      </Link>
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 py-8">
+      <div className="max-w-5xl mx-auto px-4">
+        <Link href="/courses" className="inline-flex items-center text-slate-400 hover:text-yellow-400 mb-8 transition-colors">
+          <ArrowLeft size={20} className="mr-2" /> Back to Classroom
+        </Link>
 
-      <div className="bg-white rounded-xl shadow-lg p-8 md:p-12 text-center border border-gray-100">
-        <div className="mb-10">
-          <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle size={40} />
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 p-8 md:p-12 text-center">
+          <div className="mb-10">
+            <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle size={40} className="text-white" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              🎉 Course Completed!
+            </h2>
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+              Congratulations! You have successfully mastered the basics of Python programming. 
+              Here is your official certificate of completion.
+            </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Course Completed!
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Congratulations! You have successfully mastered the basics of Python programming. Here is your official certificate of completion.
-          </p>
-        </div>
 
-        {/* Certificate Preview */}
-        <div className="flex justify-center mb-10 overflow-x-auto py-4">
-          <CertificateTemplate 
-            studentName={session?.user?.name || "Student Name"}
-            courseName="Basic Python Programming"
-            completionDate={new Date().toISOString()}
-            instructorName="Arpit Kafle"
-            certificateId={`PYTHON-${Date.now()}`}
-          />
+          <div className="flex justify-center mb-10 overflow-x-auto py-4">
+            <CertificateTemplate 
+              studentName={session?.user?.name || "Student Name"}
+              courseName="Basic Python Programming"
+              completionDate={new Date().toISOString()}
+              instructorName="RojgaarNepal Team"
+              certificateId={`PYTHON-${Date.now()}`}
+            />
+          </div>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero / Enrollment Gate */}
+    <>
+      {/* Enrollment Gate */}
       {enrollmentStatus !== "APPROVED" && (
-        <div className="max-w-5xl mx-auto px-4 py-12">
-          <Link href="/courses" className="inline-flex items-center text-gray-600 hover:text-blue-600 mb-8 transition-colors">
-            <ArrowLeft size={20} className="mr-2" />
-            Back to Classroom
-          </Link>
-          
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-            <div className="bg-slate-900 text-white p-10 md:p-16 text-center relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/chalkboard.png')]"></div>
-              <div className="relative z-10">
-                <div className="inline-flex items-center justify-center p-4 bg-yellow-500 rounded-2xl mb-6 shadow-lg shadow-yellow-500/20">
-                  <Code size={40} className="text-slate-900" />
-                </div>
-                <h1 className="text-4xl md:text-6xl font-bold mb-6 font-serif tracking-tight">Basic Python Programming</h1>
-                <p className="text-xl md:text-2xl text-yellow-200 max-w-2xl mx-auto font-light mb-10 leading-relaxed">
-                  Master the fundamentals of Python with interactive lessons and real-time coding challenges.
-                </p>
-                
-                {!loading && (
-                  <div className="flex justify-center">
-                    {enrollmentStatus === "PENDING" ? (
-                      <button disabled className="bg-gray-700 text-gray-300 px-10 py-4 rounded-full font-bold text-lg flex items-center gap-3 cursor-not-allowed">
-                        <Clock size={24} /> Enrollment Pending
-                      </button>
-                    ) : (
-                      <button 
-                        onClick={() => setShowPaymentModal(true)}
-                        className="bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-full font-bold text-lg flex items-center gap-3 shadow-xl shadow-blue-900/20 transition-all hover:scale-105 hover:-translate-y-1"
-                      >
-                        Enroll Now - Rs. 299
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
+        <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 py-12">
+          <div className="max-w-5xl mx-auto px-4">
+            <Link href="/courses" className="inline-flex items-center text-slate-400 hover:text-yellow-400 mb-8 transition-colors">
+              <ArrowLeft size={20} className="mr-2" /> Back to Classroom
+            </Link>
             
-            <div className="p-12 bg-gray-50">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
-                  <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <BookOpen size={24} />
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 overflow-hidden">
+              {/* Hero */}
+              <div className="relative bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 p-12 md:p-16 text-center overflow-hidden">
+                <div className="absolute inset-0 bg-black/20" />
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-40" />
+                <div className="relative">
+                  <div className="inline-flex items-center justify-center p-4 bg-white/10 backdrop-blur-sm rounded-2xl mb-6">
+                    <Code size={48} className="text-white" />
                   </div>
-                  <h3 className="font-bold text-gray-900 mb-2">Interactive Lessons</h3>
-                  <p className="text-sm text-gray-500">Learn by doing with our structured curriculum.</p>
+                  <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Basic Python Programming</h1>
+                  <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8">
+                    Master the fundamentals of Python with interactive lessons, real-time coding challenges, and a certificate on completion.
+                  </p>
+                  
+                  {!loading && (
+                    <div className="flex justify-center">
+                      {enrollmentStatus === "PENDING" ? (
+                        <button disabled className="bg-white/20 backdrop-blur-sm text-white px-10 py-4 rounded-full font-bold text-lg flex items-center gap-3 cursor-not-allowed border border-white/30">
+                          <Clock size={24} /> Enrollment Pending Approval
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={() => setShowPaymentModal(true)}
+                          className="bg-white text-amber-600 px-10 py-4 rounded-full font-bold text-lg flex items-center gap-3 shadow-xl transition-all hover:scale-105 hover:-translate-y-1"
+                        >
+                          <Rocket size={24} />
+                          Enroll Now - Rs. 299
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
-                  <div className="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <Code size={24} />
+              </div>
+              
+              {/* Features */}
+              <div className="p-8 md:p-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-slate-700/50 p-6 rounded-xl border border-slate-600 text-center">
+                    <div className="w-14 h-14 bg-yellow-500/20 text-yellow-400 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <Terminal size={28} />
+                    </div>
+                    <h3 className="font-bold text-white mb-2">In-Browser Coding</h3>
+                    <p className="text-sm text-slate-400">Write and run Python code directly in your browser with instant feedback.</p>
                   </div>
-                  <h3 className="font-bold text-gray-900 mb-2">In-Browser Coding</h3>
-                  <p className="text-sm text-gray-500">Write and run Python code directly in your browser.</p>
+                  <div className="bg-slate-700/50 p-6 rounded-xl border border-slate-600 text-center">
+                    <div className="w-14 h-14 bg-green-500/20 text-green-400 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <Brain size={28} />
+                    </div>
+                    <h3 className="font-bold text-white mb-2">Interactive Quizzes</h3>
+                    <p className="text-sm text-slate-400">Test your knowledge with quizzes after each lesson to reinforce learning.</p>
+                  </div>
+                  <div className="bg-slate-700/50 p-6 rounded-xl border border-slate-600 text-center">
+                    <div className="w-14 h-14 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center mx-auto mb-4">
+                      <Award size={28} />
+                    </div>
+                    <h3 className="font-bold text-white mb-2">Earn Certificate</h3>
+                    <p className="text-sm text-slate-400">Complete the course and final exam to earn a verified certificate.</p>
+                  </div>
                 </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
-                  <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <Award size={24} />
+
+                {/* Course Highlights */}
+                <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-slate-900/50 rounded-xl p-4 text-center border border-slate-700">
+                    <p className="text-3xl font-bold text-yellow-400">{COURSE_MODULES.length}</p>
+                    <p className="text-sm text-slate-400">Modules</p>
                   </div>
-                  <h3 className="font-bold text-gray-900 mb-2">Certified Skills</h3>
-                  <p className="text-sm text-gray-500">Earn a verified certificate upon completion.</p>
+                  <div className="bg-slate-900/50 rounded-xl p-4 text-center border border-slate-700">
+                    <p className="text-3xl font-bold text-green-400">{totalLessons}</p>
+                    <p className="text-sm text-slate-400">Lessons</p>
+                  </div>
+                  <div className="bg-slate-900/50 rounded-xl p-4 text-center border border-slate-700">
+                    <p className="text-3xl font-bold text-purple-400">{FINAL_EXAM_DATA.length}</p>
+                    <p className="text-sm text-slate-400">Exam Questions</p>
+                  </div>
+                  <div className="bg-slate-900/50 rounded-xl p-4 text-center border border-slate-700">
+                    <p className="text-3xl font-bold text-cyan-400">∞</p>
+                    <p className="text-sm text-slate-400">Lifetime Access</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -600,7 +709,7 @@ export default function PythonCoursePage() {
         </div>
       )}
 
-      {/* Main Course View (Approved) */}
+      {/* Main Course View */}
       {enrollmentStatus === "APPROVED" && (
         <>
           {activeTab === "lessons" && renderLessons()}
@@ -619,47 +728,6 @@ export default function PythonCoursePage() {
           setEnrollmentStatus("PENDING");
         }}
       />
-    </div>
-  );
-}
-
-// Helper component for Lock icon
-function Lock({ size, className }: { size: number, className?: string }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-    </svg>
-  );
-}
-
-function ArrowRight({ size, className }: { size: number, className?: string }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <path d="M5 12h14"></path>
-      <path d="m12 5 7 7-7 7"></path>
-    </svg>
+    </>
   );
 }

@@ -1,5 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { callGroqAI, AI_PROMPTS } from "@/lib/groq";
+import * as z from "zod";
+
+// OWASP A03: Input validation schema
+const skillsGapSchema = z.object({
+  currentTitle: z.string().max(100).optional(),
+  currentSkills: z.union([z.array(z.string().max(100)), z.string().max(1000)]),
+  yearsExperience: z.number().min(0).max(50).optional(),
+  education: z.string().max(200).optional(),
+  targetRole: z.string().max(100),
+  targetIndustry: z.string().max(100).optional(),
+  timeline: z.string().max(50).optional(),
+});
+
+// Rate limiting
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const limit = rateLimitMap.get(userId);
+  if (!limit || now > limit.resetTime) {
+    rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 });
+    return true;
+  }
+  if (limit.count >= 15) return false;
+  limit.count++;
+  return true;
+}
 
 // Helper to safely parse JSON from AI responses
 function parseAIResponse(result: string) {
@@ -18,7 +46,21 @@ function parseAIResponse(result: string) {
 
 export async function POST(req: NextRequest) {
   try {
+    // OWASP A01: Authentication check
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // OWASP A04: Rate limiting
+    if (!checkRateLimit(session.user.id)) {
+      return NextResponse.json({ error: "Too many requests. Please wait." }, { status: 429 });
+    }
+
     const body = await req.json();
+    // OWASP A03: Input validation
+    const validatedData = skillsGapSchema.parse(body);
+    
     const { 
       currentTitle, 
       currentSkills, 
@@ -27,7 +69,7 @@ export async function POST(req: NextRequest) {
       targetRole,
       targetIndustry,
       timeline
-    } = body;
+    } = validatedData;
 
     const prompt = `
 Perform a comprehensive skills gap analysis:
