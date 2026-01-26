@@ -80,7 +80,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Ticket created" });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ message: error.errors[0].message }, { status: 400 });
+      return NextResponse.json({ message: error.issues[0].message }, { status: 400 });
     }
     console.error(error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
