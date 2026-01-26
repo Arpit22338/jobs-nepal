@@ -522,6 +522,7 @@ export default function Navbar() {
 // Desktop Bottom Navigation Component
 function DesktopBottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: session } = useSession();
   
   // Hide on certain pages
@@ -530,40 +531,84 @@ function DesktopBottomNav() {
   
   const isActive = (path: string) => pathname === path || (path !== "/" && pathname.startsWith(path));
   
-  const navItems = [
+  const navLeft = [
     { href: "/my-certificates", icon: "bx-award", label: "Certificates" },
+    { href: "/profile", icon: "bx-user-circle", label: "Profile" },
+  ];
+
+  const navRight = [
     { href: "/saved-jobs", icon: "bx-bookmark", label: "Saved Jobs" },
     { href: "/my-applications", icon: "bx-file", label: "Applications" },
     { href: "/messages", icon: "bx-message-rounded-dots", label: "Messages" },
     { href: "/messages/rojgaar-ai", icon: "bx-bot", label: "RojgaarAI", highlight: true },
   ];
+
+  const getPostHref = () => {
+    if (!session) return "/login";
+    const role = session.user?.role;
+    if (role === "EMPLOYER" || role === "ADMIN") return "/employer/jobs/new";
+    return "/talent/new"; // default jobseeker/teacher -> post talent profile
+  };
+
+  const handlePlusClick = () => {
+    router.push(getPostHref());
+  };
   
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 hidden lg:block">
       <div className="max-w-4xl mx-auto px-4 pb-4">
-        <div className="bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl px-2 py-2">
-          <div className="flex items-center justify-around">
-            {navItems.map((item) => {
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={session ? item.href : "/login"}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-200 ${
-                    item.highlight
-                      ? active
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
-                        : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
-                      : active
-                      ? "bg-accent text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                  }`}
-                >
-                  <i className={`bx ${item.icon} text-xl`}></i>
-                  <span className="text-sm font-medium">{item.label}</span>
-                </Link>
-              );
-            })}
+        <div className="bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl px-3 py-3 relative">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              {navLeft.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={session ? item.href : "/login"}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-200 ${
+                      active ? "bg-accent text-primary" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    }`}
+                  >
+                    <i className={`bx ${item.icon} text-xl`}></i>
+                    <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Center Plus Button */}
+            <button
+              onClick={handlePlusClick}
+              className="absolute left-1/2 -translate-x-1/2 -top-6 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 border-4 border-card flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200"
+              aria-label="Create"
+            >
+              <i className="bx bx-plus text-3xl"></i>
+            </button>
+
+            <div className="flex items-center gap-2 ml-auto">
+              {navRight.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={session ? item.href : "/login"}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+                      item.highlight
+                        ? active
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                          : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
+                        : active
+                        ? "bg-accent text-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    }`}
+                  >
+                    <i className={`bx ${item.icon} text-xl`}></i>
+                    <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
