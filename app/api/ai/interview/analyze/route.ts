@@ -1,6 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { callGroqAI } from "@/lib/groq";
 
+// Helper function to safely parse JSON from AI response
+function parseAIResponse(result: string) {
+  // Remove markdown code blocks if present
+  const cleaned = result
+    .replace(/```json\s*/gi, "")
+    .replace(/```\s*/gi, "")
+    .trim();
+  
+  // Try to find JSON object
+  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    return JSON.parse(jsonMatch[0]);
+  }
+  
+  throw new Error("No valid JSON found in response");
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -29,30 +46,33 @@ Question ${i + 1} (${qa.category}): ${qa.question}
 Answer: ${qa.answer}
 `).join("\n")}
 
-Provide a comprehensive analysis in JSON format:
+Provide a comprehensive analysis.
+
+IMPORTANT: Return ONLY a valid JSON object (no markdown, no code blocks, no extra text).
+Return in this exact JSON format:
 {
-  "overallScore": <number 0-100>,
-  "summary": "<brief overall assessment>",
+  "overallScore": 75,
+  "summary": "brief overall assessment",
   "categoryScores": {
-    "technical": <number 0-100>,
-    "behavioral": <number 0-100>,
-    "communication": <number 0-100>,
-    "problemSolving": <number 0-100>,
-    "cultureFit": <number 0-100>
+    "technical": 70,
+    "behavioral": 75,
+    "communication": 80,
+    "problemSolving": 70,
+    "cultureFit": 75
   },
   "questionScores": [
     {
       "questionNumber": 1,
-      "question": "<question text>",
-      "score": <number 0-10>,
-      "feedback": "<specific feedback for this answer>"
+      "question": "question text",
+      "score": 7,
+      "feedback": "specific feedback for this answer"
     }
   ],
-  "strengths": ["<strength 1>", "<strength 2>", "<strength 3>"],
-  "improvements": ["<area 1>", "<area 2>", "<area 3>"],
-  "recommendations": ["<tip 1>", "<tip 2>", "<tip 3>"],
-  "hireRecommendation": "<Strong Hire / Hire / Maybe / No Hire>",
-  "keyTakeaways": "<2-3 sentence summary of most important points>"
+  "strengths": ["strength 1", "strength 2", "strength 3"],
+  "improvements": ["area 1", "area 2", "area 3"],
+  "recommendations": ["tip 1", "tip 2", "tip 3"],
+  "hireRecommendation": "Hire",
+  "keyTakeaways": "2-3 sentence summary of most important points"
 }
 
 Be fair but constructive in your assessment. Focus on specific, actionable feedback.
@@ -63,7 +83,8 @@ Be fair but constructive in your assessment. Focus on specific, actionable feedb
         role: "system" as const, 
         content: `You are an expert interview coach and hiring manager. 
 Analyze interview responses objectively and provide detailed, constructive feedback.
-Always return valid JSON. Be specific and actionable in your feedback.` 
+IMPORTANT: Always return ONLY valid JSON without markdown code blocks or any other text.
+Be specific and actionable in your feedback.` 
       },
       { role: "user" as const, content: prompt }
     ];
@@ -73,12 +94,26 @@ Always return valid JSON. Be specific and actionable in your feedback.`
     // Parse JSON response
     let analysis;
     try {
-      const jsonMatch = result.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        analysis = JSON.parse(jsonMatch[0]);
-      } else {
-        throw new Error("No JSON found in response");
-      }
+      analysis = parseAIResponse(result);
+      
+      // Ensure required fields exist with proper types
+      analysis = {
+        overallScore: analysis.overallScore || 60,
+        summary: analysis.summary || "Analysis completed.",
+        categoryScores: {
+          technical: analysis.categoryScores?.technical || 60,
+          behavioral: analysis.categoryScores?.behavioral || 60,
+          communication: analysis.categoryScores?.communication || 60,
+          problemSolving: analysis.categoryScores?.problemSolving || 60,
+          cultureFit: analysis.categoryScores?.cultureFit || 60,
+        },
+        questionScores: Array.isArray(analysis.questionScores) ? analysis.questionScores : [],
+        strengths: Array.isArray(analysis.strengths) ? analysis.strengths : [],
+        improvements: Array.isArray(analysis.improvements) ? analysis.improvements : [],
+        recommendations: Array.isArray(analysis.recommendations) ? analysis.recommendations : [],
+        hireRecommendation: analysis.hireRecommendation || "Maybe",
+        keyTakeaways: analysis.keyTakeaways || "Continue practicing to improve.",
+      };
     } catch (parseError) {
       console.error("JSON parse error:", parseError);
       // Provide default analysis structure

@@ -348,14 +348,23 @@ export default function ResumeBuilderPage() {
     const { jsPDF } = await import("jspdf");
     const html2canvas = (await import("html2canvas")).default;
     
-    const canvas = await html2canvas(resumeRef.current, { scale: 2, useCORS: true });
-    const imgData = canvas.toDataURL("image/png");
+    // High quality settings for crisp PDF output
+    const canvas = await html2canvas(resumeRef.current, { 
+      scale: 4, // Higher scale for sharper text
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      logging: false,
+      allowTaint: true,
+      imageTimeout: 0
+    });
+    const imgData = canvas.toDataURL("image/png", 1.0); // Maximum quality
     
     const pdf = new jsPDF("p", "mm", "a4");
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
     
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    // Add image with compression set to NONE for best quality
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, "NONE");
     pdf.save(`Resume_${personalInfo.fullName.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`);
   };
 
@@ -364,11 +373,20 @@ export default function ResumeBuilderPage() {
     if (!resumeRef.current) return;
     
     const html2canvas = (await import("html2canvas")).default;
-    const canvas = await html2canvas(resumeRef.current, { scale: 3, useCORS: true });
+    
+    // High quality settings for crisp image output
+    const canvas = await html2canvas(resumeRef.current, { 
+      scale: 4, // Higher scale for sharper text (4x resolution)
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      logging: false,
+      allowTaint: true,
+      imageTimeout: 0
+    });
     
     const link = document.createElement("a");
     link.download = `Resume_${personalInfo.fullName.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.png`;
-    link.href = canvas.toDataURL("image/png");
+    link.href = canvas.toDataURL("image/png", 1.0); // Maximum quality PNG
     link.click();
   };
 
@@ -429,15 +447,15 @@ export default function ResumeBuilderPage() {
         {/* Resume Preview - ATS-friendly format */}
         <div 
           ref={resumeRef}
-          className="bg-white text-black p-12 shadow-2xl mx-auto max-w-[800px] font-['Times_New_Roman',serif]"
-          style={{ minHeight: "1100px" }}
+          className="bg-white p-12 shadow-2xl mx-auto max-w-[800px] font-['Times_New_Roman',serif]"
+          style={{ minHeight: "1100px", color: "#000000" }}
         >
           {/* Header */}
           <div className="text-center border-b-2 border-black pb-4 mb-6">
-            <h1 className="text-3xl font-bold uppercase tracking-wide mb-2">
+            <h1 className="text-3xl font-bold uppercase tracking-wide mb-2 text-black" style={{ color: "#000000" }}>
               {generatedResume.header?.name || personalInfo.fullName}
             </h1>
-            <p className="text-sm">
+            <p className="text-sm text-black" style={{ color: "#000000" }}>
               {[
                 generatedResume.header?.email || personalInfo.email,
                 generatedResume.header?.phone || personalInfo.phone,
@@ -445,7 +463,7 @@ export default function ResumeBuilderPage() {
               ].filter(Boolean).join(" | ")}
             </p>
             {(generatedResume.header?.linkedin || generatedResume.header?.portfolio) && (
-              <p className="text-sm mt-1">
+              <p className="text-sm mt-1 text-black" style={{ color: "#000000" }}>
                 {[generatedResume.header.linkedin, generatedResume.header.portfolio].filter(Boolean).join(" | ")}
               </p>
             )}
@@ -454,23 +472,23 @@ export default function ResumeBuilderPage() {
           {/* Summary */}
           {generatedResume.summary && (
             <section className="mb-6">
-              <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Professional Summary</h2>
-              <p className="text-sm leading-relaxed">{generatedResume.summary}</p>
+              <h2 className="text-lg font-bold uppercase border-b border-black mb-2 text-black" style={{ color: "#000000" }}>Professional Summary</h2>
+              <p className="text-sm leading-relaxed text-black" style={{ color: "#000000" }}>{generatedResume.summary}</p>
             </section>
           )}
 
           {/* Experience */}
           {generatedResume.experience && generatedResume.experience.length > 0 && (
             <section className="mb-6">
-              <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Professional Experience</h2>
+              <h2 className="text-lg font-bold uppercase border-b border-black mb-2 text-black" style={{ color: "#000000" }}>Professional Experience</h2>
               {generatedResume.experience.map((exp, idx) => (
                 <div key={idx} className="mb-4">
                   <div className="flex justify-between items-baseline">
-                    <h3 className="font-bold">{exp.title}</h3>
-                    <span className="text-sm">{exp.startDate} - {exp.current ? "Present" : exp.endDate}</span>
+                    <h3 className="font-bold text-black" style={{ color: "#000000" }}>{exp.title}</h3>
+                    <span className="text-sm text-black" style={{ color: "#000000" }}>{exp.startDate} - {exp.current ? "Present" : exp.endDate}</span>
                   </div>
-                  <p className="italic">{exp.company}{exp.location ? `, ${exp.location}` : ""}</p>
-                  <ul className="list-disc ml-6 mt-2 text-sm space-y-1">
+                  <p className="italic text-black" style={{ color: "#000000" }}>{exp.company}{exp.location ? `, ${exp.location}` : ""}</p>
+                  <ul className="list-disc ml-6 mt-2 text-sm space-y-1 text-black" style={{ color: "#000000" }}>
                     {(Array.isArray(exp.responsibilities) ? exp.responsibilities : [exp.responsibilities]).map((resp, i) => (
                       <li key={i}>{resp}</li>
                     ))}
@@ -483,13 +501,13 @@ export default function ResumeBuilderPage() {
           {/* Projects (if no experience) */}
           {generatedResume.projects && generatedResume.projects.length > 0 && (
             <section className="mb-6">
-              <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Projects</h2>
+              <h2 className="text-lg font-bold uppercase border-b border-black mb-2 text-black" style={{ color: "#000000" }}>Projects</h2>
               {generatedResume.projects.map((proj, idx) => (
                 <div key={idx} className="mb-3">
-                  <h3 className="font-bold">{proj.title}</h3>
-                  <p className="text-sm">{proj.description}</p>
+                  <h3 className="font-bold text-black" style={{ color: "#000000" }}>{proj.title}</h3>
+                  <p className="text-sm text-black" style={{ color: "#000000" }}>{proj.description}</p>
                   {proj.technologies && proj.technologies.length > 0 && (
-                    <p className="text-sm italic">Technologies: {Array.isArray(proj.technologies) ? proj.technologies.join(", ") : proj.technologies}</p>
+                    <p className="text-sm italic text-black" style={{ color: "#000000" }}>Technologies: {Array.isArray(proj.technologies) ? proj.technologies.join(", ") : proj.technologies}</p>
                   )}
                 </div>
               ))}
@@ -499,15 +517,15 @@ export default function ResumeBuilderPage() {
           {/* Education */}
           {generatedResume.education && generatedResume.education.length > 0 && (
             <section className="mb-6">
-              <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Education</h2>
+              <h2 className="text-lg font-bold uppercase border-b border-black mb-2 text-black" style={{ color: "#000000" }}>Education</h2>
               {generatedResume.education.map((edu, idx) => (
                 <div key={idx} className="mb-3">
                   <div className="flex justify-between items-baseline">
-                    <h3 className="font-bold">{edu.degree} in {edu.field}</h3>
-                    <span className="text-sm">{edu.graduationYear}</span>
+                    <h3 className="font-bold text-black" style={{ color: "#000000" }}>{edu.degree} in {edu.field}</h3>
+                    <span className="text-sm text-black" style={{ color: "#000000" }}>{edu.graduationYear}</span>
                   </div>
-                  <p className="italic">{edu.institution}</p>
-                  {edu.gpa && <p className="text-sm">GPA: {edu.gpa}</p>}
+                  <p className="italic text-black" style={{ color: "#000000" }}>{edu.institution}</p>
+                  {edu.gpa && <p className="text-sm text-black" style={{ color: "#000000" }}>GPA: {edu.gpa}</p>}
                 </div>
               ))}
             </section>
@@ -516,8 +534,8 @@ export default function ResumeBuilderPage() {
           {/* Skills */}
           {generatedResume.skills && (
             <section className="mb-6">
-              <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Skills</h2>
-              <div className="text-sm space-y-1">
+              <h2 className="text-lg font-bold uppercase border-b border-black mb-2 text-black" style={{ color: "#000000" }}>Skills</h2>
+              <div className="text-sm space-y-1 text-black" style={{ color: "#000000" }}>
                 {generatedResume.skills.technical && generatedResume.skills.technical.length > 0 && (
                   <p><strong>Technical:</strong> {Array.isArray(generatedResume.skills.technical) ? generatedResume.skills.technical.join(", ") : generatedResume.skills.technical}</p>
                 )}
@@ -537,8 +555,8 @@ export default function ResumeBuilderPage() {
           {/* Certifications */}
           {generatedResume.certifications && generatedResume.certifications.length > 0 && (
             <section className="mb-6">
-              <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Certifications</h2>
-              <ul className="list-disc ml-6 text-sm">
+              <h2 className="text-lg font-bold uppercase border-b border-black mb-2 text-black" style={{ color: "#000000" }}>Certifications</h2>
+              <ul className="list-disc ml-6 text-sm text-black" style={{ color: "#000000" }}>
                 {generatedResume.certifications.map((cert, idx) => (
                   <li key={idx}>{cert}</li>
                 ))}
@@ -549,12 +567,12 @@ export default function ResumeBuilderPage() {
           {/* Volunteer */}
           {generatedResume.volunteer && generatedResume.volunteer.length > 0 && (
             <section className="mb-6">
-              <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Volunteer Experience</h2>
+              <h2 className="text-lg font-bold uppercase border-b border-black mb-2 text-black" style={{ color: "#000000" }}>Volunteer Experience</h2>
               {generatedResume.volunteer.map((vol, idx) => (
                 <div key={idx} className="mb-3">
-                  <h3 className="font-bold">{vol.role} - {vol.organization}</h3>
-                  <p className="text-sm italic">{vol.duration}</p>
-                  <p className="text-sm">{vol.description}</p>
+                  <h3 className="font-bold text-black" style={{ color: "#000000" }}>{vol.role} - {vol.organization}</h3>
+                  <p className="text-sm italic text-black" style={{ color: "#000000" }}>{vol.duration}</p>
+                  <p className="text-sm text-black" style={{ color: "#000000" }}>{vol.description}</p>
                 </div>
               ))}
             </section>
@@ -563,8 +581,8 @@ export default function ResumeBuilderPage() {
           {/* Awards */}
           {generatedResume.awards && generatedResume.awards.length > 0 && (
             <section className="mb-6">
-              <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Awards & Achievements</h2>
-              <ul className="list-disc ml-6 text-sm">
+              <h2 className="text-lg font-bold uppercase border-b border-black mb-2 text-black" style={{ color: "#000000" }}>Awards & Achievements</h2>
+              <ul className="list-disc ml-6 text-sm text-black" style={{ color: "#000000" }}>
                 {generatedResume.awards.map((award, idx) => (
                   <li key={idx}>{award.title}{award.issuer ? ` - ${award.issuer}` : ""}{award.date ? ` (${award.date})` : ""}</li>
                 ))}

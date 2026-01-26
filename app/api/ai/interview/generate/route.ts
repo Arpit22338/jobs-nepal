@@ -1,6 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { callGroqAI, AI_PROMPTS } from "@/lib/groq";
 
+// Helper function to safely parse JSON from AI response
+function parseAIResponse(result: string) {
+  // Remove markdown code blocks if present
+  const cleaned = result
+    .replace(/```json\s*/gi, "")
+    .replace(/```\s*/gi, "")
+    .trim();
+  
+  // Try to find JSON object
+  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    return JSON.parse(jsonMatch[0]);
+  }
+  
+  throw new Error("No valid JSON found in response");
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -23,11 +40,19 @@ Requirements:
 - If a company is mentioned, include 2-3 company-specific questions
 - Focus on the specified topics/skills if provided
 
-Return in JSON format with categorized questions.
+IMPORTANT: Return ONLY a valid JSON object (no markdown, no code blocks, no extra text).
+Return in this exact JSON format:
+{
+  "behavioral": [{"question": "...", "tip": "..."}],
+  "technical": [{"question": "...", "tip": "..."}],
+  "situational": [{"question": "...", "tip": "..."}],
+  "cultureFit": [{"question": "...", "tip": "..."}],
+  "careerGoals": [{"question": "...", "tip": "..."}]
+}
 `;
 
     const messages = [
-      { role: "system" as const, content: AI_PROMPTS.interviewPrep },
+      { role: "system" as const, content: AI_PROMPTS.interviewPrep + "\n\nIMPORTANT: Always return ONLY valid JSON without markdown code blocks or any other text." },
       { role: "user" as const, content: prompt }
     ];
 
@@ -36,12 +61,7 @@ Return in JSON format with categorized questions.
     // Parse JSON response
     let questions;
     try {
-      const jsonMatch = result.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        questions = JSON.parse(jsonMatch[0]);
-      } else {
-        throw new Error("No JSON found");
-      }
+      questions = parseAIResponse(result);
     } catch {
       // Fallback: return as structured data
       questions = {

@@ -112,6 +112,20 @@ export default function InterviewPrepPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       synthRef.current = window.speechSynthesis;
+      
+      // Preload voices - they may not be available immediately
+      const loadVoices = () => {
+        const voices = synthRef.current?.getVoices();
+        if (voices && voices.length > 0) {
+          console.log("Voices loaded:", voices.length);
+        }
+      };
+      
+      // Load voices immediately and also on voiceschanged event
+      loadVoices();
+      if (synthRef.current) {
+        synthRef.current.onvoiceschanged = loadVoices;
+      }
     }
   }, []);
 
@@ -200,31 +214,50 @@ export default function InterviewPrepPage() {
     // Cancel any ongoing speech
     synthRef.current.cancel();
     
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-    
-    // Try to use a natural voice
-    const voices = synthRef.current.getVoices();
-    const preferredVoice = voices.find(v => 
-      v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Samantha")
-    ) || voices[0];
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
-    
-    utterance.onstart = () => setIsAISpeaking(true);
-    utterance.onend = () => {
-      setIsAISpeaking(false);
-      if (interviewMode === "voice") {
-        // Start listening after AI finishes speaking
-        setTimeout(() => startListening(), 500);
+    // Wait a moment for cancel to complete
+    setTimeout(() => {
+      if (!synthRef.current) return;
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      utterance.lang = "en-US";
+      
+      // Get voices and try to use a natural one
+      const voices = synthRef.current.getVoices();
+      if (voices.length > 0) {
+        // Prefer natural/Google voices for better quality
+        const preferredVoice = voices.find(v => 
+          v.lang.startsWith("en") && (
+            v.name.includes("Google") || 
+            v.name.includes("Natural") || 
+            v.name.includes("Samantha") ||
+            v.name.includes("Female") ||
+            v.name.includes("Male")
+          )
+        ) || voices.find(v => v.lang.startsWith("en")) || voices[0];
+        
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
       }
-    };
-    utterance.onerror = () => setIsAISpeaking(false);
-    
-    synthRef.current.speak(utterance);
+      
+      utterance.onstart = () => setIsAISpeaking(true);
+      utterance.onend = () => {
+        setIsAISpeaking(false);
+        if (interviewMode === "voice") {
+          // Start listening after AI finishes speaking
+          setTimeout(() => startListening(), 500);
+        }
+      };
+      utterance.onerror = (e) => {
+        console.error("Speech synthesis error:", e);
+        setIsAISpeaking(false);
+      };
+      
+      synthRef.current.speak(utterance);
+    }, 100);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMuted, interviewMode]);
 
@@ -240,8 +273,17 @@ export default function InterviewPrepPage() {
   // =====================
   const startListening = useCallback(() => {
     if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
-      alert("Speech recognition is not supported in this browser. Please use Chrome.");
+      alert("Speech recognition is not supported in this browser. Please use Chrome or Edge.");
       return;
+    }
+
+    // Stop any existing recognition
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {
+        // Ignore errors when stopping
+      }
     }
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -249,8 +291,10 @@ export default function InterviewPrepPage() {
     recognitionRef.current.continuous = true;
     recognitionRef.current.interimResults = true;
     recognitionRef.current.lang = "en-US";
+    recognitionRef.current.maxAlternatives = 1;
 
     recognitionRef.current.onstart = () => {
+      console.log("Speech recognition started");
       setIsListening(true);
     };
 
@@ -267,31 +311,68 @@ export default function InterviewPrepPage() {
         }
       }
 
-      setTranscript(prev => prev + finalTranscript + interimTranscript);
+      // Update transcript display
+      if (interimTranscript) {
+        setTranscript(interimTranscript);
+      }
       
       if (finalTranscript) {
         setUserAnswer(prev => prev + finalTranscript);
+        setTranscript(""); // Clear interim transcript
       }
     };
 
     recognitionRef.current.onerror = (event: any) => {
       console.error("Speech recognition error:", event.error);
-      if (event.error !== "no-speech") {
+      if (event.error === "not-allowed") {
+        alert("Microphone access denied. Please allow microphone access in your browser settings.");
+      } else if (event.error === "no-speech") {
+        // Continue listening if no speech detected
+        console.log("No speech detected, continuing...");
+      } else if (event.error !== "aborted") {
         setIsListening(false);
       }
     };
 
     recognitionRef.current.onend = () => {
+      console.log("Speech recognition ended");
       setIsListening(false);
+      
+      // Auto-restart if in voice mode and should still be listening
+      if (interviewMode === "voice" && !isAISpeaking) {
+        // Optionally restart listening
+      }
     };
 
-    recognitionRef.current.start();
-  }, []);
+    try {
+      recognitionRef.current.start();
+    } catch (error) {
+      console.error("Failed to start speech recognition:", error);
+      alert("Failed to start microphone. Please check your permissions.");
+    }
+  }, [interviewMode, isAISpeaking]);
 
   const stopListening = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       setIsListening(false);
+    }
+  };
+
+  // =====================
+  // Microphone Permission
+  // =====================
+  const requestMicrophonePermission = async (): Promise<boolean> => {
+    try {
+      // Request microphone access to trigger browser permission prompt
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Stop all tracks immediately after getting permission
+      stream.getTracks().forEach(track => track.stop());
+      return true;
+    } catch (error) {
+      console.error("Microphone permission denied:", error);
+      alert("Microphone access is required for voice mode. Please allow microphone access in your browser and try again.");
+      return false;
     }
   };
 
@@ -436,6 +517,14 @@ export default function InterviewPrepPage() {
   // Practice Flow
   // =====================
   const startPractice = async () => {
+    // Request microphone permission first if voice mode is enabled
+    if (interviewMode === "voice") {
+      const hasPermission = await requestMicrophonePermission();
+      if (!hasPermission) {
+        return; // Don't start practice if permission denied
+      }
+    }
+
     setCurrentQuestionIndex(0);
     setUserAnswer("");
     setTranscript("");
@@ -699,7 +788,13 @@ export default function InterviewPrepPage() {
                 </button>
                 
                 <button
-                  onClick={() => setInterviewMode("voice")}
+                  onClick={async () => {
+                    // Request microphone permission when selecting voice mode
+                    const hasPermission = await requestMicrophonePermission();
+                    if (hasPermission) {
+                      setInterviewMode("voice");
+                    }
+                  }}
                   className={`p-4 rounded-xl border text-left transition-all ${
                     interviewMode === "voice"
                       ? "bg-primary/10 border-primary"
