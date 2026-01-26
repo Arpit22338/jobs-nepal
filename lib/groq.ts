@@ -1,14 +1,19 @@
-// Groq AI Configuration
-export const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
-export const GROQ_MODEL = "llama-3.3-70b-versatile";
-export const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+// OpenAI Configuration
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
+export const OPENAI_MODEL = "gpt-4o-mini";
+export const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
-interface GroqMessage {
+// Legacy exports for backward compatibility
+export const GROQ_API_KEY = OPENAI_API_KEY;
+export const GROQ_MODEL = OPENAI_MODEL;
+export const GROQ_API_URL = OPENAI_API_URL;
+
+interface OpenAIMessage {
   role: "system" | "user" | "assistant";
   content: string;
 }
 
-interface GroqResponse {
+interface OpenAIResponse {
   id: string;
   object: string;
   created: number;
@@ -29,7 +34,7 @@ interface GroqResponse {
 }
 
 export async function callGroqAI(
-  messages: GroqMessage[],
+  messages: OpenAIMessage[],
   options: {
     temperature?: number;
     maxTokens?: number;
@@ -37,14 +42,14 @@ export async function callGroqAI(
 ): Promise<string> {
   const { temperature = 0.7, maxTokens = 4096 } = options;
 
-  const response = await fetch(GROQ_API_URL, {
+  const response = await fetch(OPENAI_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${GROQ_API_KEY}`,
+      Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: GROQ_MODEL,
+      model: OPENAI_MODEL,
       messages,
       temperature,
       max_tokens: maxTokens,
@@ -53,10 +58,10 @@ export async function callGroqAI(
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`Groq API error: ${response.status} - ${error}`);
+    throw new Error(`OpenAI API error: ${response.status} - ${error}`);
   }
 
-  const data: GroqResponse = await response.json();
+  const data: OpenAIResponse = await response.json();
   return data.choices[0]?.message?.content || "";
 }
 

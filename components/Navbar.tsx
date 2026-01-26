@@ -4,19 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, User, LogOut, MessageSquare, ChevronDown, Settings, HelpCircle, LayoutDashboard, UserMinus, Sparkles, FileText, MessageCircle, Target, TrendingUp } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
 import { ThemeToggle } from "./ui/theme-toggle";
 import { getCurrentUserImage } from "@/app/actions";
 
-// AI Tools menu items
+// AI Tools menu items with boxicons
 const aiToolsItems = [
-  { name: "RojgaarAI Chat", href: "/messages/rojgaar-ai", icon: MessageCircle, description: "Your AI career assistant" },
-  { name: "Resume Builder", href: "/ai-tools/resume-builder", icon: FileText, description: "Create ATS-optimized resumes" },
-  { name: "Interview Prep", href: "/ai-tools/interview-prep", icon: MessageCircle, description: "Practice with AI feedback" },
-  { name: "Skills Gap Analysis", href: "/ai-tools/skills-gap", icon: TrendingUp, description: "Plan your career growth" },
-  { name: "Job Matcher", href: "/ai-tools/job-matcher", icon: Target, description: "Find jobs matching your skills" },
+  { name: "RojgaarAI Chat", href: "/messages/rojgaar-ai", icon: "bx-bot", description: "Your AI career assistant" },
+  { name: "Resume Builder", href: "/ai-tools/resume-builder", icon: "bx-file", description: "Create ATS-optimized resumes" },
+  { name: "Interview Prep", href: "/ai-tools/interview-prep", icon: "bx-microphone", description: "Practice with AI feedback" },
+  { name: "Skills Gap", href: "/ai-tools/skills-gap", icon: "bx-trending-up", description: "Plan your career growth" },
+  { name: "Job Matcher", href: "/ai-tools/job-matcher", icon: "bx-target-lock", description: "Find matching jobs" },
 ];
 
 export default function Navbar() {
@@ -42,7 +42,7 @@ export default function Navbar() {
 
   const getLinkClass = (path: string) => {
     const isActive = path === "/" ? pathname === "/" : pathname.startsWith(path);
-    return `${isActive ? "text-primary font-bold" : "text-foreground/80 hover:text-primary font-medium"} text-sm transition-all duration-200 tracking-wide`;
+    return `flex items-center gap-1.5 ${isActive ? "text-primary font-semibold" : "text-foreground/70 hover:text-primary"} text-[13px] transition-colors`;
   };
 
   const router = useRouter();
@@ -125,21 +125,21 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled
-          ? "bg-background/80 backdrop-blur-xl border-border/40 py-2 shadow-lg"
-          : "bg-background/50 backdrop-blur-md border-transparent py-4"
+        className={`fixed top-0 w-full z-50 transition-all duration-200 border-b ${scrolled
+          ? "bg-background/90 backdrop-blur-lg border-border/30 shadow-sm"
+          : "bg-background/70 backdrop-blur-md border-transparent"
           }`}
         style={{ WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14">
+          <div className="flex justify-between items-center h-12">
             {/* Left: Logo */}
-            <div className="shrink-0 flex items-center mr-8">
-              <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-105 active:scale-95 duration-200">
-                <div className="hidden md:block relative w-10 h-10 md:w-14 md:h-14">
+            <div className="shrink-0 flex items-center">
+              <Link href="/" className="flex items-center gap-1.5 group transition-transform hover:scale-[1.02] active:scale-[0.98] duration-150">
+                <div className="relative w-8 h-8">
                   <Image src="/logo.png" alt="Rojgaar Logo" fill className="object-contain" />
                 </div>
-                <div className="text-xl md:text-2xl font-black tracking-tighter whitespace-nowrap">
+                <div className="text-lg font-bold tracking-tight">
                   <span className="text-primary">Rojgaar</span>
                   <span className="text-foreground">Nepal</span>
                 </div>
@@ -147,12 +147,27 @@ export default function Navbar() {
             </div>
 
             {/* Center: Desktop Menu */}
-            <div className="hidden lg:flex items-center gap-6">
-              <Link href="/" className={getLinkClass("/")}>Home</Link>
-              <Link href="/jobs" className={getLinkClass("/jobs")}>Jobs</Link>
-              <Link href="/people" className={getLinkClass("/people")}>Community</Link>
-              <Link href="/courses" className={getLinkClass("/courses")}>Courses</Link>
-              <Link href="/talent" className={getLinkClass("/talent")}>Find Talent</Link>
+            <div className="hidden lg:flex items-center gap-1">
+              <Link href="/" className={`${getLinkClass("/")} px-3 py-1.5 rounded-lg hover:bg-accent/50`}>
+                <i className="bx bx-home-alt text-base"></i>
+                Home
+              </Link>
+              <Link href="/jobs" className={`${getLinkClass("/jobs")} px-3 py-1.5 rounded-lg hover:bg-accent/50`}>
+                <i className="bx bx-briefcase text-base"></i>
+                Jobs
+              </Link>
+              <Link href="/people" className={`${getLinkClass("/people")} px-3 py-1.5 rounded-lg hover:bg-accent/50`}>
+                <i className="bx bx-group text-base"></i>
+                Community
+              </Link>
+              <Link href="/courses" className={`${getLinkClass("/courses")} px-3 py-1.5 rounded-lg hover:bg-accent/50`}>
+                <i className="bx bx-book-open text-base"></i>
+                Courses
+              </Link>
+              <Link href="/talent" className={`${getLinkClass("/talent")} px-3 py-1.5 rounded-lg hover:bg-accent/50`}>
+                <i className="bx bx-search-alt text-base"></i>
+                Find Talent
+              </Link>
 
               {/* AI Tools Dropdown */}
               <div 
@@ -161,38 +176,31 @@ export default function Navbar() {
                 onMouseLeave={() => setIsAIToolsOpen(false)}
               >
                 <button
-                  className={`flex items-center gap-1.5 text-sm font-medium transition-all duration-200 tracking-wide ${
-                    pathname.startsWith('/ai-tools') 
-                      ? "text-primary font-bold" 
-                      : "text-foreground/80 hover:text-primary"
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] transition-colors hover:bg-accent/50 ${
+                    pathname.startsWith('/ai-tools') || pathname === '/messages/rojgaar-ai'
+                      ? "text-primary font-semibold" 
+                      : "text-foreground/70 hover:text-primary"
                   }`}
                 >
-                  <Sparkles size={16} className="text-primary" />
+                  <i className="bx bx-bot text-base text-primary"></i>
                   AI Tools
-                  <ChevronDown size={14} className={`transition-transform duration-200 ${isAIToolsOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={12} className={`transition-transform duration-150 ${isAIToolsOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {isAIToolsOpen && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                    <div className="bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl py-2 px-2 min-w-[280px] shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-                      <div className="px-3 py-2 border-b border-border/40 mb-2">
-                        <p className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-2">
-                          <Sparkles size={12} /> AI-Powered Tools
-                        </p>
-                      </div>
+                  <div className="absolute top-full left-0 pt-1 z-50">
+                    <div className="bg-card/95 backdrop-blur-lg border border-border/40 rounded-xl py-1.5 min-w-[220px] shadow-xl animate-in fade-in zoom-in-95 duration-150">
                       {aiToolsItems.map((item) => (
                         <Link
                           key={item.href}
                           href={item.href}
                           onClick={closeMenus}
-                          className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-accent transition-colors group"
+                          className="flex items-center gap-2.5 px-3 py-2 hover:bg-accent transition-colors group mx-1.5 rounded-lg"
                         >
-                          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                            <item.icon size={18} className="text-primary" />
-                          </div>
+                          <i className={`bx ${item.icon} text-lg text-primary`}></i>
                           <div>
-                            <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{item.name}</p>
-                            <p className="text-xs text-muted-foreground">{item.description}</p>
+                            <p className="text-[13px] font-medium text-foreground group-hover:text-primary transition-colors">{item.name}</p>
+                            <p className="text-[11px] text-muted-foreground">{item.description}</p>
                           </div>
                         </Link>
                       ))}
@@ -204,16 +212,16 @@ export default function Navbar() {
               {user?.role === "ADMIN" && (
                 <Link
                   href="/admin/dashboard"
-                  className="bg-red-500/10 text-red-500 border border-red-500/20 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                  className="bg-red-500/10 text-red-500 border border-red-500/20 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wide hover:bg-red-500 hover:text-white transition-all ml-1"
                 >
-                  Admin Panel
+                  Admin
                 </Link>
               )}
 
               {user?.role === "EMPLOYER" && (
                 <Link
                   href="/employer/dashboard"
-                  className="bg-primary/10 text-primary border border-primary/20 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-sm"
+                  className="bg-primary/10 text-primary border border-primary/20 px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wide hover:bg-primary hover:text-primary-foreground transition-all ml-1"
                 >
                   Dashboard
                 </Link>
@@ -221,88 +229,87 @@ export default function Navbar() {
             </div>
 
             {/* Right: Icons & Auth */}
-            <div className="hidden lg:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-1">
               <ThemeToggle />
               {session ? (
                 <>
                   <NotificationBell />
-                  <Link href="/messages" className="text-muted-foreground hover:text-primary relative transition-colors p-2 rounded-full hover:bg-accent/50 group">
-                    <MessageSquare size={20} className="group-hover:scale-110 transition-transform" />
+                  <Link href="/messages" className="text-muted-foreground hover:text-primary relative transition-colors p-2 rounded-lg hover:bg-accent/50">
+                    <i className="bx bx-message-dots text-xl"></i>
                     {unreadCount > 0 && (
-                      <span className="absolute top-1 right-1 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center ring-2 ring-background">
+                      <span className="absolute top-0.5 right-0.5 bg-destructive text-destructive-foreground text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                         {unreadCount}
                       </span>
                     )}
                   </Link>
 
-                  <div className="relative ml-2">
+                  <div className="relative ml-1">
                     <button
                       onClick={() => setIsProfileOpen(!isProfileOpen)}
-                      className="flex items-center gap-2 focus:outline-none hover:bg-accent/50 p-1.5 rounded-full transition-all duration-200 border border-transparent hover:border-border/50"
+                      className="flex items-center gap-1.5 focus:outline-none hover:bg-accent/50 p-1 rounded-lg transition-colors"
                     >
-                      <div className="w-9 h-9 rounded-full overflow-hidden shadow-sm ring-2 ring-primary/10 group-hover:ring-primary/30 transition-all">
+                      <div className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-primary/20">
                         {userImage ? (
-                          <Image src={userImage} alt={user?.name || "User"} width={36} height={36} className="object-cover w-full h-full" />
+                          <Image src={userImage} alt={user?.name || "User"} width={28} height={28} className="object-cover w-full h-full" />
                         ) : (
                           <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-                            <span className="text-primary font-bold text-xs">{getInitials(user?.name || "U")}</span>
+                            <span className="text-primary font-semibold text-[10px]">{getInitials(user?.name || "U")}</span>
                           </div>
                         )}
                       </div>
-                      <ChevronDown size={14} className={`text-muted-foreground transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown size={12} className={`text-muted-foreground transition-transform duration-150 ${isProfileOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {isProfileOpen && (
-                      <div className="absolute right-0 mt-3 w-64 bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl py-2 z-50 animate-in fade-in zoom-in-95 duration-200 origin-top-right shadow-2xl" style={{ WebkitBackfaceVisibility: 'hidden', backfaceVisibility: 'hidden' }}>
-                        <div className="px-4 py-4 border-b border-border/40 mb-1 bg-accent/20">
-                          <p className="font-bold text-foreground truncate text-sm">{user?.name}</p>
-                          <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
-                          <span className="inline-flex mt-2 items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">
+                      <div className="absolute right-0 mt-2 w-56 bg-card/95 backdrop-blur-lg border border-border/40 rounded-xl py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 origin-top-right shadow-xl">
+                        <div className="px-3 py-3 border-b border-border/30 mb-1">
+                          <p className="font-semibold text-foreground truncate text-[13px]">{user?.name}</p>
+                          <p className="text-[11px] text-muted-foreground truncate">{user?.email}</p>
+                          <span className="inline-flex mt-1.5 items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary">
                             {user?.role}
                           </span>
                         </div>
-                        <div className="px-2 space-y-0.5 mt-2">
-                          {/* RojgaarAI Quick Access */}
-                          <Link href="/messages/rojgaar-ai" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium bg-primary/5 border border-primary/20 hover:bg-primary/10 text-primary rounded-xl transition-colors mb-2" onClick={closeMenus}>
+                        <div className="px-1.5 space-y-0.5">
+                          <Link href="/messages/rojgaar-ai" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium bg-primary/5 hover:bg-primary/10 text-primary rounded-lg transition-colors mx-1 mb-1" onClick={closeMenus}>
                             <i className="bx bx-bot text-lg"></i> Chat with RojgaarAI
                           </Link>
-                          <Link href="/profile" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
-                            <User size={16} className="text-muted-foreground" /> Profile
+                          <Link href="/profile" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] text-foreground/80 hover:bg-accent hover:text-primary rounded-lg transition-colors mx-1" onClick={closeMenus}>
+                            <i className="bx bx-user text-base text-muted-foreground"></i> Profile
                           </Link>
-                          <Link href="/my-applications" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
-                            <LayoutDashboard size={16} className="text-muted-foreground" /> My Applications
+                          <Link href="/my-applications" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] text-foreground/80 hover:bg-accent hover:text-primary rounded-lg transition-colors mx-1" onClick={closeMenus}>
+                            <i className="bx bx-file text-base text-muted-foreground"></i> My Applications
                           </Link>
-                          <Link href="/saved-jobs" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
-                            <i className="bx bx-bookmark text-lg text-muted-foreground"></i> Saved Jobs
+                          <Link href="/saved-jobs" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] text-foreground/80 hover:bg-accent hover:text-primary rounded-lg transition-colors mx-1" onClick={closeMenus}>
+                            <i className="bx bx-bookmark text-base text-muted-foreground"></i> Saved Jobs
                           </Link>
-                          <Link href="/profile/edit" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
-                            <Settings size={16} className="text-muted-foreground" /> Settings
+                          <Link href="/profile/edit" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] text-foreground/80 hover:bg-accent hover:text-primary rounded-lg transition-colors mx-1" onClick={closeMenus}>
+                            <i className="bx bx-cog text-base text-muted-foreground"></i> Settings
                           </Link>
                           {user?.role === "EMPLOYER" && (
-                            <Link href="/employer/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
-                              <LayoutDashboard size={16} className="text-muted-foreground" /> Dashboard
+                            <Link href="/employer/dashboard" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] text-foreground/80 hover:bg-accent hover:text-primary rounded-lg transition-colors mx-1" onClick={closeMenus}>
+                              <i className="bx bx-grid-alt text-base text-muted-foreground"></i> Dashboard
                             </Link>
                           )}
                           {user?.role === "ADMIN" && (
                             <>
-                              <Link href="/employer/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
-                                <i className="bx bx-briefcase text-lg text-muted-foreground"></i> Manage Posts
+                              <Link href="/employer/dashboard" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] text-foreground/80 hover:bg-accent hover:text-primary rounded-lg transition-colors mx-1" onClick={closeMenus}>
+                                <i className="bx bx-briefcase text-base text-muted-foreground"></i> Manage Posts
                               </Link>
-                              <Link href="/admin/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-500/10 dark:hover:bg-red-500/10 rounded-xl transition-colors" onClick={closeMenus}>
-                                <LayoutDashboard size={16} className="text-red-500" /> Admin Panel
+                              <Link href="/admin/dashboard" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] font-medium text-red-500 hover:bg-red-500/10 rounded-lg transition-colors mx-1" onClick={closeMenus}>
+                                <i className="bx bx-shield text-base text-red-500"></i> Admin Panel
                               </Link>
                             </>
                           )}
-                          <Link href="/support" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
-                            <HelpCircle size={16} className="text-muted-foreground" /> Support
+                          <Link href="/support" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] text-foreground/80 hover:bg-accent hover:text-primary rounded-lg transition-colors mx-1" onClick={closeMenus}>
+                            <i className="bx bx-help-circle text-base text-muted-foreground"></i> Support
                           </Link>
-                          <Link href="/profile/blocked" className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-500/10 rounded-xl transition-colors" onClick={closeMenus}>
-                            <UserMinus size={16} className="text-red-500" /> Blocked Users
+                          <Link href="/profile/blocked" className="flex items-center gap-2.5 px-2.5 py-2 text-[13px] text-red-500 hover:bg-red-500/10 rounded-lg transition-colors mx-1" onClick={closeMenus}>
+                            <i className="bx bx-user-minus text-base text-red-500"></i> Blocked Users
                           </Link>
                         </div>
-                        <div className="border-t border-border/40 my-1 pt-1 px-2">
-                          <button onClick={() => signOut()} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-xl transition-colors text-left">
-                            <LogOut size={16} /> Sign Out
+                        <div className="border-t border-border/30 mt-1 pt-1 px-1.5">
+                          <button onClick={() => signOut()} className="w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] text-destructive hover:bg-destructive/10 rounded-lg transition-colors mx-1 text-left">
+                            <i className="bx bx-log-out text-base"></i> Sign Out
                           </button>
                         </div>
                       </div>
@@ -310,13 +317,13 @@ export default function Navbar() {
                   </div>
                 </>
               ) : (
-                <div className="flex items-center space-x-1">
-                  <Link href="/login" className="text-sm font-medium text-foreground/70 hover:text-primary px-4 py-2.5 rounded-full hover:bg-accent transition-colors">
+                <div className="flex items-center gap-1">
+                  <Link href="/login" className="text-[13px] font-medium text-foreground/70 hover:text-primary px-3 py-1.5 rounded-lg hover:bg-accent/50 transition-colors">
                     Login
                   </Link>
                   <Link
                     href="/register"
-                    className="text-sm font-medium bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-2.5 rounded-full transition-all shadow-md hover:shadow-primary/25 hover:-translate-y-0.5 active:translate-y-0"
+                    className="text-[13px] font-medium bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-1.5 rounded-lg transition-colors"
                   >
                     Register
                   </Link>
@@ -325,12 +332,12 @@ export default function Navbar() {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="lg:hidden flex items-center gap-2">
+            <div className="lg:hidden flex items-center gap-1.5">
               <ThemeToggle />
               {!session && (
                 <Link
                   href="/login"
-                  className="text-sm font-medium bg-primary/10 text-primary px-4 py-2 rounded-full transition"
+                  className="text-[13px] font-medium bg-primary/10 text-primary px-3 py-1.5 rounded-lg transition"
                 >
                   Login
                 </Link>
@@ -338,10 +345,10 @@ export default function Navbar() {
               {session && (
                 <>
                   <NotificationBell />
-                  <Link href="/messages" className="text-muted-foreground hover:text-primary relative p-1">
-                    <MessageSquare size={22} />
+                  <Link href="/messages" className="text-muted-foreground hover:text-primary relative p-1.5">
+                    <i className="bx bx-message-dots text-xl"></i>
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center ring-2 ring-background">
+                      <span className="absolute -top-0.5 -right-0.5 bg-destructive text-destructive-foreground text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                         {unreadCount}
                       </span>
                     )}
@@ -350,10 +357,10 @@ export default function Navbar() {
               )}
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 text-foreground/80 hover:text-primary hover:bg-accent rounded-full transition-colors focus:outline-none"
+                className="p-1.5 text-foreground/80 hover:text-primary hover:bg-accent/50 rounded-lg transition-colors focus:outline-none"
                 aria-label="Toggle menu"
               >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
+                {isOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </div>
@@ -365,74 +372,71 @@ export default function Navbar() {
         <div className="fixed inset-0 z-100 lg:hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={closeMenus} />
           <div
-            className="absolute inset-y-0 right-0 w-[280px] bg-background/95 backdrop-blur-xl shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-300 border-l border-border/50"
+            className="absolute inset-y-0 right-0 w-[260px] bg-background/95 backdrop-blur-lg shadow-xl flex flex-col h-full animate-in slide-in-from-right duration-200 border-l border-border/40"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4 border-b border-border/50 flex items-center justify-between bg-accent/20">
-              <span className="font-bold text-lg text-foreground">Menu</span>
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <button onClick={closeMenus} className="p-2 text-foreground/80 hover:bg-accent rounded-full">
-                  <X size={20} />
-                </button>
-              </div>
+            <div className="p-3 border-b border-border/40 flex items-center justify-between">
+              <span className="font-semibold text-foreground">Menu</span>
+              <button onClick={closeMenus} className="p-1.5 text-foreground/80 hover:bg-accent rounded-lg">
+                <X size={18} />
+              </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-              <Link href="/" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                Home
+            <div className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
+              <Link href="/" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                <i className="bx bx-home-alt text-lg"></i> Home
               </Link>
 
               {user?.role === "TEACHER" ? (
                 <>
-                  <Link href="/teacher/course" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Add Course
+                  <Link href="/teacher/course" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-plus-circle text-lg"></i> Add Course
                   </Link>
-                  <Link href="/teacher/dashboard" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Teacher Dashboard
+                  <Link href="/teacher/dashboard" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-grid-alt text-lg"></i> Teacher Dashboard
                   </Link>
                 </>
               ) : (
                 <>
-                  <Link href="/jobs" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Find Jobs
+                  <Link href="/jobs" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-briefcase text-lg"></i> Find Jobs
                   </Link>
-                  <Link href="/people" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Community
+                  <Link href="/people" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-group text-lg"></i> Community
                   </Link>
-                  <Link href="/talent" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Find Talent
+                  <Link href="/talent" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-search-alt text-lg"></i> Find Talent
                   </Link>
                 </>
               )}
 
-              <Link href="/courses" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                Skill Courses
+              <Link href="/courses" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                <i className="bx bx-book-open text-lg"></i> Courses
               </Link>
 
               {/* AI Tools Section in Mobile */}
-              <div className="my-2 border-t border-border/50 mx-4"></div>
+              <div className="my-2 border-t border-border/40 mx-2"></div>
               <button
                 onClick={() => setIsAIToolsMobileOpen(!isAIToolsMobileOpen)}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-bold text-primary hover:bg-primary/10 transition-colors"
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[14px] font-semibold text-primary hover:bg-primary/10 transition-colors"
               >
-                <span className="flex items-center gap-2">
-                  <Sparkles size={18} />
+                <span className="flex items-center gap-2.5">
+                  <i className="bx bx-bot text-lg"></i>
                   AI Tools
                 </span>
-                <ChevronDown size={16} className={`transition-transform duration-200 ${isAIToolsMobileOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={14} className={`transition-transform duration-150 ${isAIToolsMobileOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {isAIToolsMobileOpen && (
-                <div className="space-y-1 pl-4">
+                <div className="space-y-0.5 pl-3">
                   {aiToolsItems.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={closeMenus}
-                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors"
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors"
                     >
-                      <item.icon size={16} className="text-primary" />
+                      <i className={`bx ${item.icon} text-base text-primary`}></i>
                       {item.name}
                     </Link>
                   ))}
@@ -441,15 +445,15 @@ export default function Navbar() {
 
               {session && (
                 <>
-                  <Link href="/my-certificates" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Certificates
+                  <Link href="/my-certificates" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-medal text-lg"></i> Certificates
                   </Link>
-                  <div className="my-2 border-t border-border/50 mx-4"></div>
-                  <p className="px-4 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Quick Access</p>
-                  <Link href="/my-applications" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                  <div className="my-2 border-t border-border/40 mx-2"></div>
+                  <p className="px-3 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Quick Access</p>
+                  <Link href="/my-applications" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
                     <i className="bx bx-file text-lg"></i> My Applications
                   </Link>
-                  <Link href="/saved-jobs" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                  <Link href="/saved-jobs" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
                     <i className="bx bx-bookmark text-lg"></i> Saved Jobs
                   </Link>
                 </>
@@ -457,45 +461,45 @@ export default function Navbar() {
 
               {user?.role === "JOBSEEKER" && (
                 <>
-                  <div className="my-2 border-t border-border/50 mx-4"></div>
-                  <p className="px-4 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Job Seeker</p>
-                  <Link href="/talent/new" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Share My Talent
+                  <div className="my-2 border-t border-border/40 mx-2"></div>
+                  <p className="px-3 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Job Seeker</p>
+                  <Link href="/talent/new" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-user-plus text-lg"></i> Share My Talent
                   </Link>
                 </>
               )}
 
               {user?.role === "TEACHER" && (
                 <>
-                  <div className="my-2 border-t border-border/50 mx-4"></div>
-                  <p className="px-4 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Teacher</p>
-                  <Link href="/teacher/dashboard" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Teacher Dashboard
+                  <div className="my-2 border-t border-border/40 mx-2"></div>
+                  <p className="px-3 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Teacher</p>
+                  <Link href="/teacher/dashboard" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-grid-alt text-lg"></i> Dashboard
                   </Link>
                 </>
               )}
 
               {(user?.role === "EMPLOYER" || user?.role === "ADMIN") && (
                 <>
-                  <div className="my-2 border-t border-border/50 mx-4"></div>
-                  <p className="px-4 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Employer</p>
-                  <Link href="/employer/jobs/new" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Post a Job
+                  <div className="my-2 border-t border-border/40 mx-2"></div>
+                  <p className="px-3 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Employer</p>
+                  <Link href="/employer/jobs/new" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-plus-circle text-lg"></i> Post a Job
                   </Link>
-                  <Link href="/employer/dashboard" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    Dashboard
+                  <Link href="/employer/dashboard" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-grid-alt text-lg"></i> Dashboard
                   </Link>
                 </>
               )}
 
               {user?.role === "ADMIN" && (
                 <>
-                  <div className="my-2 border-t border-border/50 mx-4"></div>
-                  <p className="px-4 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Admin</p>
-                  <Link href="/employer/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    <i className="bx bx-briefcase text-lg"></i> Manage My Posts
+                  <div className="my-2 border-t border-border/40 mx-2"></div>
+                  <p className="px-3 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Admin</p>
+                  <Link href="/employer/dashboard" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-briefcase text-lg"></i> Manage Posts
                   </Link>
-                  <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-bold text-red-500 hover:bg-red-500/10 transition-colors" onClick={closeMenus}>
+                  <Link href="/admin/dashboard" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[14px] font-medium text-red-500 hover:bg-red-500/10 transition-colors" onClick={closeMenus}>
                     <i className="bx bx-shield text-lg"></i> Admin Panel
                   </Link>
                 </>
@@ -503,25 +507,25 @@ export default function Navbar() {
             </div>
 
             {session && (
-              <div className="p-4 border-t border-border/50 space-y-2 bg-accent/10">
-                <Link href="/profile/blocked" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-bold text-red-500 hover:bg-red-500/10 transition-colors" onClick={closeMenus}>
-                  <UserMinus size={18} className="text-red-500" /> Blocked Users
+              <div className="p-3 border-t border-border/40 space-y-1">
+                <Link href="/profile/blocked" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-red-500 hover:bg-red-500/10 transition-colors" onClick={closeMenus}>
+                  <i className="bx bx-user-minus text-base"></i> Blocked Users
                 </Link>
-                <Link href="/profile/edit" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                  <Settings size={18} className="text-muted-foreground" /> Settings
+                <Link href="/profile/edit" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                  <i className="bx bx-cog text-base"></i> Settings
                 </Link>
-                <button onClick={() => { signOut(); closeMenus(); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-destructive hover:bg-destructive/10 transition-colors text-left">
-                  <LogOut size={18} /> Sign Out
+                <button onClick={() => { signOut(); closeMenus(); }} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-destructive hover:bg-destructive/10 transition-colors text-left">
+                  <i className="bx bx-log-out text-base"></i> Sign Out
                 </button>
               </div>
             )}
 
             {!session && (
-              <div className="p-4 border-t border-border/50 space-y-3">
-                <Link href="/login" className="block w-full text-center px-4 py-2.5 rounded-xl border border-border text-foreground font-semibold hover:bg-accent" onClick={closeMenus}>
+              <div className="p-3 border-t border-border/40 space-y-2">
+                <Link href="/login" className="block w-full text-center px-3 py-2 rounded-lg border border-border text-foreground text-[14px] font-medium hover:bg-accent" onClick={closeMenus}>
                   Login
                 </Link>
-                <Link href="/register" className="block w-full text-center px-4 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 shadow-sm" onClick={closeMenus}>
+                <Link href="/register" className="block w-full text-center px-3 py-2 rounded-lg bg-primary text-primary-foreground text-[14px] font-medium hover:bg-primary/90" onClick={closeMenus}>
                   Register
                 </Link>
               </div>

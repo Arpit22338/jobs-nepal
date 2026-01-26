@@ -963,7 +963,7 @@ export default function ResumeBuilderPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-1">Field of Study *</label>
+                      <label className="block text-sm font-medium mb-1">Field of Study <span className="text-muted-foreground text-xs">(optional)</span></label>
                       <input
                         type="text"
                         value={edu.field}

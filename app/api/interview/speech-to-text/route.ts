@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 
 // Rate limiting map
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!GROQ_API_KEY) {
+    if (!OPENAI_API_KEY) {
       return NextResponse.json(
         { error: "Speech service not configured" },
         { status: 500 }
@@ -79,25 +79,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create form data for Groq API
-    const groqFormData = new FormData();
-    groqFormData.append("file", audioFile, audioFile.name || "audio.webm");
-    groqFormData.append("model", "whisper-large-v3-turbo");
-    groqFormData.append("response_format", "json");
-    groqFormData.append("language", "en");
+    // Create form data for OpenAI API
+    const openaiFormData = new FormData();
+    openaiFormData.append("file", audioFile, audioFile.name || "audio.webm");
+    openaiFormData.append("model", "whisper-1");
+    openaiFormData.append("response_format", "json");
+    openaiFormData.append("language", "en");
 
-    // Call Groq's Whisper API for transcription
-    const response = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
+    // Call OpenAI's Whisper API for transcription
+    const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${GROQ_API_KEY}`,
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
       },
-      body: groqFormData,
+      body: openaiFormData,
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Groq STT Error:", errorText);
+      console.error("OpenAI STT Error:", errorText);
       return NextResponse.json(
         { error: "Failed to transcribe audio. Please try again." },
         { status: 500 }

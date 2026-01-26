@@ -5,6 +5,67 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { X, Send, Loader2, ChevronRight, Sparkles } from "lucide-react";
 
+// Helper function to parse message content and convert URLs to clickable links
+function parseMessageWithLinks(content: string): React.ReactNode {
+  // Match URLs in the text
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = content.split(urlRegex);
+  
+  if (parts.length === 1) {
+    return content; // No URLs found
+  }
+  
+  return parts.map((part, index) => {
+    if (part.match(urlRegex)) {
+      // Extract the path from the URL for display text
+      try {
+        const url = new URL(part);
+        const path = url.pathname;
+        // Create friendly display text based on the path
+        let displayText = "here";
+        if (path.includes("resume-builder")) displayText = "Resume Builder";
+        else if (path.includes("interview-prep")) displayText = "Interview Prep";
+        else if (path.includes("skills-gap")) displayText = "Skills Gap Analysis";
+        else if (path.includes("job-matcher")) displayText = "Job Matcher";
+        else if (path.includes("ai-tools")) displayText = "AI Tools";
+        else if (path.includes("jobs")) displayText = "Jobs";
+        else if (path.includes("profile")) displayText = "Profile";
+        else if (path.includes("courses")) displayText = "Courses";
+        else if (path.includes("support")) displayText = "Support";
+        else if (path.includes("talent")) displayText = "Talent";
+        else if (path.includes("messages")) displayText = "Messages";
+        else if (path === "/") displayText = "Home";
+        else displayText = path.split("/").filter(Boolean).pop() || "here";
+        
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:text-blue-600 underline font-medium"
+          >
+            {displayText}
+          </a>
+        );
+      } catch {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:text-blue-600 underline font-medium"
+          >
+            here
+          </a>
+        );
+      }
+    }
+    return part;
+  });
+}
+
 interface Message {
   role: "user" | "assistant";
   content: string;
@@ -315,7 +376,9 @@ export default function RojgaarAIPopup() {
                         <span className="text-xs font-semibold text-primary">RojgaarAI</span>
                       </div>
                     )}
-                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                    <p className="text-sm whitespace-pre-wrap">
+                      {msg.role === "assistant" ? parseMessageWithLinks(msg.content) : msg.content}
+                    </p>
                   </div>
                 </div>
               ))}

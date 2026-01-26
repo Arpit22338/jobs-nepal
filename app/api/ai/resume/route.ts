@@ -28,7 +28,7 @@ const resumeSchema = z.object({
   education: z.array(z.object({
     degree: z.string().max(100),
     institution: z.string().max(200),
-    field: z.string().max(100),
+    field: z.string().max(100).optional(),
     graduationYear: z.string().max(10),
     gpa: z.string().max(10).optional(),
     coursework: z.string().max(500).optional(),
@@ -148,9 +148,8 @@ ${exp.responsibilities}
 EDUCATION:
 ${education.map((edu: any, i: number) => `
 Education ${i + 1}:
-- Degree: ${edu.degree}
+- Degree: ${edu.degree}${edu.field ? ` in ${edu.field}` : ''}
 - Institution: ${edu.institution}
-- Field of Study: ${edu.field}
 - Graduation Year: ${edu.graduationYear}
 ${edu.gpa ? `- GPA: ${edu.gpa}` : ''}
 ${edu.coursework ? `- Relevant Coursework: ${edu.coursework}` : ''}
