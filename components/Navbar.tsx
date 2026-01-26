@@ -269,11 +269,12 @@ export default function Navbar() {
                           <Link href="/profile" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
                             <User size={16} className="text-muted-foreground" /> Profile
                           </Link>
-                          {user?.role === "JOBSEEKER" && (
-                            <Link href="/my-applications" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
-                              <LayoutDashboard size={16} className="text-muted-foreground" /> My Applications
-                            </Link>
-                          )}
+                          <Link href="/my-applications" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
+                            <LayoutDashboard size={16} className="text-muted-foreground" /> My Applications
+                          </Link>
+                          <Link href="/saved-jobs" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
+                            <i className="bx bx-bookmark text-lg text-muted-foreground"></i> Saved Jobs
+                          </Link>
                           <Link href="/profile/edit" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
                             <Settings size={16} className="text-muted-foreground" /> Settings
                           </Link>
@@ -283,9 +284,14 @@ export default function Navbar() {
                             </Link>
                           )}
                           {user?.role === "ADMIN" && (
-                            <Link href="/admin/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-500/10 dark:hover:bg-red-500/10 rounded-xl transition-colors" onClick={closeMenus}>
-                              <LayoutDashboard size={16} className="text-red-500" /> Admin Panel
-                            </Link>
+                            <>
+                              <Link href="/employer/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
+                                <i className="bx bx-briefcase text-lg text-muted-foreground"></i> Manage Posts
+                              </Link>
+                              <Link href="/admin/dashboard" className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-500/10 dark:hover:bg-red-500/10 rounded-xl transition-colors" onClick={closeMenus}>
+                                <LayoutDashboard size={16} className="text-red-500" /> Admin Panel
+                              </Link>
+                            </>
                           )}
                           <Link href="/support" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-foreground/80 hover:bg-accent hover:text-primary rounded-xl transition-colors" onClick={closeMenus}>
                             <HelpCircle size={16} className="text-muted-foreground" /> Support
@@ -434,9 +440,19 @@ export default function Navbar() {
               )}
 
               {session && (
-                <Link href="/my-certificates" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                  Certificates
-                </Link>
+                <>
+                  <Link href="/my-certificates" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    Certificates
+                  </Link>
+                  <div className="my-2 border-t border-border/50 mx-4"></div>
+                  <p className="px-4 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Quick Access</p>
+                  <Link href="/my-applications" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-file text-lg"></i> My Applications
+                  </Link>
+                  <Link href="/saved-jobs" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-bookmark text-lg"></i> Saved Jobs
+                  </Link>
+                </>
               )}
 
               {user?.role === "JOBSEEKER" && (
@@ -445,9 +461,6 @@ export default function Navbar() {
                   <p className="px-4 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Job Seeker</p>
                   <Link href="/talent/new" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
                     Share My Talent
-                  </Link>
-                  <Link href="/my-applications" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                    My Applications
                   </Link>
                 </>
               )}
@@ -476,9 +489,16 @@ export default function Navbar() {
               )}
 
               {user?.role === "ADMIN" && (
-                <Link href="/admin/dashboard" className="block px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
-                  Admin Panel
-                </Link>
+                <>
+                  <div className="my-2 border-t border-border/50 mx-4"></div>
+                  <p className="px-4 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Admin</p>
+                  <Link href="/employer/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-foreground/80 hover:text-primary hover:bg-accent transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-briefcase text-lg"></i> Manage My Posts
+                  </Link>
+                  <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-bold text-red-500 hover:bg-red-500/10 transition-colors" onClick={closeMenus}>
+                    <i className="bx bx-shield text-lg"></i> Admin Panel
+                  </Link>
+                </>
               )}
             </div>
 
