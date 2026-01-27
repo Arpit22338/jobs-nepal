@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Menu, X, ChevronDown, Sparkles } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import NotificationBell from "./NotificationBell";
 import { ThemeToggle } from "./ui/theme-toggle";
 import { getCurrentUserImage } from "@/app/actions";
@@ -170,17 +170,16 @@ export default function Navbar() {
               </Link>
 
               {/* AI Tools Dropdown */}
-              <div 
+              <div
                 className="relative"
                 onMouseEnter={() => setIsAIToolsOpen(true)}
                 onMouseLeave={() => setIsAIToolsOpen(false)}
               >
                 <button
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] transition-colors hover:bg-accent/50 ${
-                    pathname.startsWith('/ai-tools') || pathname === '/messages/rojgaar-ai'
-                      ? "text-primary font-semibold" 
-                      : "text-foreground/70 hover:text-primary"
-                  }`}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] transition-colors hover:bg-accent/50 ${pathname.startsWith('/ai-tools') || pathname === '/messages/rojgaar-ai'
+                    ? "text-primary font-semibold"
+                    : "text-foreground/70 hover:text-primary"
+                    }`}
                 >
                   <i className="bx bx-bot text-base text-primary"></i>
                   AI Tools
@@ -426,7 +425,7 @@ export default function Navbar() {
                 </span>
                 <ChevronDown size={14} className={`transition-transform duration-150 ${isAIToolsMobileOpen ? 'rotate-180' : ''}`} />
               </button>
-              
+
               {isAIToolsMobileOpen && (
                 <div className="space-y-0.5 pl-3">
                   {aiToolsItems.map((item) => (
@@ -536,7 +535,7 @@ export default function Navbar() {
 
       {/* Floating AI Tools Button for Mobile */}
       <FloatingAIButton />
-      
+
       {/* Desktop Bottom Navigation Bar */}
       <DesktopBottomNav />
     </>
@@ -550,13 +549,13 @@ function DesktopBottomNav() {
   const { data: session } = useSession();
   const [showPostMenu, setShowPostMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  
+
   // Hide on certain pages
   const hiddenPaths = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
   if (hiddenPaths.some(p => pathname.startsWith(p))) return null;
-  
+
   const isActive = (path: string) => pathname === path || (path !== "/" && pathname.startsWith(path));
-  
+
   const navItems = [
     { href: "/jobs", icon: "bx-briefcase", label: "Jobs" },
     { href: "/my-certificates", icon: "bx-award", label: "Certs" },
@@ -590,7 +589,7 @@ function DesktopBottomNav() {
     setShowPostMenu(false);
     router.push(path);
   };
-  
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 hidden lg:block">
       <div className="max-w-3xl mx-auto px-4 pb-4">
@@ -657,7 +656,7 @@ function DesktopBottomNav() {
               </div>
             </div>
           )}
-          
+
           {/* Navigation Items */}
           <div className="flex items-center justify-center gap-1">
             {navItems.slice(0, 3).map((item) => {
@@ -666,9 +665,8 @@ function DesktopBottomNav() {
                 <Link
                   key={item.href}
                   href={session ? item.href : "/login"}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 ${
-                    active ? "bg-accent text-primary" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                  }`}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 ${active ? "bg-accent text-primary" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    }`}
                 >
                   <i className={`bx ${item.icon} text-lg`}></i>
                   <span className="text-xs font-medium">{item.label}</span>
@@ -691,15 +689,14 @@ function DesktopBottomNav() {
                 <Link
                   key={item.href}
                   href={session ? item.href : "/login"}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 ${
-                    item.highlight
-                      ? active
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
-                        : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
-                      : active
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 ${item.highlight
+                    ? active
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                      : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
+                    : active
                       ? "bg-accent text-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                  }`}
+                    }`}
                 >
                   <i className={`bx ${item.icon} text-lg`}></i>
                   <span className="text-xs font-medium">{item.label}</span>
@@ -767,7 +764,7 @@ function FloatingAIButton() {
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-accent transition-colors group"
             >
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                <item.icon size={16} className="text-primary" />
+                <i className={`bx ${item.icon} text-base text-primary`}></i>
               </div>
               <p className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">{item.name}</p>
             </Link>
