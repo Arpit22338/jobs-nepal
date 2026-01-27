@@ -112,7 +112,7 @@ export default function NewJobPage() {
         if (data.employerProfile?.companyName) {
           setFormData(prev => ({ ...prev, companyName: data.employerProfile.companyName }));
         }
-      }).catch(() => {});
+      }).catch(() => { });
     }
   }, [session]);
 
@@ -252,7 +252,7 @@ export default function NewJobPage() {
   const filteredSkillSuggestions = commonSkills.filter(s => s.toLowerCase().includes(skillInput.toLowerCase()) && !formData.requiredSkills.includes(s)).slice(0, 5);
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 pb-32">
+    <div className="max-w-4xl mx-auto py-8 px-4 pb-60">
       <div className="mb-8">
         <h1 className="text-3xl font-black text-foreground mb-2">Post a New Job</h1>
         <p className="text-muted-foreground">Fill in the details to attract the best candidates</p>
@@ -531,7 +531,7 @@ export default function NewJobPage() {
       </div>
 
       {/* Fixed Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border p-4 z-40">
+      <div className="fixed bottom-24 left-0 right-0 bg-card/95 backdrop-blur-xl border-t border-border p-4 z-40">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex gap-3 w-full sm:w-auto">
             <button type="button" onClick={saveDraft} className="flex-1 sm:flex-none px-4 py-2 rounded-xl border border-border text-foreground hover:bg-accent transition-colors flex items-center justify-center gap-2"><Save size={18} /> Save Draft</button>

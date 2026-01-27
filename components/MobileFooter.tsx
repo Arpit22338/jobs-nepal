@@ -23,8 +23,7 @@ export default function MobileFooter() {
         "/forgot-password",
         "/reset-password",
         "/verify-email",
-        "/talent/new",
-        "/employer/jobs/new"
+        "/verify-email"
     ];
     const isChatPage = pathname.startsWith("/messages/") && pathname.length > 10;
 
@@ -82,13 +81,13 @@ export default function MobileFooter() {
             {/* Post Menu Overlay */}
             {showPostMenu && (
                 <div className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm md:hidden animate-in fade-in duration-200">
-                    <div 
+                    <div
                         ref={menuRef}
                         className="absolute bottom-24 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 duration-300"
                     >
                         <div className="p-4 border-b border-border flex items-center justify-between">
                             <h3 className="font-semibold text-foreground">Create New</h3>
-                            <button 
+                            <button
                                 onClick={() => setShowPostMenu(false)}
                                 className="p-2 rounded-full hover:bg-accent transition-colors"
                             >
@@ -149,13 +148,13 @@ export default function MobileFooter() {
             {/* More Menu Overlay */}
             {showMoreMenu && (
                 <div className="fixed inset-0 z-60 bg-black/50 backdrop-blur-sm md:hidden animate-in fade-in duration-200">
-                    <div 
+                    <div
                         ref={moreMenuRef}
                         className="absolute bottom-24 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 duration-300 max-h-[70vh] overflow-y-auto"
                     >
                         <div className="p-4 border-b border-border flex items-center justify-between sticky top-0 bg-card z-10">
                             <h3 className="font-semibold text-foreground">Quick Access</h3>
-                            <button 
+                            <button
                                 onClick={() => setShowMoreMenu(false)}
                                 className="p-2 rounded-full hover:bg-accent transition-colors"
                             >
@@ -184,9 +183,9 @@ export default function MobileFooter() {
                                 </div>
                                 <span className="font-medium text-foreground">My Certificates</span>
                             </Link>
-                            
+
                             <div className="border-t border-border my-2"></div>
-                            
+
                             {/* User Features */}
                             <Link
                                 href="/my-applications"
@@ -208,7 +207,7 @@ export default function MobileFooter() {
                                 </div>
                                 <span className="font-medium text-foreground">Profile</span>
                             </Link>
-                            
+
                             {/* RojgaarAI - Featured */}
                             <Link
                                 href="/messages/rojgaar-ai"
@@ -223,7 +222,7 @@ export default function MobileFooter() {
                                     <span className="px-1.5 py-0.5 bg-primary/20 text-primary text-[10px] font-bold rounded">AI</span>
                                 </div>
                             </Link>
-                            
+
                             {(user?.role === "EMPLOYER" || user?.role === "ADMIN") && (
                                 <>
                                     <div className="border-t border-border my-2"></div>
@@ -283,10 +282,10 @@ export default function MobileFooter() {
                                     <button
                                         key={`more-${index}`}
                                         onClick={handleMoreClick}
-                                        className={`flex flex-col items-center justify-center gap-0.5 px-3 py-2 transition-all duration-200 rounded-xl ${showMoreMenu 
-                                            ? "text-primary bg-primary/10" 
+                                        className={`flex flex-col items-center justify-center gap-0.5 px-3 py-2 transition-all duration-200 rounded-xl ${showMoreMenu
+                                            ? "text-primary bg-primary/10"
                                             : "text-muted-foreground hover:text-foreground"
-                                        }`}
+                                            }`}
                                     >
                                         <Icon size={20} strokeWidth={showMoreMenu ? 2.5 : 1.5} className={`transition-transform duration-200 ${showMoreMenu ? 'scale-110' : ''}`} />
                                         <span className={`text-[10px] ${showMoreMenu ? 'font-bold' : 'font-medium'}`}>{item.label}</span>
@@ -298,14 +297,14 @@ export default function MobileFooter() {
                                 <Link
                                     key={item.href}
                                     href={session ? item.href! : item.href === "/" ? "/" : "/login"}
-                                    className={`flex flex-col items-center justify-center gap-0.5 px-3 py-2 transition-all duration-200 rounded-xl ${active 
-                                        ? "text-primary bg-primary/10" 
+                                    className={`flex flex-col items-center justify-center gap-0.5 px-3 py-2 transition-all duration-200 rounded-xl ${active
+                                        ? "text-primary bg-primary/10"
                                         : "text-muted-foreground hover:text-foreground"
-                                    }`}
+                                        }`}
                                 >
-                                    <Icon 
-                                        size={20} 
-                                        strokeWidth={active ? 2.5 : 1.5} 
+                                    <Icon
+                                        size={20}
+                                        strokeWidth={active ? 2.5 : 1.5}
                                         className={`transition-transform duration-200 ${active ? 'scale-110' : ''}`}
                                     />
                                     <span className={`text-[10px] ${active ? 'font-bold' : 'font-medium'}`}>{item.label}</span>

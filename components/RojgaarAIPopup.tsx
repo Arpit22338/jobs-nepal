@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { X, Send, Loader2, ChevronRight, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 // Helper function to parse message content and convert URLs to clickable links
 function parseMessageWithLinks(content: string): React.ReactNode {
@@ -163,7 +165,7 @@ export default function RojgaarAIPopup() {
               setBubbleMessage(data.tip || "Try our AI tools!");
               setShowBubble(true);
               // Hide bubble after 8 seconds
-              setTimeout(() => setShowBubble(false), 8000);
+              setTimeout(() => setShowBubble(false), 15000);
             }, 5000);
           }
         } catch (error) {
@@ -181,7 +183,7 @@ export default function RojgaarAIPopup() {
             if (data.success && data.tip) {
               setBubbleMessage(data.tip);
               setShowBubble(true);
-              setTimeout(() => setShowBubble(false), 8000);
+              setTimeout(() => setShowBubble(false), 15000);
             }
           } catch (error) {
             console.error("Failed to fetch tip:", error);
@@ -413,9 +415,30 @@ export default function RojgaarAIPopup() {
                         <span className="text-xs font-semibold text-primary">RojgaarAI</span>
                       </div>
                     )}
-                    <p className="text-sm whitespace-pre-wrap">
-                      {msg.role === "assistant" ? parseMessageWithLinks(msg.content) : msg.content}
-                    </p>
+                    <div className="text-sm prose dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0">
+                      {msg.role === "assistant" ? (
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            a: ({ node, ...props }) => (
+                              <a
+                                {...props}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline font-medium"
+                              />
+                            ),
+                            p: ({ node, ...props }) => <p {...props} className="mb-1 last:mb-0" />,
+                            ul: ({ node, ...props }) => <ul {...props} className="list-disc pl-4 mb-2 space-y-1" />,
+                            ol: ({ node, ...props }) => <ol {...props} className="list-decimal pl-4 mb-2 space-y-1" />,
+                          }}
+                        >
+                          {msg.content}
+                        </ReactMarkdown>
+                      ) : (
+                        msg.content
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

@@ -33,7 +33,7 @@ export default function Footer() {
             {/* Decorative elements */}
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-            
+
             <div className="container mx-auto px-4 relative z-10">
                 {/* Main Footer Content */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-12">
@@ -52,8 +52,9 @@ export default function Footer() {
                         <p className="text-muted-foreground leading-relaxed max-w-md text-lg">
                             Empowering Nepal's digital workforce by connecting talented individuals with visionary employers.
                         </p>
-                        
+
                         {/* Social Links */}
+                        {/* Social Links - Temporarily Disabled
                         <div className="flex items-center gap-3 pt-2">
                             {socialLinks.map((social) => {
                                 const Icon = social.icon;
@@ -71,6 +72,7 @@ export default function Footer() {
                                 );
                             })}
                         </div>
+                        */}
                     </div>
 
                     {/* Quick Links */}
@@ -113,7 +115,7 @@ export default function Footer() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
                             <h3 className="text-sm font-bold text-foreground uppercase tracking-wider mb-4">Support</h3>
                             <div className="flex flex-wrap gap-2">

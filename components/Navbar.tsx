@@ -596,7 +596,7 @@ function DesktopBottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 hidden lg:block">
+    <div className="fixed bottom-0 left-0 right-0 z-[1000] hidden lg:block">
       <div className="max-w-3xl mx-auto px-4 pb-4">
         <div className="bg-card/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl px-4 py-3 relative">
           {/* Post Menu Popup */}

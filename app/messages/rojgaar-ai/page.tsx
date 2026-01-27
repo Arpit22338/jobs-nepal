@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Send, Loader2, Sparkles, ChevronRight, Info } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Message {
   id: string;
@@ -116,7 +118,7 @@ export default function RojgaarAIChatPage() {
       });
 
       const data = await res.json();
-      
+
       const assistantMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
@@ -236,7 +238,7 @@ export default function RojgaarAIChatPage() {
             <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
               I&apos;m your personal career assistant at RojgaarNepal. I can help you find jobs, improve your profile, and navigate all our AI tools.
             </p>
-            
+
             {/* Info Box */}
             <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 mb-6 max-w-sm mx-auto text-left">
               <div className="flex items-start gap-3">
@@ -281,16 +283,34 @@ export default function RojgaarAIChatPage() {
                 </div>
               )}
               <div
-                className={`rounded-2xl px-4 py-3 ${
-                  msg.role === "user"
-                    ? "bg-primary text-primary-foreground rounded-br-md"
-                    : "bg-card border border-border rounded-bl-md shadow-sm"
-                }`}
+                className={`rounded-2xl px-4 py-3 ${msg.role === "user"
+                  ? "bg-primary text-primary-foreground rounded-br-md"
+                  : "bg-card border border-border rounded-bl-md shadow-sm"
+                  }`}
               >
                 {msg.role === "assistant" && (
                   <p className="text-xs font-bold text-primary mb-1">RojgaarAI</p>
                 )}
-                <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                <div className="text-sm prose dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      a: ({ node, ...props }) => (
+                        <a
+                          {...props}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline font-medium"
+                        />
+                      ),
+                      p: ({ node, ...props }) => <p {...props} className="mb-1 last:mb-0" />,
+                      ul: ({ node, ...props }) => <ul {...props} className="list-disc pl-4 mb-2 space-y-1" />,
+                      ol: ({ node, ...props }) => <ol {...props} className="list-decimal pl-4 mb-2 space-y-1" />,
+                    }}
+                  >
+                    {msg.content}
+                  </ReactMarkdown>
+                </div>
                 <p className={`text-[10px] mt-1.5 ${msg.role === "user" ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
                   {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </p>
