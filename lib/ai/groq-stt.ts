@@ -21,7 +21,7 @@ export async function transcribeAudio(
             formData.append("file", audioBlob, "audio.webm");
         } else {
             // Node.js Buffer handling
-            const blob = new Blob([audioBlob], { type: "audio/webm" });
+            const blob = new Blob([audioBlob as any], { type: "audio/webm" });
             formData.append("file", blob, "audio.webm");
         }
 
