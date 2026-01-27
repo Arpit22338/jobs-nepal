@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { callGroqAI } from "@/lib/groq";
+import { callDeepSeekChat } from "@/lib/openrouter";
 
 // Rate limiting map (in production, use Redis)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -241,7 +242,7 @@ DARK MODE:
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -321,8 +322,8 @@ WHAT YOU CANNOT DO (Politely decline these):
 8. Make financial transactions
 9. Send emails on behalf of users
 
-PLATFORM FEATURES (Always give direct clickable links, NOT markdown paths):
-${PLATFORM_FEATURES.aiTools.map(t => `- ${t.name}: ${t.description} → ${t.path}`).join("\n")}
+PLATFORM FEATURES (Always give direct clickable links):
+${PLATFORM_FEATURES.aiTools.map(t => `- [${t.name}](${t.path}): ${t.description}`).join("\n")}
 
 GENERAL FEATURES:
 ${PLATFORM_FEATURES.features.map(f => `- ${f}`).join("\n")}
@@ -352,12 +353,10 @@ DIRECT LINKS (Always use FULL URLs with https://www.rojgaarnepal.com):
 - Chat with RojgaarAI: ${BASE_URL}/messages/rojgaar-ai
 
 LINK FORMAT RULES:
-- ALWAYS use full URLs like https://www.rojgaarnepal.com/jobs
-- NEVER use relative paths like /jobs
-- DO NOT use markdown format like [text](link)
-- Links will be automatically converted to clickable text, so write naturally
-- Example: "You can build your resume at https://www.rojgaarnepal.com/ai-tools/resume-builder"
-- Example: "Check out https://www.rojgaarnepal.com/jobs to find opportunities"
+- ALWAYS use Markdown format: [Link Text](URL)
+- NEVER use raw URLs unless inside the markdown link
+- Example: "You can use the [Resume Builder](${BASE_URL}/ai-tools/resume-builder)"
+- Example: "Check out [Job Matcher](${BASE_URL}/ai-tools/job-matcher) to find roles"
 
 HELPFUL TIPS:
 ${PLATFORM_FEATURES.tips.map(t => `- ${t}`).join("\n")}
@@ -397,12 +396,12 @@ If someone asks "what's your name?" or "who are you?", respond: "I'm RojgaarAI, 
     // Validate conversation history
     const safeHistory = Array.isArray(conversationHistory)
       ? conversationHistory
-          .slice(-6) // Only keep last 6 messages for context
-          .filter((msg: any) => msg.role === "user" || msg.role === "assistant")
-          .map((msg: any) => ({
-            role: msg.role as "user" | "assistant",
-            content: typeof msg.content === "string" ? msg.content.slice(0, 500) : "",
-          }))
+        .slice(-6) // Only keep last 6 messages for context
+        .filter((msg: any) => msg.role === "user" || msg.role === "assistant")
+        .map((msg: any) => ({
+          role: msg.role as "user" | "assistant",
+          content: typeof msg.content === "string" ? msg.content.slice(0, 500) : "",
+        }))
       : [];
 
     const messages = [
@@ -411,10 +410,27 @@ If someone asks "what's your name?" or "who are you?", respond: "I'm RojgaarAI, 
       { role: "user" as const, content: sanitized }
     ];
 
-    const response = await callGroqAI(messages, {
-      temperature: 0.7,
-      maxTokens: 500,
-    });
+    let response = "";
+
+    // Primary: Try DeepSeek (OpenRouter)
+    try {
+      response = await callDeepSeekChat(messages, {
+        temperature: 0.7,
+        maxTokens: 500,
+      });
+    } catch (error) {
+      console.warn("DeepSeek OpenRouter failed, falling back to Groq:", error);
+      // Fallback: Try Groq
+      try {
+        response = await callGroqAI(messages, {
+          temperature: 0.7,
+          maxTokens: 500,
+        });
+      } catch (fallbackError) {
+        console.error("All AI providers failed:", fallbackError);
+        throw new Error("AI service unavailable");
+      }
+    }
 
     // Final safety check on response
     const safeResponse = response
@@ -441,20 +457,20 @@ If someone asks "what's your name?" or "who are you?", respond: "I'm RojgaarAI, 
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get user data for personalized tips
     const userData = await getLimitedUserData(session.user.id);
-    
+
     const tips = [
       ...PLATFORM_FEATURES.tips,
       `Try our AI Resume Builder for an ATS-optimized resume!`,
       `Practice interviews with voice and video in Interview Prep`,
       `Check Job Matcher to find jobs that fit your skills`,
-      userData && userData.skillPercentage < 70 
+      userData && userData.skillPercentage < 70
         ? `Your profile is ${userData.skillPercentage}% complete. Add more skills!`
         : `Great job keeping your profile updated!`,
       `New: Dark mode is now available!`,

@@ -1,30 +1,11 @@
-// DeepSeek API Wrapper - The "Brain" for reasoning/logic tasks
-// Used for: Interview questions, CV generation, skill analysis, answer evaluation
+import { callDeepSeekChat, callDeepSeekReasoner } from "@/lib/openrouter";
 
-const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || "";
-const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
-const DEEPSEEK_MODEL = "deepseek-chat"; // DeepSeek-V3
+// DeepSeek API Wrapper - The "Brain" for reasoning/logic tasks
+// Refactored to use OpenRouter for better rate limits and access to R1
 
 interface DeepSeekMessage {
     role: "system" | "user" | "assistant";
     content: string;
-}
-
-interface DeepSeekResponse {
-    id: string;
-    choices: {
-        index: number;
-        message: {
-            role: string;
-            content: string;
-        };
-        finish_reason: string;
-    }[];
-    usage?: {
-        prompt_tokens: number;
-        completion_tokens: number;
-        total_tokens: number;
-    };
 }
 
 export interface InterviewQuestion {
@@ -39,49 +20,26 @@ export interface AnswerFeedback {
     strengths: string[];
     improvements: string[];
     sampleAnswer: string;
+    tips: string[];
 }
 
-// Core DeepSeek API call
+// Core DeepSeek API call (Wrapper around OpenRouter)
 export async function callDeepSeek(
     messages: DeepSeekMessage[],
     options: {
         temperature?: number;
         maxTokens?: number;
         jsonMode?: boolean;
+        model?: "chat" | "reasoner";
     } = {}
 ): Promise<string> {
-    const { temperature = 0.7, maxTokens = 4096, jsonMode = false } = options;
+    const { temperature = 0.7, maxTokens = 4096, model = "chat" } = options;
 
-    if (!DEEPSEEK_API_KEY) {
-        throw new Error("DEEPSEEK_API_KEY not configured");
+    if (model === "reasoner") {
+        return callDeepSeekReasoner(messages, { temperature, maxTokens });
     }
 
-    const response = await fetch(DEEPSEEK_API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-        },
-        body: JSON.stringify({
-            model: DEEPSEEK_MODEL,
-            messages,
-            temperature,
-            max_tokens: maxTokens,
-            response_format: jsonMode ? { type: "json_object" } : undefined,
-        }),
-    });
-
-    if (response.status === 429) {
-        throw new Error("DEEPSEEK_RATE_LIMIT");
-    }
-
-    if (!response.ok) {
-        const error = await response.text();
-        throw new Error(`DeepSeek API error: ${response.status} - ${error}`);
-    }
-
-    const data: DeepSeekResponse = await response.json();
-    return data.choices[0]?.message?.content || "";
+    return callDeepSeekChat(messages, { temperature, maxTokens });
 }
 
 // Generate interview question with timer
@@ -173,14 +131,16 @@ Score from 1-10. Consider:
             score: Math.min(Math.max(parsed.score || 5, 1), 10),
             strengths: Array.isArray(parsed.strengths) ? parsed.strengths : ["Attempted the question"],
             improvements: Array.isArray(parsed.improvements) ? parsed.improvements : ["Provide more detail"],
-            sampleAnswer: parsed.sampleAnswer || "A strong answer would include specific examples."
+            sampleAnswer: parsed.sampleAnswer || "A strong answer would include specific examples.",
+            tips: parsed.tips || ["Use the STAR method"]
         };
     } catch {
         return {
             score: 5,
             strengths: ["Completed the interview"],
             improvements: ["Provide more detailed responses"],
-            sampleAnswer: "Focus on specific examples and use the STAR method."
+            sampleAnswer: "Focus on specific examples and use the STAR method.",
+            tips: ["Practice the STAR method", "Be specific"]
         };
     }
 }
@@ -213,10 +173,11 @@ Return ONLY valid JSON matching this structure:
   "keywords": ["ATS keywords extracted from content"]
 }`;
 
+    // Use Reasoner model for better ATS logic
     const result = await callDeepSeek([
         { role: "system", content: systemPrompt },
         { role: "user", content: `Generate a CV for: ${JSON.stringify(userProfile)}` }
-    ], { temperature: 0.6, jsonMode: true, maxTokens: 4096 });
+    ], { temperature: 0.6, jsonMode: true, maxTokens: 4096, model: "reasoner" });
 
     try {
         return JSON.parse(result);
@@ -270,5 +231,3 @@ Return ONLY valid JSON:
         };
     }
 }
-
-export { DEEPSEEK_API_KEY };

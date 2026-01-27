@@ -486,7 +486,7 @@ export default function InterviewPrepPage() {
       recorder.onstop = async () => {
         console.log("🎤 Audio recording stopped, sending to Groq...");
         setIsListening(false);
-        
+
         // Stop the audio stream tracks
         if (audioStreamRef.current) {
           audioStreamRef.current.getTracks().forEach(track => track.stop());
@@ -525,7 +525,7 @@ export default function InterviewPrepPage() {
 
     try {
       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
-      
+
       // Only transcribe if we have meaningful audio (> 1KB)
       if (audioBlob.size < 1000) {
         console.log("Audio too short, skipping transcription");
@@ -547,7 +547,7 @@ export default function InterviewPrepPage() {
       }
 
       const data = await response.json();
-      
+
       if (data.transcript && data.transcript.trim()) {
         console.log("✅ Groq transcript:", data.transcript);
         setUserAnswer((prev) => {
@@ -695,7 +695,7 @@ export default function InterviewPrepPage() {
   const requestMicrophonePermission = async (): Promise<boolean> => {
     setMicStatus("checking");
     setSttError(null);
-    
+
     try {
       // First check if permission is already blocked at browser level
       if (navigator.permissions) {
@@ -859,7 +859,7 @@ export default function InterviewPrepPage() {
               }
             });
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     }
   }, [interviewMode, micStatus]);
@@ -1242,7 +1242,7 @@ export default function InterviewPrepPage() {
   // RENDER
   // =====================
   const browserInstructions = getBrowserInstructions();
-  
+
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-6 pb-24">
       {showMicPrompt && (
@@ -1276,7 +1276,7 @@ export default function InterviewPrepPage() {
                       RojgaarAI needs your microphone
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Voice interview requires microphone access for speech recognition. 
+                      Voice interview requires microphone access for speech recognition.
                       Click &quot;Allow&quot; when your browser asks for permission.
                     </p>
                   </div>
@@ -1314,7 +1314,7 @@ export default function InterviewPrepPage() {
                         Microphone Access Blocked
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Your browser has blocked microphone access for this site. 
+                        Your browser has blocked microphone access for this site.
                         Follow the steps below to enable it.
                       </p>
                     </div>
@@ -1464,22 +1464,20 @@ export default function InterviewPrepPage() {
           <div className="flex justify-center gap-2 mt-4">
             <button
               onClick={() => setStep("questions")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                step === "questions"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-accent hover:bg-accent/80"
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${step === "questions"
+                ? "bg-primary text-primary-foreground"
+                : "bg-accent hover:bg-accent/80"
+                }`}
             >
               Questions
             </button>
             {savedVideos.length > 0 && (
               <button
                 onClick={() => setStep("recordings")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-                  step === "recordings"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-accent hover:bg-accent/80"
-                }`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${step === "recordings"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-accent hover:bg-accent/80"
+                  }`}
               >
                 <Video size={16} /> Recordings ({savedVideos.length})
               </button>
@@ -1523,11 +1521,10 @@ export default function InterviewPrepPage() {
                   <button
                     key={level}
                     onClick={() => setExperienceLevel(level)}
-                    className={`px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
-                      experienceLevel === level
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "border-border hover:border-primary/50 hover:bg-accent"
-                    }`}
+                    className={`px-4 py-3 rounded-xl border text-sm font-medium transition-all ${experienceLevel === level
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "border-border hover:border-primary/50 hover:bg-accent"
+                      }`}
                   >
                     {level}
                   </button>
@@ -1545,11 +1542,10 @@ export default function InterviewPrepPage() {
                   <button
                     key={count}
                     onClick={() => setNumQuestions(count)}
-                    className={`px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
-                      numQuestions === count
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "border-border hover:border-primary/50 hover:bg-accent"
-                    }`}
+                    className={`px-4 py-3 rounded-xl border text-sm font-medium transition-all ${numQuestions === count
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "border-border hover:border-primary/50 hover:bg-accent"
+                      }`}
                   >
                     {count}
                   </button>
@@ -1565,11 +1561,10 @@ export default function InterviewPrepPage() {
               <div className="grid md:grid-cols-2 gap-3">
                 <button
                   onClick={() => setInterviewMode("text")}
-                  className={`p-4 rounded-xl border text-left transition-all ${
-                    interviewMode === "text"
-                      ? "bg-primary/10 border-primary"
-                      : "border-border hover:border-primary/50"
-                  }`}
+                  className={`p-4 rounded-xl border text-left transition-all ${interviewMode === "text"
+                    ? "bg-primary/10 border-primary"
+                    : "border-border hover:border-primary/50"
+                    }`}
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <MessageCircle
@@ -1593,11 +1588,10 @@ export default function InterviewPrepPage() {
                     setShowMicPrompt(false);
                     setInterviewMode("voice");
                   }}
-                  className={`p-4 rounded-xl border text-left transition-all ${
-                    interviewMode === "voice"
-                      ? "bg-primary/10 border-primary"
-                      : "border-border hover:border-primary/50"
-                  }`}
+                  className={`p-4 rounded-xl border text-left transition-all ${interviewMode === "voice"
+                    ? "bg-primary/10 border-primary"
+                    : "border-border hover:border-primary/50"
+                    }`}
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Mic
@@ -1818,13 +1812,12 @@ export default function InterviewPrepPage() {
               </span>
               <div className="flex items-center gap-3">
                 {/* Timer Display */}
-                <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-mono text-sm font-bold ${
-                  timeRemaining <= 30 
-                    ? "bg-red-500/10 text-red-500 animate-pulse" 
-                    : timeRemaining <= 60 
-                    ? "bg-yellow-500/10 text-yellow-500" 
+                <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full font-mono text-sm font-bold ${timeRemaining <= 30
+                  ? "bg-red-500/10 text-red-500 animate-pulse"
+                  : timeRemaining <= 60
+                    ? "bg-yellow-500/10 text-yellow-500"
                     : "bg-green-500/10 text-green-500"
-                }`}>
+                  }`}>
                   <i className="bx bx-time-five"></i>
                   {formatTime(timeRemaining)}
                 </div>
@@ -1879,11 +1872,10 @@ export default function InterviewPrepPage() {
                       setIsMuted(!isMuted);
                       if (!isMuted) stopSpeaking();
                     }}
-                    className={`p-3 rounded-full transition-colors ${
-                      isMuted
-                        ? "bg-red-500/20 text-red-500"
-                        : "bg-accent text-foreground"
-                    }`}
+                    className={`p-3 rounded-full transition-colors ${isMuted
+                      ? "bg-red-500/20 text-red-500"
+                      : "bg-accent text-foreground"
+                      }`}
                     title={isMuted ? "Unmute AI" : "Mute AI"}
                   >
                     {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
@@ -1892,13 +1884,12 @@ export default function InterviewPrepPage() {
                   <button
                     onClick={isListening ? stopListening : startListening}
                     disabled={isTranscribing}
-                    className={`p-6 rounded-full transition-all transform hover:scale-105 ${
-                      isListening
-                        ? "bg-red-500 text-white animate-pulse"
-                        : isTranscribing
-                          ? "bg-yellow-500 text-white"
-                          : "bg-primary text-primary-foreground"
-                    }`}
+                    className={`p-6 rounded-full transition-all transform hover:scale-105 ${isListening
+                      ? "bg-red-500 text-white animate-pulse"
+                      : isTranscribing
+                        ? "bg-yellow-500 text-white"
+                        : "bg-primary text-primary-foreground"
+                      }`}
                     title={isListening ? "Stop Recording" : "Start Recording"}
                   >
                     {isTranscribing ? (
@@ -1977,7 +1968,7 @@ export default function InterviewPrepPage() {
                 {/* Tips */}
                 <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/20 text-sm">
                   <p className="text-muted-foreground">
-                    <span className="font-medium text-primary">Tip:</span> Click the microphone to start/stop recording. 
+                    <span className="font-medium text-primary">Tip:</span> Click the microphone to start/stop recording.
                     Your speech will be transcribed using AI for better accuracy.
                   </p>
                 </div>
@@ -2042,13 +2033,12 @@ export default function InterviewPrepPage() {
           <div className="glass-card rounded-2xl p-6 md:p-8 border border-border/50">
             <div className="flex items-center gap-3 mb-6">
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  feedback.score >= 8
-                    ? "bg-green-500/20 text-green-500"
-                    : feedback.score >= 6
-                      ? "bg-yellow-500/20 text-yellow-500"
-                      : "bg-red-500/20 text-red-500"
-                }`}
+                className={`w-12 h-12 rounded-full flex items-center justify-center ${feedback.score >= 8
+                  ? "bg-green-500/20 text-green-500"
+                  : feedback.score >= 6
+                    ? "bg-yellow-500/20 text-yellow-500"
+                    : "bg-red-500/20 text-red-500"
+                  }`}
               >
                 {feedback.score >= 8 ? (
                   <CheckCircle size={28} />
@@ -2181,13 +2171,12 @@ export default function InterviewPrepPage() {
               <div className="glass-card rounded-2xl p-6 md:p-8 border border-border/50">
                 <div className="text-center mb-6">
                   <div
-                    className={`inline-flex w-32 h-32 rounded-full items-center justify-center text-4xl font-black mb-4 ${
-                      analysis.overallScore >= 80
-                        ? "bg-green-500/20 text-green-500"
-                        : analysis.overallScore >= 60
-                          ? "bg-yellow-500/20 text-yellow-500"
-                          : "bg-red-500/20 text-red-500"
-                    }`}
+                    className={`inline-flex w-32 h-32 rounded-full items-center justify-center text-4xl font-black mb-4 ${analysis.overallScore >= 80
+                      ? "bg-green-500/20 text-green-500"
+                      : analysis.overallScore >= 60
+                        ? "bg-yellow-500/20 text-yellow-500"
+                        : "bg-red-500/20 text-red-500"
+                      }`}
                   >
                     {analysis.overallScore}
                   </div>
@@ -2196,15 +2185,14 @@ export default function InterviewPrepPage() {
                   </h2>
                   <p className="text-muted-foreground">{analysis.summary}</p>
                   <span
-                    className={`inline-block mt-3 px-4 py-1.5 rounded-full font-semibold ${
-                      analysis.hireRecommendation === "Strong Hire"
-                        ? "bg-green-500/20 text-green-500"
-                        : analysis.hireRecommendation === "Hire"
-                          ? "bg-green-500/10 text-green-400"
-                          : analysis.hireRecommendation === "Maybe"
-                            ? "bg-yellow-500/20 text-yellow-500"
-                            : "bg-red-500/20 text-red-500"
-                    }`}
+                    className={`inline-block mt-3 px-4 py-1.5 rounded-full font-semibold ${analysis.hireRecommendation === "Strong Hire"
+                      ? "bg-green-500/20 text-green-500"
+                      : analysis.hireRecommendation === "Hire"
+                        ? "bg-green-500/10 text-green-400"
+                        : analysis.hireRecommendation === "Maybe"
+                          ? "bg-yellow-500/20 text-yellow-500"
+                          : "bg-red-500/20 text-red-500"
+                      }`}
                   >
                     {analysis.hireRecommendation}
                   </span>
@@ -2310,18 +2298,18 @@ export default function InterviewPrepPage() {
                             <Cell key={`cell-${index}`} fill={color} />
                           ))}
                         </Pie>
-                        <Tooltip 
-                          formatter={(value) => [`${Math.round((value as number) * 10)}%`, "Score"]}
-                          contentStyle={{ 
-                            backgroundColor: 'hsl(var(--card))', 
+                        <Tooltip
+                          formatter={(value) => [`${Math.round((value as number) <= 10 ? (value as number) * 10 : (value as number))}%`, "Score"]}
+                          contentStyle={{
+                            backgroundColor: 'hsl(var(--card))',
                             border: '1px solid hsl(var(--border))',
                             borderRadius: '8px',
                             color: 'hsl(var(--foreground))'
                           }}
                         />
-                        <Legend 
-                          layout="vertical" 
-                          align="right" 
+                        <Legend
+                          layout="vertical"
+                          align="right"
                           verticalAlign="middle"
                           wrapperStyle={{ fontSize: '12px', paddingLeft: '10px' }}
                           formatter={(value: string) => <span style={{ color: 'hsl(var(--foreground))' }}>{value}</span>}
@@ -2329,7 +2317,7 @@ export default function InterviewPrepPage() {
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
-                  
+
                   {/* Score Legend with Values */}
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4">
                     {[
@@ -2343,7 +2331,7 @@ export default function InterviewPrepPage() {
                         <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
                         <div className="min-w-0">
                           <p className="text-xs text-muted-foreground truncate">{item.name}</p>
-                          <p className="text-sm font-bold text-foreground">{Math.round(item.value * 10)}%</p>
+                          <p className="text-sm font-bold text-foreground">{Math.round(item.value <= 10 ? item.value * 10 : item.value)}%</p>
                         </div>
                       </div>
                     ))}
@@ -2362,7 +2350,7 @@ export default function InterviewPrepPage() {
                     <BarChart
                       data={analysis.questionScores.map((q, i) => ({
                         name: `Q${i + 1}`,
-                        score: q.score * 10,
+                        score: q.score <= 10 ? q.score * 10 : q.score,
                       }))}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#334155" />

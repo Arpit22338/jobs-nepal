@@ -549,6 +549,7 @@ function DesktopBottomNav() {
   const { data: session } = useSession();
   const [showPostMenu, setShowPostMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Hide on certain pages
   const hiddenPaths = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
@@ -568,6 +569,10 @@ function DesktopBottomNav() {
   useEffect(() => {
     if (!showPostMenu) return;
     const handleClickOutside = (event: MouseEvent) => {
+      // Ignore click if it's on the toggle button
+      if (buttonRef.current && buttonRef.current.contains(event.target as Node)) {
+        return;
+      }
       if (!menuRef.current) return;
       if (!menuRef.current.contains(event.target as Node)) {
         setShowPostMenu(false);
@@ -676,6 +681,7 @@ function DesktopBottomNav() {
 
             {/* Center Plus Button - Inline like mobile */}
             <button
+              ref={buttonRef}
               onClick={handlePlusClick}
               className={`mx-2 w-12 h-12 rounded-2xl bg-linear-to-br from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/30 flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200 ${showPostMenu ? 'rotate-45' : ''}`}
               aria-label="Create"

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { callGroqAI, AI_PROMPTS } from "@/lib/groq";
+import { callDeepSeek } from "@/lib/ai/deepseek";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, sanitizeInput } from "@/lib/security/owasp-guards";
 
 // Helper to safely parse JSON from AI responses
 function parseAIResponse(result: string) {
@@ -21,10 +22,23 @@ function parseAIResponse(result: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Session can be used for authenticated matching in the future
-    await getServerSession(authOptions);
+    const session = await getServerSession(authOptions);
+
+    // 1. Rate Limiting (Security Guard)
+    if (session?.user?.id) {
+      if (!checkRateLimit(session.user.id, 20)) { // 20 requests per minute
+        return NextResponse.json({ success: false, error: "Too many requests" }, { status: 429 });
+      }
+    }
+
     const body = await req.json();
     const { profileData, filters } = body;
+
+    // 2. Input Sanitization (Security Guard)
+    // Basic check ensuring no malicious payloads in text fields
+    if (profileData?.currentTitle && !sanitizeInput(profileData.currentTitle).safe) {
+      return NextResponse.json({ success: false, error: "Invalid input detected" }, { status: 400 });
+    }
 
     // Fetch available jobs from database
     const jobs = await prisma.job.findMany({
@@ -84,15 +98,9 @@ Type: ${job.type}
 Required Skills: ${job.requiredSkills}
 `).join('\n')}
 
-For each relevant job (top 10 matches), provide:
-1. Match score (0-100)
-2. Matching skills
-3. Missing skills they should develop
-4. Why this job is a good fit
-5. Any concerns or growth areas
+For each relevant job (top 10 matches), provide match score (0-100), reasoning, and skill gaps.
 
-IMPORTANT: Return ONLY a valid JSON object (no markdown, no code blocks, no extra text).
-Return JSON array:
+IMPORTANT: Return ONLY a valid JSON object matching this structure:
 {
   "matches": [
     {
@@ -110,11 +118,12 @@ Return JSON array:
 `;
 
     const messages = [
-      { role: "system" as const, content: `${AI_PROMPTS.jobMatcher}\n\nIMPORTANT: Always return ONLY valid JSON without markdown code blocks or any other text.` },
+      { role: "system" as const, content: "You are an expert Recruitment AI. Analyze job matches with high precision. Return ONLY JSON." },
       { role: "user" as const, content: prompt }
     ];
 
-    const result = await callGroqAI(messages, { temperature: 0.5, maxTokens: 3000 });
+    // Use DeepSeek Chat (via OpenRouter)
+    const result = await callDeepSeek(messages, { temperature: 0.5, maxTokens: 3000, jsonMode: true });
 
     // Parse AI response
     let aiMatches;
