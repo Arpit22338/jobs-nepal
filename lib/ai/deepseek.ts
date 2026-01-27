@@ -204,7 +204,12 @@ Return ONLY valid JSON matching this structure:
   "summary": "Professional summary...",
   "experience": [{ "title": "", "company": "", "duration": "", "achievements": [] }],
   "education": [{ "degree": "", "institution": "", "year": "" }],
-  "skills": { "technical": [], "soft": [], "languages": [] },
+  "skills": { 
+    "technical": [], 
+    "soft": [], 
+    "tools": [],
+    "languages": [{ "language": "Language Name", "proficiency": "Proficiency Level" }] 
+  },
   "keywords": ["ATS keywords extracted from content"]
 }`;
 
