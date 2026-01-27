@@ -65,7 +65,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    
+
     // OWASP A03: Input validation
     const { subject, message } = ticketSchema.parse(body);
 
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Ticket created" });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ message: error.errors[0].message }, { status: 400 });
+      return NextResponse.json({ message: (error as any).errors[0]?.message || "Invalid input" }, { status: 400 });
     }
     console.error(error);
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
