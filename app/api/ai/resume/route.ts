@@ -155,7 +155,7 @@ Your task is to create a professional, personalized resume in JSON format.
 
 CRITICAL RULES - FOLLOW EXACTLY:
 1. **USE ONLY PROVIDED DATA**: Use ONLY the information the user provided. Do NOT invent or assume anything.
-2. **PERSONALIZED SUMMARY**: Write a professional summary based on THEIR ACTUAL background, skills, education, and experience. Do NOT use generic phrases.
+2. **FIRST PERSON SUMMARY**: Write the summary in FIRST PERSON ("I am", "I have", "My goal is"). Do NOT use third person ("He is", "Arpit is"). Example: "I am a dedicated computer science student with experience in..."
 3. **NO EXPERIENCE HANDLING**: If they have no work experience, make PROJECTS and EDUCATION prominent. Write summary focusing on education, projects, and skills.
 4. **INCLUDE EVERYTHING**: Include ALL certifications, languages, skills, projects that user provided.
 5. **ATS-FRIENDLY**: Use clear section headings, action verbs, and standard formatting.
@@ -164,7 +164,7 @@ CRITICAL RULES - FOLLOW EXACTLY:
 RETURN FORMAT - VALID JSON ONLY:
 {
   "header": { "name": "", "email": "", "phone": "", "location": "", "linkedin": "", "portfolio": "" },
-  "summary": "2-3 sentences about THIS SPECIFIC PERSON based on THEIR actual info",
+  "summary": "2-3 sentences in FIRST PERSON (I am, I have) about their actual background",
   "experience": [{ "title": "", "company": "", "location": "", "startDate": "", "endDate": "", "current": boolean, "responsibilities": ["bullet1", "bullet2"] }],
   "education": [{ "degree": "", "institution": "", "field": "", "graduationYear": "", "gpa": "", "coursework": [], "achievements": [] }],
   "skills": { 
