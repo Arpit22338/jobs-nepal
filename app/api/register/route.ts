@@ -26,16 +26,16 @@ const RATE_LIMIT_MAX = 5; // 5 requests per minute
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
   const record = rateLimitMap.get(ip);
-  
+
   if (!record || now > record.resetTime) {
     rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
     return false;
   }
-  
+
   if (record.count >= RATE_LIMIT_MAX) {
     return true;
   }
-  
+
   record.count++;
   return false;
 }
@@ -119,7 +119,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Registration error:", error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ message: "Invalid input" }, { status: 400 });
+      return NextResponse.json({ message: error.issues.map((e: { message: string }) => e.message).join(". ") }, { status: 400 });
     }
     // SECURITY: Generic error message to prevent information disclosure
     return NextResponse.json({ message: "An error occurred. Please try again." }, { status: 500 });

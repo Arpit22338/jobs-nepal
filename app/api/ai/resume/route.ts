@@ -110,23 +110,63 @@ export async function POST(req: NextRequest) {
     // Detect languages provided by user
     const userProvidedLanguages = skills.languages && skills.languages.length > 0
       ? skills.languages.map(l => `${l.language} (${l.proficiency})`).join(', ')
-      : "None provided";
+      : "Not specified";
 
-    const systemPrompt = `You are an expert ATS (Applicant Tracking System) Resume Optimizer.
-Your goal is to generate a JSON resume structure that is readable by machines and humans.
+    // Format experience entries
+    const formattedExperience = hasWorkExperience && experience && experience.length > 0
+      ? experience.map(exp =>
+        `- ${exp.title} at ${exp.company}${exp.location ? `, ${exp.location}` : ''}
+  Duration: ${exp.startDate} - ${exp.current ? 'Present' : exp.endDate || 'Present'}
+  Responsibilities: ${exp.responsibilities}`
+      ).join('\n')
+      : "NO WORK EXPERIENCE - Focus on projects, education, and skills instead";
 
-CRITICAL RULES:
-1. **LANGUAGES**: If the user provided languages (${userProvidedLanguages}), you MUST include them in the 'skills.languages' array. Do NOT omit them.
-2. **ATS OPTIMIZATION**: Use standard headings and Action Verbs (Achieved, Led, Developed).
-3. **FORMAT**: Return ONLY valid JSON matching the schema below.
-4. **CONTENT**: Polish the descriptions to be professional and impact-oriented.
+    // Format education entries
+    const formattedEducation = education.map(edu =>
+      `- ${edu.degree}${edu.field ? ` in ${edu.field}` : ''} at ${edu.institution} (${edu.graduationYear})${edu.gpa ? `, GPA: ${edu.gpa}` : ''}${edu.coursework ? `\n  Relevant Coursework: ${edu.coursework}` : ''}${edu.achievements ? `\n  Achievements: ${edu.achievements}` : ''}`
+    ).join('\n');
 
-JSON STRUCTURE:
+    // Format projects
+    const formattedProjects = hasProjects && projects && projects.length > 0
+      ? projects.map(proj =>
+        `- ${proj.title}${proj.duration ? ` (${proj.duration})` : ''}
+  Description: ${proj.description}
+  Technologies: ${proj.technologies}${proj.link ? `\n  Link: ${proj.link}` : ''}`
+      ).join('\n')
+      : "No projects provided";
+
+    // Format volunteer work
+    const formattedVolunteer = hasVolunteer && volunteer && volunteer.length > 0
+      ? volunteer.map(vol =>
+        `- ${vol.role} at ${vol.organization} (${vol.duration})
+  ${vol.description}`
+      ).join('\n')
+      : "";
+
+    // Format awards
+    const formattedAwards = hasAwards && awards && awards.length > 0
+      ? awards.map(award =>
+        `- ${award.title}${award.issuer ? ` from ${award.issuer}` : ''}${award.date ? ` (${award.date})` : ''}`
+      ).join('\n')
+      : "";
+
+    const systemPrompt = `You are an expert ATS (Applicant Tracking System) Resume Writer.
+Your task is to create a professional, personalized resume in JSON format.
+
+CRITICAL RULES - FOLLOW EXACTLY:
+1. **USE ONLY PROVIDED DATA**: Use ONLY the information the user provided. Do NOT invent or assume anything.
+2. **PERSONALIZED SUMMARY**: Write a professional summary based on THEIR ACTUAL background, skills, education, and experience. Do NOT use generic phrases.
+3. **NO EXPERIENCE HANDLING**: If they have no work experience, make PROJECTS and EDUCATION prominent. Write summary focusing on education, projects, and skills.
+4. **INCLUDE EVERYTHING**: Include ALL certifications, languages, skills, projects that user provided.
+5. **ATS-FRIENDLY**: Use clear section headings, action verbs, and standard formatting.
+6. **POLISH BUT STAY HONEST**: Enhance wording professionally but do not add fake achievements or skills.
+
+RETURN FORMAT - VALID JSON ONLY:
 {
   "header": { "name": "", "email": "", "phone": "", "location": "", "linkedin": "", "portfolio": "" },
-  "summary": "Compelling professional summary...",
-  "experience": [{ "title": "", "company": "", "location": "", "startDate": "", "endDate": "", "current": boolean, "responsibilities": ["bullet 1", "bullet 2"] }],
-  "education": [{ "degree": "", "institution": "", "field": "", "graduationYear": "", "gpa": "" }],
+  "summary": "2-3 sentences about THIS SPECIFIC PERSON based on THEIR actual info",
+  "experience": [{ "title": "", "company": "", "location": "", "startDate": "", "endDate": "", "current": boolean, "responsibilities": ["bullet1", "bullet2"] }],
+  "education": [{ "degree": "", "institution": "", "field": "", "graduationYear": "", "gpa": "", "coursework": [], "achievements": [] }],
   "skills": { 
     "technical": ["skill1", "skill2"], 
     "soft": ["skill1", "skill2"], 
@@ -139,18 +179,50 @@ JSON STRUCTURE:
   "awards": [{ "title": "", "issuer": "", "date": "" }]
 }`;
 
-    const userPrompt = `Generate a resume for:
-    Name: ${personalInfo.fullName}
-    Location: ${personalInfo.location}
-    Summary: ${summary}
-    Languages: ${userProvidedLanguages}
-    Technical Skills: ${skills.technical}
-    
-    Experience: ${JSON.stringify(experience || [])}
-    Education: ${JSON.stringify(education || [])}
-    Projects: ${JSON.stringify(projects || [])}
-    Awards: ${JSON.stringify(awards || [])}
-    `;
+    const userPrompt = `Generate a professional ATS-friendly resume for this person using ONLY the information below.
+
+=== PERSONAL INFORMATION ===
+Full Name: ${personalInfo.fullName}
+Email: ${personalInfo.email}
+Phone: ${personalInfo.phone}
+Location: ${personalInfo.location}
+LinkedIn: ${personalInfo.linkedin || 'Not provided'}
+Portfolio: ${personalInfo.portfolio || 'Not provided'}
+
+=== PROFESSIONAL SUMMARY (User's Input) ===
+${summary || 'No summary provided - generate one based on their background'}
+
+=== WORK EXPERIENCE ===
+Has Work Experience: ${hasWorkExperience ? 'YES' : 'NO'}
+${formattedExperience}
+
+=== EDUCATION ===
+${formattedEducation}
+
+=== SKILLS ===
+Technical Skills: ${skills.technical || 'Not specified'}
+Soft Skills: ${skills.soft || 'Not specified'}
+Tools: ${skills.tools || 'Not specified'}
+Certifications: ${skills.certifications || 'None'}
+Languages: ${userProvidedLanguages}
+
+=== PROJECTS ===
+${formattedProjects}
+
+${formattedVolunteer ? `=== VOLUNTEER WORK ===\n${formattedVolunteer}` : ''}
+
+${formattedAwards ? `=== AWARDS & ACHIEVEMENTS ===\n${formattedAwards}` : ''}
+
+${publications ? `=== PUBLICATIONS ===\n${publications}` : ''}
+
+${hobbies ? `=== INTERESTS/HOBBIES ===\n${hobbies}` : ''}
+
+IMPORTANT INSTRUCTIONS:
+1. Write a PERSONALIZED summary using their actual name, education, skills, and any projects/certifications
+2. If they have NO work experience, emphasize their projects, education, and certifications
+3. Include ALL their skills, languages, and certifications exactly as provided
+4. Polish the descriptions professionally but keep them accurate to what they provided
+5. Return ONLY valid JSON, no markdown, no extra text`;
 
     // Use Smart Client (DeepSeek R1 preferred for strong logic/formatting)
     const result = await smartAICall([
@@ -158,7 +230,7 @@ JSON STRUCTURE:
       { role: "user", content: userPrompt }
     ], {
       modelType: "reasoner", // Use DeepSeek R1 for reasoning about ATS rules
-      temperature: 0.3,
+      temperature: 0.4, // Slightly higher for more personalized output
       jsonMode: true
     });
 

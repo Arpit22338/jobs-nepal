@@ -302,6 +302,8 @@ export default function ResumeBuilderPage() {
   const handleGenerateResume = async () => {
     setIsGenerating(true);
     setLoadingMessageIndex(0);
+    const startTime = Date.now();
+    const minLoadingTime = 3000; // Minimum 3 seconds for UX
 
     try {
       const response = await fetch("/api/ai/resume", {
@@ -326,6 +328,12 @@ export default function ResumeBuilderPage() {
       });
 
       const data = await response.json();
+
+      // Ensure minimum loading time for better UX
+      const elapsed = Date.now() - startTime;
+      if (elapsed < minLoadingTime) {
+        await new Promise(resolve => setTimeout(resolve, minLoadingTime - elapsed));
+      }
 
       if (data.success) {
         setGeneratedResume(data.resume);
@@ -422,24 +430,24 @@ export default function ResumeBuilderPage() {
             <h1 className="text-3xl font-black text-foreground">Your Professional Resume</h1>
             <p className="text-muted-foreground">Review, edit, and download your ATS-optimized resume</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             <button
               onClick={() => setShowPreview(false)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-foreground hover:bg-accent transition-colors"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg border border-border text-foreground hover:bg-accent transition-colors text-sm sm:text-base"
             >
-              <Edit3 size={18} /> Edit Resume
+              <Edit3 size={16} className="sm:w-[18px] sm:h-[18px]" /> Edit
             </button>
             <button
               onClick={downloadPDF}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-lg"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-lg text-sm sm:text-base"
             >
-              <Download size={18} /> Download PDF
+              <Download size={16} className="sm:w-[18px] sm:h-[18px]" /> PDF
             </button>
             <button
               onClick={downloadImage}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary/10 transition-colors"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg border border-primary text-primary hover:bg-primary/10 transition-colors text-sm sm:text-base"
             >
-              <ImageIcon size={18} /> Download Image
+              <ImageIcon size={16} className="sm:w-[18px] sm:h-[18px]" /> Image
             </button>
           </div>
         </div>
@@ -447,7 +455,7 @@ export default function ResumeBuilderPage() {
         {/* Resume Preview - ATS-friendly format */}
         <div
           ref={resumeRef}
-          className="bg-white p-12 shadow-2xl mx-auto max-w-[800px] font-['Times_New_Roman',serif]"
+          className="bg-white p-6 sm:p-8 md:p-12 shadow-2xl mx-auto max-w-[800px] font-['Times_New_Roman',serif]"
           style={{ minHeight: "1100px", color: "#000000" }}
         >
           {/* Header */}
@@ -665,24 +673,24 @@ export default function ResumeBuilderPage() {
 
       {/* Wizard Steps */}
       {viewMode === "wizard" && (
-        <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-2">
+        <div className="flex justify-center mb-8 overflow-x-auto px-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {steps.map((step, idx) => (
               <div key={step.id} className="flex items-center">
                 <button
                   onClick={() => setCurrentStep(step.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${currentStep === step.id
-                      ? "bg-primary text-primary-foreground"
-                      : isStepValid(step.id)
-                        ? "bg-primary/10 text-primary"
-                        : "bg-accent text-muted-foreground hover:bg-accent/80"
+                  className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-lg transition-all text-sm sm:text-base ${currentStep === step.id
+                    ? "bg-primary text-primary-foreground"
+                    : isStepValid(step.id)
+                      ? "bg-primary/10 text-primary"
+                      : "bg-accent text-muted-foreground hover:bg-accent/80"
                     }`}
                 >
-                  <step.icon size={18} />
-                  <span className="hidden md:inline font-medium">{step.title}</span>
+                  <step.icon size={16} className="sm:w-[18px] sm:h-[18px]" />
+                  <span className="hidden sm:inline font-medium">{step.title}</span>
                 </button>
                 {idx < steps.length - 1 && (
-                  <ChevronDown size={20} className="text-muted-foreground -rotate-90 mx-1" />
+                  <ChevronDown size={16} className="text-muted-foreground -rotate-90 mx-0.5 sm:mx-1 hidden xs:block" />
                 )}
               </div>
             ))}

@@ -34,13 +34,13 @@ function parseAIResponse(result: string) {
     .replace(/```json\s*/gi, "")
     .replace(/```\s*/gi, "")
     .trim();
-  
+
   // Try to find JSON object
   const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
   if (jsonMatch) {
     return JSON.parse(jsonMatch[0]);
   }
-  
+
   throw new Error("No valid JSON found in response");
 }
 
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     // OWASP A03: Input validation
     const validatedData = interviewGenerateSchema.parse(body);
-    
+
     const { jobTitle, experienceLevel, industry, companyName, focusTopics } = validatedData;
 
     const prompt = `
@@ -72,13 +72,15 @@ ${industry ? `Industry: ${industry}` : ''}
 ${companyName ? `Company: ${companyName}` : ''}
 ${focusTopics && focusTopics.length > 0 ? `Focus Topics/Skills: ${focusTopics.join(', ')}` : ''}
 
-Requirements:
-- Generate 15-20 high-quality interview questions
-- Include a mix of behavioral (STAR method), technical, situational, and culture fit questions
-- For each question, provide a brief tip on how to approach answering it
-- Tailor questions to the experience level
-- If a company is mentioned, include 2-3 company-specific questions
-- Focus on the specified topics/skills if provided
+REQUIREMENTS:
+- Generate 15-20 UNIQUE and DIVERSE interview questions
+- Each question must be SPECIFIC to this exact role (${jobTitle}) - avoid generic questions
+- Include role-specific TECHNICAL questions (e.g., for Web Developer: React, JS, CSS; for Penetration Tester: security tools, vulnerabilities)
+- Include behavioral questions using STAR method
+- Include situational and culture fit questions
+- DO NOT use generic questions like "tell me about yourself" or "what's your weakness"
+- Make questions CHALLENGING and appropriate for ${experienceLevel} level
+- Every generation should produce COMPLETELY DIFFERENT questions
 
 IMPORTANT: Return ONLY a valid JSON object (no markdown, no code blocks, no extra text).
 Return in this exact JSON format:
@@ -96,7 +98,7 @@ Return in this exact JSON format:
       { role: "user" as const, content: prompt }
     ];
 
-    const result = await callGroqAI(messages, { temperature: 0.7, maxTokens: 3000 });
+    const result = await callGroqAI(messages, { temperature: 0.9, maxTokens: 3000 });
 
     // Parse JSON response
     let questions;

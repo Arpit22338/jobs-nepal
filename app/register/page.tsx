@@ -12,7 +12,11 @@ import { getSetting } from "@/lib/settings";
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must include an uppercase letter")
+    .regex(/[a-z]/, "Password must include a lowercase letter")
+    .regex(/[0-9]/, "Password must include a number"),
   role: z.enum(["JOBSEEKER", "EMPLOYER", "TEACHER"]),
   image: z.string().optional(),
 });
@@ -130,6 +134,7 @@ export default function RegisterPage() {
             {errors.password && (
               <p className="text-destructive text-xs mt-1.5 font-medium ml-1">{errors.password.message}</p>
             )}
+            <p className="text-muted-foreground text-xs mt-1.5 ml-1">Min 8 chars, with uppercase, lowercase & number</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">I am a...</label>
