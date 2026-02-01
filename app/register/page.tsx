@@ -26,6 +26,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [teacherLoginEnabled, setTeacherLoginEnabled] = useState(true);
 
   const {
@@ -144,12 +145,22 @@ export default function RegisterPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1.5">Password</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              {...register("password")}
-              className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                {...register("password")}
+                className="mt-1 block w-full rounded-xl border border-input bg-background/50 px-4 py-2.5 pr-12 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                <i className={`bx ${showPassword ? 'bx-hide' : 'bx-show'} text-xl`}></i>
+              </button>
+            </div>
             {errors.password && (
               <p className="text-destructive text-xs mt-1.5 font-medium ml-1">{errors.password.message}</p>
             )}

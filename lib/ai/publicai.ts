@@ -26,15 +26,15 @@ export async function callPublicAI(
         throw new Error("PublicAI API key not configured");
     }
 
-    // PublicAI uses OpenAI-compatible API at publicapi.dev
-    const response = await fetch("https://api.publicapis.org/v1/chat/completions", {
+    // PublicAI uses OpenAI-compatible API
+    const response = await fetch("https://api.pawan.krd/v1/chat/completions", {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${PUBLICAI_API_KEY}`,
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            model: "llama-3.1-70b-instruct", // Best Llama model available
+            model: "pai-001-rp", // PublicAI Roleplay model - reliable fallback
             messages,
             temperature,
             max_tokens: maxTokens,
