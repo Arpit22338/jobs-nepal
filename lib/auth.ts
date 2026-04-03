@@ -35,9 +35,14 @@ export const authOptions: NextAuthOptions = {
 
         // Block Teacher login if disabled
         if (user.role === "TEACHER") {
-          const teacherLoginEnabled = (await getSetting("teacher_login_enabled")) !== "false";
-          if (!teacherLoginEnabled) {
-            throw new Error("Teacher accounts are temporarily disabled by the administrator.");
+          try {
+            const teacherLoginEnabled = (await getSetting("teacher_login_enabled")) !== "false";
+            if (!teacherLoginEnabled) {
+              throw new Error("Teacher accounts are temporarily disabled by the administrator.");
+            }
+          } catch (error) {
+            // If getSetting fails, allow login (fail open for settings errors)
+            console.error("Error checking teacher login setting:", error);
           }
         }
 
