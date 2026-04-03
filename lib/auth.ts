@@ -7,9 +7,14 @@ import { getSetting } from "@/lib/settings";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 hours
+    updateAge: 60 * 60, // Update session every 1 hour
   },
   pages: {
     signIn: "/login",
+  },
+  jwt: {
+    maxAge: 24 * 60 * 60, // 24 hours
   },
   providers: [
     CredentialsProvider({

@@ -1580,25 +1580,64 @@ export default function InterviewPrepPage() {
               </div>
             </div>
 
-            {/* Interview Mode - Text Only (Voice Coming Soon) */}
+            {/* Interview Mode Selection */}
             <div>
               <label className="block text-sm font-medium mb-2">
                 Interview Mode
               </label>
-              <div className="p-4 rounded-xl border border-primary bg-primary/10">
-                <div className="flex items-center gap-3 mb-2">
-                  <MessageCircle size={24} className="text-primary" />
-                  <span className="font-semibold">Text Interview</span>
-                  <span className="ml-auto text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">Active</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Type your answers and get instant AI feedback
-                </p>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Text Mode */}
+                <button
+                  onClick={() => setInterviewMode("text")}
+                  className={`p-4 rounded-xl border transition-all ${
+                    interviewMode === "text"
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50 hover:bg-accent"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <MessageCircle size={24} className={interviewMode === "text" ? "text-primary" : "text-muted-foreground"} />
+                    <span className="font-semibold">Text</span>
+                    {interviewMode === "text" && (
+                      <span className="ml-auto text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">Active</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground text-left">
+                    Type your answers
+                  </p>
+                </button>
+
+                {/* Voice Mode */}
+                <button
+                  onClick={() => setInterviewMode("voice")}
+                  className={`p-4 rounded-xl border transition-all ${
+                    interviewMode === "voice"
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50 hover:bg-accent"
+                  }`}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <Mic size={24} className={interviewMode === "voice" ? "text-primary" : "text-muted-foreground"} />
+                    <span className="font-semibold">Voice</span>
+                    {interviewMode === "voice" && (
+                      <span className="ml-auto text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">Active</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground text-left">
+                    Speak naturally with AI
+                  </p>
+                </button>
               </div>
-              <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                <i className="bx bx-info-circle"></i>
-                Voice interview mode coming soon!
-              </p>
+              
+              {/* Voice Mode Features Info */}
+              {interviewMode === "voice" && (
+                <div className="mt-3 p-3 rounded-lg bg-accent/50 border border-border">
+                  <p className="text-xs text-muted-foreground flex items-start gap-2">
+                    <Sparkles size={14} className="mt-0.5 text-primary flex-shrink-0" />
+                    <span>AI will speak questions using TTS and listen to your answers via voice recognition</span>
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Generate Button */}

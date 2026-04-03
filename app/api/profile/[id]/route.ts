@@ -34,6 +34,10 @@ export async function GET(
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
+    // SECURITY: Check if user is viewing their own profile or is admin
+    const isOwner = session?.user?.id === userId;
+    const isAdmin = session?.user?.role === "ADMIN";
+
     let isTrusted = false;
     if (session?.user?.id) {
       const trust = await prisma.trust.findUnique({
@@ -48,12 +52,37 @@ export async function GET(
     }
 
     let profileData: Record<string, unknown> = {};
-    if (user.role === "JOBSEEKER" && user.jobSeekerProfile) {
-      profileData = { ...user.jobSeekerProfile, image: user.image };
-    } else if (user.role === "EMPLOYER" && user.employerProfile) {
-      profileData = { ...user.employerProfile, image: user.image };
+    
+    // Return full profile data only for owner or admin
+    if (isOwner || isAdmin) {
+      if (user.role === "JOBSEEKER" && user.jobSeekerProfile) {
+        profileData = { ...user.jobSeekerProfile, image: user.image };
+      } else if (user.role === "EMPLOYER" && user.employerProfile) {
+        profileData = { ...user.employerProfile, image: user.image };
+      } else {
+        profileData = { image: user.image };
+      }
     } else {
-      profileData = { image: user.image };
+      // Return limited public profile for non-owners
+      if (user.role === "JOBSEEKER" && user.jobSeekerProfile) {
+        profileData = {
+          bio: user.jobSeekerProfile.bio,
+          skills: user.jobSeekerProfile.skills,
+          location: user.jobSeekerProfile.location,
+          image: user.image,
+          // Hide sensitive data: experience, education, resumeUrl, portfolioUrl
+        };
+      } else if (user.role === "EMPLOYER" && user.employerProfile) {
+        profileData = {
+          companyName: user.employerProfile.companyName,
+          description: user.employerProfile.description,
+          location: user.employerProfile.location,
+          image: user.image,
+          // Hide sensitive data: website, portfolioUrl
+        };
+      } else {
+        profileData = { image: user.image };
+      }
     }
 
     return NextResponse.json({
@@ -66,7 +95,8 @@ export async function GET(
       profile: profileData,
       posts: user.talentPosts || [],
       trustCount: user._count.receivedTrusts,
-      isTrusted
+      isTrusted,
+      isOwner, // Let client know if user owns this profile
     });
   } catch (error) {
     console.error("Error fetching profile:", error);

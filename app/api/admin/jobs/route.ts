@@ -10,14 +10,21 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Admin should see ALL platform jobs, not just their own
     const jobs = await prisma.job.findMany({
-      where: { employerId: session.user.id },
       select: {
         id: true,
         title: true,
         location: true,
         createdAt: true,
-        views: true
+        views: true,
+        employer: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
       },
       orderBy: { createdAt: "desc" }
     });

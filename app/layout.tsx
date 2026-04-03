@@ -26,11 +26,17 @@ export const metadata: Metadata = {
     default: "Rojgaar Nepal - #1 Job Portal & Freelancing Site in Nepal | Find Jobs, Hire Talent",
     template: "%s | Rojgaar Nepal - Jobs in Nepal"
   },
-  description: "Rojgaar Nepal is Nepal's leading job portal and freelancing platform. Find jobs in Nepal, hire skilled freelancers, learn Python, CV building courses, and use AI career tools. 100% free job posting for employers.",
+  description: "Rojgaar Nepal is Nepal's leading AI-powered job portal and freelancing platform. Find jobs with AI job matcher, build resumes with AI resume builder, practice with AI interview prep, assess skills with AI skills gap analyzer. Plus Python courses, CV building, and 100% free job posting for employers.",
   keywords: [
     "job in nepal",
     "jobs in nepal",
     "nepal jobs",
+    "AI job portal nepal",
+    "AI resume builder nepal",
+    "AI interview preparation",
+    "AI career tools nepal",
+    "AI job matcher",
+    "AI skills gap analysis",
     "freelancing in nepal",
     "freelancing site in nepal",
     "freelance jobs nepal",
@@ -49,7 +55,9 @@ export const metadata: Metadata = {
     "software developer jobs nepal",
     "career in nepal",
     "hire experts nepal",
-    "talent hiring nepal"
+    "talent hiring nepal",
+    "AI powered job search",
+    "artificial intelligence jobs nepal"
   ],
   authors: [{ name: "Rojgaar Nepal Team" }],
   creator: "Rojgaar Nepal",
@@ -73,8 +81,8 @@ export const metadata: Metadata = {
     locale: "en_NP",
     url: "https://rojgaarnepal.com",
     siteName: "Rojgaar Nepal",
-    title: "Rojgaar Nepal - Find Jobs, Hire Talent, Learn Skills",
-    description: "Nepal's #1 platform for jobs, freelancing, and professional skill courses. Free job posting, AI resume builder, and verified talent pool.",
+    title: "Rojgaar Nepal - AI-Powered Job Portal | Find Jobs, Hire Talent",
+    description: "Nepal's #1 AI-powered platform for jobs and freelancing. Features: AI job matcher, AI resume builder, AI interview prep, AI skills gap analyzer. Free job posting and verified talent pool.",
     images: [
       {
         url: "/og-image.png",
@@ -86,8 +94,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rojgaar Nepal - Jobs, Freelancing & Courses in Nepal",
-    description: "Find your dream job or hire top talent in Nepal. Free courses, AI tools, and verified opportunities.",
+    title: "Rojgaar Nepal - AI-Powered Jobs, Freelancing & Courses",
+    description: "Find your dream job with AI tools: job matcher, resume builder, interview prep, skills gap analyzer. Hire top talent in Nepal. Free courses and verified opportunities.",
     images: ["/og-image.png"],
   },
   verification: {
@@ -109,7 +117,7 @@ const jsonLd = {
       "@id": "https://rojgaarnepal.com/#website",
       "url": "https://rojgaarnepal.com",
       "name": "Rojgaar Nepal",
-      "description": "Nepal's #1 Job Portal and Freelancing Platform",
+      "description": "Nepal's #1 AI-Powered Job Portal and Freelancing Platform with AI Job Matcher, AI Resume Builder, AI Interview Prep, and AI Skills Gap Analyzer",
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
@@ -142,10 +150,10 @@ const jsonLd = {
       "@type": "WebPage",
       "@id": "https://rojgaarnepal.com/#webpage",
       "url": "https://rojgaarnepal.com",
-      "name": "Rojgaar Nepal - Find Jobs, Hire Talent, Learn Skills",
+      "name": "Rojgaar Nepal - AI-Powered Job Portal & Freelancing",
       "isPartOf": { "@id": "https://rojgaarnepal.com/#website" },
       "about": { "@id": "https://rojgaarnepal.com/#organization" },
-      "description": "Find jobs in Nepal, hire freelancers, and learn professional skills with free courses."
+      "description": "Find jobs using AI job matcher, build resumes with AI, practice interviews with AI, and analyze skills gaps. Plus freelancing and free courses."
     }
   ]
 };
@@ -180,6 +188,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${poppins.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+        suppressHydrationWarning
       >
         <Providers>
           <ParticlesBackground />
