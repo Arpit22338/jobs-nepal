@@ -61,7 +61,7 @@ function resetRateLimitIfExpired() {
 /**
  * Get next available API key
  */
-function getAvailableApiKey(): { key: string | undefined; index: number } | null {
+function getAvailableApiKey(): { key: string; index: number } | null {
   resetRateLimitIfExpired();
 
   // Try key 1
