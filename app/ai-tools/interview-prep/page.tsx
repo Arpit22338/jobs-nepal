@@ -134,10 +134,14 @@ export default function InterviewPrepPage() {
   const [micStatus, setMicStatus] = useState<
     "prompt" | "granted" | "denied" | "checking" | "blocked"
   >("prompt");
+  const [cameraStatus, setCameraStatus] = useState<
+    "prompt" | "granted" | "denied" | "checking" | "blocked"
+  >("prompt");
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [sttError, setSttError] = useState<string | null>(null);
   const [browserType, setBrowserType] = useState<"chrome" | "safari" | "firefox" | "edge" | "other">("other");
   const [showLockedToast, setShowLockedToast] = useState(false);
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
 
   // Timer state
   const [, setTimeLimit] = useState(0);
@@ -151,6 +155,7 @@ export default function InterviewPrepPage() {
 
   // Refs
   const videoRef = useRef<HTMLVideoElement>(null);
+  const facePreviewRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
   const recognitionRef = useRef<any>(null);
@@ -692,41 +697,65 @@ export default function InterviewPrepPage() {
   };
 
   // =====================
-  // Microphone Permission
+  // Microphone & Camera Permission
   // =====================
   const requestMicrophonePermission = async (): Promise<boolean> => {
     setMicStatus("checking");
+    setCameraStatus("checking");
     setSttError(null);
 
     try {
-      // First check if permission is already blocked at browser level
+      // First check if permissions are already blocked at browser level
       if (navigator.permissions) {
         try {
-          const permissionStatus = await navigator.permissions.query({ name: "microphone" as PermissionName });
-          if (permissionStatus.state === "denied") {
+          const micPermission = await navigator.permissions.query({ name: "microphone" as PermissionName });
+          if (micPermission.state === "denied") {
             setMicStatus("blocked");
             return false;
           }
         } catch {
           // Some browsers don't support permission query for microphone
         }
+        try {
+          const camPermission = await navigator.permissions.query({ name: "camera" as PermissionName });
+          if (camPermission.state === "denied") {
+            setCameraStatus("blocked");
+          }
+        } catch {
+          // Some browsers don't support permission query for camera
+        }
       }
 
-      // Request microphone access to trigger browser permission prompt
+      // Request BOTH microphone AND camera access to trigger browser permission prompts
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true,
         },
+        video: {
+          facingMode: "user",
+          width: { ideal: 320 },
+          height: { ideal: 240 },
+        },
       });
-      // Stop all tracks immediately after getting permission
-      mediaStream.getTracks().forEach((track) => track.stop());
+      
+      // Keep camera stream for face preview, stop audio tracks
+      mediaStream.getAudioTracks().forEach((track) => track.stop());
+      
+      // Set camera stream for face preview
+      setCameraStream(mediaStream);
+      if (facePreviewRef.current) {
+        facePreviewRef.current.srcObject = mediaStream;
+        facePreviewRef.current.play().catch(console.error);
+      }
+      
       setMicStatus("granted");
-      console.log("✅ Microphone permission granted");
+      setCameraStatus("granted");
+      console.log("✅ Microphone and Camera permissions granted");
       return true;
     } catch (error: any) {
-      console.error("Microphone permission error:", error);
+      console.error("Permission error:", error);
       if (
         error.name === "NotAllowedError" ||
         error.name === "PermissionDeniedError"
@@ -747,24 +776,34 @@ export default function InterviewPrepPage() {
         setMicStatus("denied");
       } else if (error.name === "NotFoundError") {
         setMicStatus("denied");
-        setSttError("No microphone found on this device. Please connect a microphone and try again.");
+        setSttError("No microphone or camera found on this device. Please connect them and try again.");
       } else if (error.name === "NotReadableError") {
         setMicStatus("denied");
-        setSttError("Microphone is being used by another application. Please close other apps using the microphone.");
+        setSttError("Microphone/Camera is being used by another application. Please close other apps.");
       } else {
         setMicStatus("denied");
-        setSttError("Could not access microphone. Please check your device settings.");
+        setSttError("Could not access microphone/camera. Please check your device settings.");
       }
       return false;
     }
   };
+
+  // Stop camera stream when interview ends
+  const stopCameraStream = useCallback(() => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
+  }, [cameraStream]);
 
   // Switch to text mode as fallback
   const switchToTextMode = () => {
     setInterviewMode("text");
     setShowMicPrompt(false);
     setMicStatus("prompt");
+    setCameraStatus("prompt");
     setSttError(null);
+    stopCameraStream();
   };
 
   // Detect browser type
@@ -1125,6 +1164,7 @@ export default function InterviewPrepPage() {
       stopVideoRecording();
     }
     stopAllMedia();
+    stopCameraStream();
 
     setIsAnalyzing(true);
     try {
@@ -1296,15 +1336,15 @@ export default function InterviewPrepPage() {
               {(micStatus === "prompt" || micStatus === "checking") && (
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <Mic size={20} className="text-primary" />
+                    <Video size={20} className="text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-foreground font-medium">
-                      RojgaarAI needs your microphone
+                      RojgaarAI needs your microphone &amp; camera
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Voice interview requires microphone access for speech recognition.
-                      Click &quot;Allow&quot; when your browser asks for permission.
+                      Voice interview requires microphone for speech and camera for face monitoring.
+                      Click &quot;Allow&quot; when your browser asks for permissions.
                     </p>
                   </div>
                 </div>
@@ -1738,6 +1778,25 @@ export default function InterviewPrepPage() {
       {/* =================== */}
       {step === "practice" && questions.length > 0 && (
         <div className="space-y-6">
+          {/* Face Preview Circle - Always show when camera is active */}
+          {interviewMode === "voice" && cameraStream && (
+            <div className="fixed top-4 right-4 z-50">
+              <div className="relative">
+                <video
+                  ref={facePreviewRef}
+                  autoPlay
+                  muted
+                  playsInline
+                  className="w-20 h-20 rounded-full object-cover border-3 border-primary shadow-lg bg-black"
+                  style={{ transform: "scaleX(-1)" }}
+                />
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 border-2 border-white flex items-center justify-center">
+                  <Camera size={10} className="text-white" />
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Video Preview */}
           {interviewMode === "voice" && enableVideoRecording && (
             <div className="glass-card rounded-2xl p-4 border border-border/50">
